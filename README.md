@@ -7,4 +7,7 @@ cd routing_result_plotting
 ```
 
 ## To plot the fine-tuning results with bar chart
-TBU
+```
+cd qwen7b_malt_finetuned
+# check the README in the folder
+```
