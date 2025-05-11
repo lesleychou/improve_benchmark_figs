@@ -2,13 +2,15 @@
 
 It will generate 3 spider charts, and 2 SSIM two-dim charts (one with small query number, one with large query number)
 
-## Required packages
+## Required packages (common matplotlib ones)
+```
 import os
 import json
 import matplotlib.pyplot as plt
 from scipy import stats
 import numpy as np
 import matplotlib.patches as mpatches
+```
 
 ## Run
 ```python
