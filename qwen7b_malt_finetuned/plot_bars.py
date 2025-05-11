@@ -1,0 +1,98 @@
+import jsonlines
+import os
+from collections import Counter
+import matplotlib.pyplot as plt
+import numpy as np
+from scipy import stats
+
+def main():
+    # Define paths
+    results_dir = 'finetuned_results'
+    qwen_rel_paths = [
+        'qwen7b_level1.jsonl', 
+        'qwen7b_level2.jsonl', 
+        'qwen7b_level3.jsonl', 
+        'qwen7b_all.jsonl'
+    ]
+    qwen_result_paths = [os.path.join(results_dir, rel_path) for rel_path in qwen_rel_paths]
+    
+    # Load data
+    data = []
+    for path in qwen_result_paths:
+        with jsonlines.open(path) as reader:
+            data.append([entry for entry in reader])
+    
+    # Calculate accuracy metrics
+    names = ['level1', 'level2', 'level3', 'all']
+    levels = ['level1', 'level2', 'level3']
+    bar_heights = {level: [] for level in levels}
+    bar_errors = {level: [] for level in levels}
+    
+    for dataset in data:
+        num_correct = {level: 0 for level in levels}
+        totals = {level: 0 for level in levels}
+        binary_outcomes = {level: [] for level in levels}
+    
+        for entry in dataset:
+            task = entry['Label']
+            correctness = (entry['Result-Correctness'] == 'Pass')
+            
+            if 'level-1' in task:
+                num_correct['level1'] += int(correctness)
+                totals['level1'] += 1
+                binary_outcomes['level1'].append(1 if correctness else 0)
+            elif 'level-2' in task:
+                num_correct['level2'] += int(correctness)
+                totals['level2'] += 1
+                binary_outcomes['level2'].append(1 if correctness else 0)
+            elif 'level-3' in task:
+                num_correct['level3'] += int(correctness)
+                totals['level3'] += 1
+                binary_outcomes['level3'].append(1 if correctness else 0)
+        
+        for level in bar_heights:
+            # Calculate accuracy
+            acc = num_correct[level] / totals[level] if totals[level] > 0 else 0
+            bar_heights[level].append(acc)
+            
+            # Calculate standard error and multiply by 1.96 for 95% confidence interval
+            sem = stats.sem(binary_outcomes[level], ddof=0) if binary_outcomes[level] else 0
+            # Calculate 95% confidence interval (multiply by 1.96)
+            ci_95 = 1.96 * sem
+            bar_errors[level].append(ci_95)
+    
+    print(bar_heights)
+    print("95% confidence intervals:", bar_errors)
+    
+    # Create visualization
+    x = np.arange(len(names))  # the label locations
+    width = 0.25  # the width of the bars
+    multiplier = 0
+    
+    fig, ax = plt.subplots(layout='constrained', figsize=(10,7))
+    
+    for level, acc in bar_heights.items():
+        offset = width * multiplier
+        rects = ax.bar(x + offset, acc, width, label=level, 
+                      yerr=bar_errors[level], 
+                      capsize=5, 
+                      error_kw={'elinewidth': 1.5, 'capthick': 1.5})
+        ax.bar_label(rects, padding=3, fmt='%.2f')
+        multiplier += 1
+        
+    # Add some text for labels, title and custom x-axis tick labels, etc.
+    ax.set_ylabel('Proportion Correct', fontsize=14)
+    ax.set_xlabel('Level of Finetune Training Data', fontsize=14)
+    ax.set_title('Performance of Qwen-7B Finetunes on Different Network Query Levels', fontsize=16)
+    ax.set_xticks(x + width, names)
+    ax.legend(loc='upper left', ncols=3)
+    ax.tick_params(axis='both', which='major', labelsize=12)
+    
+    # Save figure
+    plt.savefig('figs/qwen7b_performance_by_level.png', dpi=300, bbox_inches='tight')
+    
+    # Optional: display figure if running in an environment that supports it
+    plt.show()
+
+if __name__ == "__main__":
+    main()

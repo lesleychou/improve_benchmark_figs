@@ -1,6 +1,6 @@
 # Script to analyze App-Route results
 
-It will generate 3 spider charts, and 2 SSIM two-dim charts (one with small query number, one with large query number)
+It will generate 3 spider charts, and two SEM (95% confidence interval) charts (one with small query number, one with large query number)
 
 ## Required packages (common matplotlib ones)
 ```
