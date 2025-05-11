@@ -1,0 +1,153 @@
+Log Content:
+Pingall result: p60_h1 -> p60_h2 p60_h3 p60_h4 X 
+p60_h2 -> p60_h1 p60_h3 p60_h4 X 
+p60_h3 -> p60_h1 p60_h2 p60_h4 p60_r0 
+p60_h4 -> p60_h1 p60_h2 p60_h3 p60_r0 
+p60_r0 -> X X p60_h3 p60_h4 
+*** Results: 20% dropped (16/20 received)
+
+
+
+Machine: p60_r0
+Commands: ip addr
+==================================================
+Log Content:
+Machine: p60_r0
+Command: ip addr
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host 
+       valid_lft forever preferred_lft forever
+2: p60_r0-eth1@if36911: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether 00:00:00:00:00:05 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 192.168.1.1/24 brd 192.168.1.255 scope global p60_r0-eth1
+       valid_lft forever preferred_lft forever
+    inet6 fe80::200:ff:fe00:5/64 scope link 
+       valid_lft forever preferred_lft forever
+3: p60_r0-eth2@if36912: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether aa:5a:d7:4c:bf:36 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 192.168.2.1/24 brd 192.168.2.255 scope global p60_r0-eth2
+       valid_lft forever preferred_lft forever
+    inet6 fe80::a85a:d7ff:fe4c:bf36/64 scope link 
+       valid_lft forever preferred_lft forever
+Pingall result: p60_h1 -> p60_h2 p60_h3 p60_h4 X 
+p60_h2 -> p60_h1 p60_h3 p60_h4 X 
+p60_h3 -> p60_h1 p60_h2 p60_h4 p60_r0 
+p60_h4 -> p60_h1 p60_h2 p60_h3 p60_r0 
+p60_r0 -> X X p60_h3 p60_h4 
+*** Results: 20% dropped (16/20 received)
+
+
+
+Machine: p60_r0
+Commands: ip route
+==================================================
+Log Content:
+Machine: p60_r0
+Command: ip route
+192.168.1.0/24 dev p60_r0-eth1 proto kernel scope link src 192.168.1.1 
+192.168.2.0/24 dev p60_r0-eth2 proto kernel scope link src 192.168.2.1 
+Pingall result: p60_h1 -> p60_h2 p60_h3 p60_h4 X 
+p60_h2 -> p60_h1 p60_h3 p60_h4 X 
+p60_h3 -> p60_h1 p60_h2 p60_h4 p60_r0 
+p60_h4 -> p60_h1 p60_h2 p60_h3 p60_r0 
+p60_r0 -> X X p60_h3 p60_h4 
+*** Results: 20% dropped (16/20 received)
+
+
+
+Machine: p60_r0
+Commands: ip neigh
+==================================================
+Log Content:
+Machine: p60_r0
+Command: ip neigh
+192.168.1.100 dev p60_r0-eth1 lladdr 00:00:00:00:00:01 REACHABLE
+192.168.1.101 dev p60_r0-eth1 lladdr 00:00:00:00:00:02 REACHABLE
+192.168.2.101 dev p60_r0-eth2 lladdr 00:00:00:00:00:04 REACHABLE
+192.168.2.100 dev p60_r0-eth2 lladdr 00:00:00:00:00:03 REACHABLE
+Pingall result: p60_h1 -> p60_h2 p60_h3 p60_h4 X 
+p60_h2 -> p60_h1 p60_h3 p60_h4 X 
+p60_h3 -> p60_h1 p60_h2 p60_h4 p60_r0 
+p60_h4 -> p60_h1 p60_h2 p60_h3 p60_r0 
+p60_r0 -> X X p60_h3 p60_h4 
+*** Results: 20% dropped (16/20 received)
+
+
+
+Machine: p60_r0
+Commands: sysctl net.ipv4.ip_forward
+==================================================
+Log Content:
+Machine: p60_r0
+Command: sysctl net.ipv4.ip_forward
+net.ipv4.ip_forward = 1
+Pingall result: p60_h1 -> p60_h2 p60_h3 p60_h4 X 
+p60_h2 -> p60_h1 p60_h3 p60_h4 X 
+p60_h3 -> p60_h1 p60_h2 p60_h4 p60_r0 
+p60_h4 -> p60_h1 p60_h2 p60_h3 p60_r0 
+p60_r0 -> X X p60_h3 p60_h4 
+*** Results: 20% dropped (16/20 received)
+
+
+
+Machine: p60_r0
+Commands: iptables -L -v -n
+==================================================
+Log Content:
+Machine: p60_r0
+Command: iptables -L -v -n
+Chain INPUT (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+   10   840 DROP       all  --  *      *       192.168.1.0/24       0.0.0.0/0           
+
+Chain FORWARD (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+
+Chain OUTPUT (policy ACCEPT 0 packets, 0 bytes)
+ pkts bytes target     prot opt in     out     source               destination         
+   10   840 DROP       all  --  *      *       0.0.0.0/0            192.168.1.0/24      
+Pingall result: p60_h1 -> p60_h2 p60_h3 p60_h4 X 
+p60_h2 -> p60_h1 p60_h3 p60_h4 X 
+p60_h3 -> p60_h1 p60_h2 p60_h4 p60_r0 
+p60_h4 -> p60_h1 p60_h2 p60_h3 p60_r0 
+p60_r0 -> X X p60_h3 p60_h4 
+*** Results: 20% dropped (16/20 received)
+
+
+
+Machine: p60_r0
+Commands: iptables -D INPUT -s 192.168.1.0/24 -j DROP
+==================================================
+Log Content:
+Machine: p60_r0
+Command: iptables -D INPUT -s 192.168.1.0/24 -j DROP
+Pingall result: p60_h1 -> p60_h2 p60_h3 p60_h4 X 
+p60_h2 -> p60_h1 p60_h3 p60_h4 X 
+p60_h3 -> p60_h1 p60_h2 p60_h4 p60_r0 
+p60_h4 -> p60_h1 p60_h2 p60_h3 p60_r0 
+p60_r0 -> X X p60_h3 p60_h4 
+*** Results: 20% dropped (16/20 received)
+
+
+
+Machine: p60_r0
+Commands: iptables -D OUTPUT -d 192.168.1.0/24 -j DROP
+==================================================
+Log Content:
+Machine: p60_r0
+Command: iptables -D OUTPUT -d 192.168.1.0/24 -j DROP
+Pingall result: p60_h1 -> p60_h2 p60_h3 p60_h4 p60_r0 
+p60_h2 -> p60_h1 p60_h3 p60_h4 p60_r0 
+p60_h3 -> p60_h1 p60_h2 p60_h4 p60_r0 
+p60_h4 -> p60_h1 p60_h2 p60_h3 p60_r0 
+p60_r0 -> p60_h1 p60_h2 p60_h3 p60_h4 
+*** Results: 0% dropped (20/20 received)
+
+
+
+Machine: p60_r0
+Commands: iptables -D OUTPUT -d 192.168.1.0/24 -j DROP
+==================================================

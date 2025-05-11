@@ -1,0 +1,194 @@
+Log Content:
+Pingall result: p79_h1 -> p79_h2 X X X 
+p79_h2 -> p79_h1 X X X 
+p79_h3 -> X X p79_h4 X 
+p79_h4 -> X X p79_h3 X 
+p79_r0 -> X X p79_h3 p79_h4 
+*** Results: 70% dropped (6/20 received)
+
+
+
+Machine: p79_r0
+Commands: ifconfig
+==================================================
+Log Content:
+Machine: p79_r0
+Command: ifconfig
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+        inet 127.0.0.1  netmask 255.0.0.0
+        inet6 ::1  prefixlen 128  scopeid 0x10<host>
+        loop  txqueuelen 1000  (Local Loopback)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 0  bytes 0 (0.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+p79_r0-eth1: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.2.1  netmask 255.255.255.0  broadcast 0.0.0.0
+        ether 00:00:00:00:00:05  txqueuelen 1000  (Ethernet)
+        RX packets 22  bytes 1848 (1.8 KB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 5  bytes 490 (490.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+p79_r0-eth2: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.2.1  netmask 255.255.255.0  broadcast 192.168.2.255
+        inet6 fe80::ec73:fbff:fe5b:c5e9  prefixlen 64  scopeid 0x20<link>
+        ether ee:73:fb:5b:c5:e9  txqueuelen 1000  (Ethernet)
+        RX packets 26  bytes 2368 (2.3 KB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 14  bytes 1300 (1.3 KB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+Pingall result: p79_h1 -> p79_h2 X X X 
+p79_h2 -> p79_h1 X X X 
+p79_h3 -> X X p79_h4 X 
+p79_h4 -> X X p79_h3 X 
+p79_r0 -> X X p79_h3 p79_h4 
+*** Results: 70% dropped (6/20 received)
+
+
+
+Machine: p79_r0
+Commands: ifconfig p79_r0-eth2 192.168.3.1 netmask 255.255.255.0
+==================================================
+Log Content:
+Machine: p79_r0
+Command: ifconfig p79_r0-eth2 192.168.3.1 netmask 255.255.255.0
+Pingall result: p79_h1 -> p79_h2 X X X 
+p79_h2 -> p79_h1 X X X 
+p79_h3 -> X X p79_h4 X 
+p79_h4 -> X X p79_h3 X 
+p79_r0 -> X X X X 
+*** Results: 80% dropped (4/20 received)
+
+
+
+Machine: p79_r0
+Commands: route -n
+==================================================
+Log Content:
+Machine: p79_r0
+Command: route -n
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+192.168.2.0     0.0.0.0         255.255.255.0   U     0      0        0 p79_r0-eth1
+192.168.3.0     0.0.0.0         255.255.255.0   U     0      0        0 p79_r0-eth2
+Pingall result: p79_h1 -> p79_h2 X X X 
+p79_h2 -> p79_h1 X X X 
+p79_h3 -> X X p79_h4 X 
+p79_h4 -> X X p79_h3 X 
+p79_r0 -> X X X X 
+*** Results: 80% dropped (4/20 received)
+
+
+
+Machine: p79_r0
+Commands: cat /proc/sys/net/ipv4/ip_forward
+==================================================
+Log Content:
+Machine: p79_r0
+Command: cat /proc/sys/net/ipv4/ip_forward
+1
+Pingall result: p79_h1 -> p79_h2 X X X 
+p79_h2 -> p79_h1 X X X 
+p79_h3 -> X X p79_h4 X 
+p79_h4 -> X X p79_h3 X 
+p79_r0 -> X X X X 
+*** Results: 80% dropped (4/20 received)
+
+
+
+Machine: p79_r0
+Commands: arp -n
+==================================================
+Log Content:
+Machine: p79_r0
+Command: arp -n
+Address                  HWtype  HWaddress           Flags Mask            Iface
+192.168.2.100                    (incomplete)                              p79_r0-eth1
+192.168.2.101                    (incomplete)                              p79_r0-eth1
+Pingall result: p79_h1 -> p79_h2 X X X 
+p79_h2 -> p79_h1 X X X 
+p79_h3 -> X X p79_h4 X 
+p79_h4 -> X X p79_h3 X 
+p79_r0 -> X X X X 
+*** Results: 80% dropped (4/20 received)
+
+
+
+Machine: p79_r0
+Commands: ip -s -s neigh flush all
+==================================================
+Log Content:
+Machine: p79_r0
+Command: ip -s -s neigh flush all
+192.168.2.100 dev p79_r0-eth1  used 2/71/2 probes 6 FAILED
+192.168.2.101 dev p79_r0-eth1  used 2/71/2 probes 6 FAILED
+
+*** Round 1, deleting 2 entries ***
+*** Flush is complete after 1 round ***
+Pingall result: p79_h1 -> p79_h2 X X X 
+p79_h2 -> p79_h1 X X X 
+p79_h3 -> X X p79_h4 X 
+p79_h4 -> X X p79_h3 X 
+p79_r0 -> X X X X 
+*** Results: 80% dropped (4/20 received)
+
+
+
+Machine: p79_r0
+Commands: arping -I p79_r0-eth1 192.168.2.100
+==================================================
+Log Content:
+Machine: p79_r0
+Command: arping -I p79_r0-eth1 192.168.2.100
+bash: arping: command not found
+Pingall result: p79_h1 -> p79_h2 X X X 
+p79_h2 -> p79_h1 X X X 
+p79_h3 -> X X p79_h4 X 
+p79_h4 -> X X p79_h3 X 
+p79_r0 -> X X X X 
+*** Results: 80% dropped (4/20 received)
+
+
+
+Machine: p79_r0
+Commands: arp -n
+==================================================
+Log Content:
+Machine: p79_r0
+Command: arp -n
+Address                  HWtype  HWaddress           Flags Mask            Iface
+192.168.2.100                    (incomplete)                              p79_r0-eth1
+192.168.2.101                    (incomplete)                              p79_r0-eth1
+Pingall result: p79_h1 -> p79_h2 X X X 
+p79_h2 -> p79_h1 X X X 
+p79_h3 -> X X p79_h4 X 
+p79_h4 -> X X p79_h3 X 
+p79_r0 -> X X X X 
+*** Results: 80% dropped (4/20 received)
+
+
+
+Machine: p79_r0
+Commands: ethtool p79_r0-eth1
+==================================================
+Log Content:
+Machine: p79_r0
+Command: ethtool p79_r0-eth1
+Address                  HWtype  HWaddress           Flags Mask            Iface
+192.168.2.100                    (incomplete)                              p79_r0-eth1
+192.168.2.101                    (incomplete)                              p79_r0-eth1
+Pingall result: p79_h1 -> p79_h2 X X X 
+p79_h2 -> p79_h1 X X X 
+p79_h3 -> X X p79_h4 X 
+p79_h4 -> X X p79_h3 X 
+p79_r0 -> X X X X 
+*** Results: 80% dropped (4/20 received)
+
+
+
+Machine: p79_r0
+Commands: ethtool p79_r0-eth1
+==================================================

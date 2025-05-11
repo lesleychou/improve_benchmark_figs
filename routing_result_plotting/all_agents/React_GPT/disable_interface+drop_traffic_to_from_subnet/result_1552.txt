@@ -1,0 +1,202 @@
+Log Content:
+Pingall result: p69_h1 -> X X X X 
+p69_h2 -> X X X X 
+p69_h3 -> X X X X 
+p69_h4 -> X X X X 
+p69_r0 -> X X X X 
+*** Results: 100% dropped (0/20 received)
+
+
+
+Machine: p69_r0
+Commands: ifconfig
+==================================================
+Log Content:
+Machine: p69_r0
+Command: ifconfig
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+        inet 127.0.0.1  netmask 255.0.0.0
+        inet6 ::1  prefixlen 128  scopeid 0x10<host>
+        loop  txqueuelen 1000  (Local Loopback)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 0  bytes 0 (0.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+p69_r0-eth2: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.2.1  netmask 255.255.255.0  broadcast 192.168.2.255
+        inet6 fe80::2c59:cff:fe0d:4864  prefixlen 64  scopeid 0x20<link>
+        ether 2e:59:0c:0d:48:64  txqueuelen 1000  (Ethernet)
+        RX packets 31  bytes 2674 (2.6 KB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 18  bytes 1580 (1.5 KB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+Pingall result: p69_h1 -> p69_h2 X X X 
+p69_h2 -> p69_h1 X X X 
+p69_h3 -> X X p69_h4 p69_r0 
+p69_h4 -> X X p69_h3 p69_r0 
+p69_r0 -> X X p69_h3 p69_h4 
+*** Results: 60% dropped (8/20 received)
+
+
+
+Machine: p69_r0
+Commands: ifconfig -a
+==================================================
+Log Content:
+Machine: p69_r0
+Command: ifconfig -a
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+        inet 127.0.0.1  netmask 255.0.0.0
+        inet6 ::1  prefixlen 128  scopeid 0x10<host>
+        loop  txqueuelen 1000  (Local Loopback)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 0  bytes 0 (0.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+p69_r0-eth1: flags=4098<BROADCAST,MULTICAST>  mtu 1500
+        inet 192.168.1.1  netmask 255.255.255.0  broadcast 192.168.1.255
+        ether 00:00:00:00:00:05  txqueuelen 1000  (Ethernet)
+        RX packets 6  bytes 588 (588.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 4  bytes 396 (396.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+p69_r0-eth2: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.2.1  netmask 255.255.255.0  broadcast 192.168.2.255
+        inet6 fe80::2c59:cff:fe0d:4864  prefixlen 64  scopeid 0x20<link>
+        ether 2e:59:0c:0d:48:64  txqueuelen 1000  (Ethernet)
+        RX packets 40  bytes 3528 (3.5 KB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 24  bytes 2224 (2.2 KB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+Pingall result: p69_h1 -> p69_h2 X X X 
+p69_h2 -> p69_h1 X X X 
+p69_h3 -> X X p69_h4 p69_r0 
+p69_h4 -> X X p69_h3 p69_r0 
+p69_r0 -> X X p69_h3 p69_h4 
+*** Results: 60% dropped (8/20 received)
+
+
+
+Machine: p69_r0
+Commands: ifconfig p69_r0-eth1 up
+==================================================
+Log Content:
+Machine: p69_r0
+Command: ifconfig p69_r0-eth1 up
+Pingall result: p69_h1 -> p69_h2 X X X 
+p69_h2 -> p69_h1 X X X 
+p69_h3 -> X X p69_h4 p69_r0 
+p69_h4 -> X X p69_h3 p69_r0 
+p69_r0 -> X X p69_h3 p69_h4 
+*** Results: 60% dropped (8/20 received)
+
+
+
+Machine: p69_r0
+Commands: route
+==================================================
+Log Content:
+Machine: p69_r0
+Command: route
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+192.168.1.0     0.0.0.0         255.255.255.0   U     0      0        0 p69_r0-eth1
+192.168.2.0     0.0.0.0         255.255.255.0   U     0      0        0 p69_r0-eth2
+Pingall result: p69_h1 -> p69_h2 p69_h3 p69_h4 X 
+p69_h2 -> p69_h1 p69_h3 p69_h4 X 
+p69_h3 -> p69_h1 p69_h2 p69_h4 p69_r0 
+p69_h4 -> p69_h1 p69_h2 p69_h3 p69_r0 
+p69_r0 -> X X p69_h3 p69_h4 
+*** Results: 20% dropped (16/20 received)
+
+
+
+Machine: p69_r0
+Commands: arp -a
+==================================================
+Log Content:
+Machine: p69_r0
+Command: arp -a
+? (192.168.1.100) at 00:00:00:00:00:01 [ether] on p69_r0-eth1
+? (192.168.1.101) at 00:00:00:00:00:02 [ether] on p69_r0-eth1
+? (192.168.2.100) at 00:00:00:00:00:03 [ether] on p69_r0-eth2
+? (192.168.2.101) at 00:00:00:00:00:04 [ether] on p69_r0-eth2
+Pingall result: p69_h1 -> p69_h2 p69_h3 p69_h4 X 
+p69_h2 -> p69_h1 p69_h3 p69_h4 X 
+p69_h3 -> p69_h1 p69_h2 p69_h4 p69_r0 
+p69_h4 -> p69_h1 p69_h2 p69_h3 p69_r0 
+p69_r0 -> X X p69_h3 p69_h4 
+*** Results: 20% dropped (16/20 received)
+
+
+
+Machine: p69_r0
+Commands: cat /proc/sys/net/ipv4/ip_forward
+==================================================
+Log Content:
+Machine: p69_r0
+Command: cat /proc/sys/net/ipv4/ip_forward
+1
+Pingall result: p69_h1 -> p69_h2 p69_h3 p69_h4 X 
+p69_h2 -> p69_h1 p69_h3 p69_h4 X 
+p69_h3 -> p69_h1 p69_h2 p69_h4 p69_r0 
+p69_h4 -> p69_h1 p69_h2 p69_h3 p69_r0 
+p69_r0 -> X X p69_h3 p69_h4 
+*** Results: 20% dropped (16/20 received)
+
+
+
+Machine: None
+Commands: None
+==================================================
+Log Content:
+Machine: None
+Command: None
+1
+Pingall result: p69_h1 -> p69_h2 p69_h3 p69_h4 X 
+p69_h2 -> p69_h1 p69_h3 p69_h4 X 
+p69_h3 -> p69_h1 p69_h2 p69_h4 p69_r0 
+p69_h4 -> p69_h1 p69_h2 p69_h3 p69_r0 
+p69_r0 -> X X p69_h3 p69_h4 
+*** Results: 20% dropped (16/20 received)
+
+
+
+Machine: p69_r0
+Commands: route add -net 192.168.1.0 netmask 255.255.255.0 dev p69_r0-eth1
+==================================================
+Log Content:
+Machine: p69_r0
+Command: route add -net 192.168.1.0 netmask 255.255.255.0 dev p69_r0-eth1
+Pingall result: p69_h1 -> p69_h2 p69_h3 p69_h4 X 
+p69_h2 -> p69_h1 p69_h3 p69_h4 X 
+p69_h3 -> p69_h1 p69_h2 p69_h4 p69_r0 
+p69_h4 -> p69_h1 p69_h2 p69_h3 p69_r0 
+p69_r0 -> X X p69_h3 p69_h4 
+*** Results: 20% dropped (16/20 received)
+
+
+
+Machine: None
+Commands: None
+==================================================
+Log Content:
+Machine: None
+Command: None
+Pingall result: p69_h1 -> p69_h2 p69_h3 p69_h4 X 
+p69_h2 -> p69_h1 p69_h3 p69_h4 X 
+p69_h3 -> p69_h1 p69_h2 p69_h4 p69_r0 
+p69_h4 -> p69_h1 p69_h2 p69_h3 p69_r0 
+p69_r0 -> X X p69_h3 p69_h4 
+*** Results: 20% dropped (16/20 received)
+
+
+
+Machine: p69_r0
+Commands: route add -net 192.168.2.0 netmask 255.255.255.0 dev p69_r0-eth2
+==================================================

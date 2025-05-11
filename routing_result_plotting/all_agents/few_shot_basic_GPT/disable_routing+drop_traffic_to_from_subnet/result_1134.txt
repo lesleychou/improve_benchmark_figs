@@ -1,0 +1,181 @@
+Log Content:
+Pingall result: p62_h1 -> p62_h2 X X p62_r0 
+p62_h2 -> p62_h1 X X p62_r0 
+p62_h3 -> X X p62_h4 X 
+p62_h4 -> X X p62_h3 X 
+p62_r0 -> p62_h1 p62_h2 X X 
+*** Results: 60% dropped (8/20 received)
+
+
+
+Machine: p62_r0
+Commands: sysctl net.ipv4.ip_forward
+==================================================
+Log Content:
+Machine: p62_r0
+Command: sysctl net.ipv4.ip_forward
+net.ipv4.ip_forward = 1
+Pingall result: p62_h1 -> p62_h2 X X p62_r0 
+p62_h2 -> p62_h1 X X p62_r0 
+p62_h3 -> X X p62_h4 X 
+p62_h4 -> X X p62_h3 X 
+p62_r0 -> p62_h1 p62_h2 X X 
+*** Results: 60% dropped (8/20 received)
+
+
+
+Machine: p62_r0
+Commands: ip link show
+==================================================
+Log Content:
+Machine: p62_r0
+Command: ip link show
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+2: p62_r0-eth1@if52245: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP mode DEFAULT group default qlen 1000
+    link/ether 00:00:00:00:00:05 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+3: p62_r0-eth2@if52246: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP mode DEFAULT group default qlen 1000
+    link/ether 2e:09:73:24:86:f2 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+Pingall result: p62_h1 -> p62_h2 X X p62_r0 
+p62_h2 -> p62_h1 X X p62_r0 
+p62_h3 -> X X p62_h4 X 
+p62_h4 -> X X p62_h3 X 
+p62_r0 -> p62_h1 p62_h2 X X 
+*** Results: 60% dropped (8/20 received)
+
+
+
+Machine: p62_r0
+Commands: ip addr show dev p62_r0-eth1
+==================================================
+Log Content:
+Machine: p62_r0
+Command: ip addr show dev p62_r0-eth1
+2: p62_r0-eth1@if52245: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether 00:00:00:00:00:05 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 192.168.1.1/24 brd 192.168.1.255 scope global p62_r0-eth1
+       valid_lft forever preferred_lft forever
+    inet6 fe80::200:ff:fe00:5/64 scope link 
+       valid_lft forever preferred_lft forever
+Pingall result: p62_h1 -> p62_h2 X X p62_r0 
+p62_h2 -> p62_h1 X X p62_r0 
+p62_h3 -> X X p62_h4 X 
+p62_h4 -> X X p62_h3 X 
+p62_r0 -> p62_h1 p62_h2 X X 
+*** Results: 60% dropped (8/20 received)
+
+
+
+Machine: p62_r0
+Commands: ip addr show dev p62_r0-eth2
+==================================================
+Log Content:
+Machine: p62_r0
+Command: ip addr show dev p62_r0-eth2
+3: p62_r0-eth2@if52246: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether 2e:09:73:24:86:f2 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+    inet 192.168.2.1/24 brd 192.168.2.255 scope global p62_r0-eth2
+       valid_lft forever preferred_lft forever
+    inet6 fe80::2c09:73ff:fe24:86f2/64 scope link 
+       valid_lft forever preferred_lft forever
+Pingall result: p62_h1 -> p62_h2 X X p62_r0 
+p62_h2 -> p62_h1 X X p62_r0 
+p62_h3 -> X X p62_h4 X 
+p62_h4 -> X X p62_h3 X 
+p62_r0 -> p62_h1 p62_h2 X X 
+*** Results: 60% dropped (8/20 received)
+
+
+
+Machine: p62_r0
+Commands: ip route
+==================================================
+Log Content:
+Machine: p62_r0
+Command: ip route
+192.168.1.0/24 dev p62_r0-eth1 proto kernel scope link src 192.168.1.1 
+192.168.2.0/24 dev p62_r0-eth2 proto kernel scope link src 192.168.2.1 
+Pingall result: p62_h1 -> p62_h2 X X p62_r0 
+p62_h2 -> p62_h1 X X p62_r0 
+p62_h3 -> X X p62_h4 X 
+p62_h4 -> X X p62_h3 X 
+p62_r0 -> p62_h1 p62_h2 X X 
+*** Results: 60% dropped (8/20 received)
+
+
+
+Machine: p62_r0
+Commands: iptables -L -v --line-numbers
+==================================================
+Log Content:
+Machine: p62_r0
+Command: iptables -L -v --line-numbers
+Chain INPUT (policy ACCEPT 0 packets, 0 bytes)
+num   pkts bytes target     prot opt in     out     source               destination         
+1       12  1008 REJECT     all  --  any    any     192.168.2.0/24       anywhere             reject-with icmp-port-unreachable
+
+Chain FORWARD (policy DROP 48 packets, 4032 bytes)
+num   pkts bytes target     prot opt in     out     source               destination         
+
+Chain OUTPUT (policy ACCEPT 0 packets, 0 bytes)
+num   pkts bytes target     prot opt in     out     source               destination         
+1       36  3696 REJECT     all  --  any    any     anywhere             192.168.2.0/24       reject-with icmp-port-unreachable
+Pingall result: p62_h1 -> p62_h2 X X p62_r0 
+p62_h2 -> p62_h1 X X p62_r0 
+p62_h3 -> X X p62_h4 X 
+p62_h4 -> X X p62_h3 X 
+p62_r0 -> p62_h1 p62_h2 X X 
+*** Results: 60% dropped (8/20 received)
+
+
+
+Machine: p62_r0
+Commands: iptables -D INPUT 1
+==================================================
+Log Content:
+Machine: p62_r0
+Command: iptables -D INPUT 1
+Pingall result: p62_h1 -> p62_h2 X X p62_r0 
+p62_h2 -> p62_h1 X X p62_r0 
+p62_h3 -> X X p62_h4 X 
+p62_h4 -> X X p62_h3 X 
+p62_r0 -> p62_h1 p62_h2 X X 
+*** Results: 60% dropped (8/20 received)
+
+
+
+Machine: p62_r0
+Commands: iptables -D OUTPUT 1
+==================================================
+Log Content:
+Machine: p62_r0
+Command: iptables -D OUTPUT 1
+Pingall result: p62_h1 -> p62_h2 X X p62_r0 
+p62_h2 -> p62_h1 X X p62_r0 
+p62_h3 -> X X p62_h4 p62_r0 
+p62_h4 -> X X p62_h3 p62_r0 
+p62_r0 -> p62_h1 p62_h2 p62_h3 p62_h4 
+*** Results: 40% dropped (12/20 received)
+
+
+
+Machine: p62_r0
+Commands: ip route
+==================================================
+Log Content:
+Machine: p62_r0
+Command: ip route
+192.168.1.0/24 dev p62_r0-eth1 proto kernel scope link src 192.168.1.1 
+192.168.2.0/24 dev p62_r0-eth2 proto kernel scope link src 192.168.2.1 
+Pingall result: p62_h1 -> p62_h2 X X p62_r0 
+p62_h2 -> p62_h1 X X p62_r0 
+p62_h3 -> X X p62_h4 p62_r0 
+p62_h4 -> X X p62_h3 p62_r0 
+p62_r0 -> p62_h1 p62_h2 p62_h3 p62_h4 
+*** Results: 40% dropped (12/20 received)
+
+
+
+Machine: p62_r0
+Commands: arp -n
+==================================================
