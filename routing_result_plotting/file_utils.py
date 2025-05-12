@@ -426,7 +426,7 @@ def plot_spider_charts(save_result_path, sample_num):
             color = colors[idx % len(colors)]
             # Plot line with higher z-order to ensure it's above the fill
             ax.plot(angles, values, linewidth=1.5, linestyle='-', color=color, zorder=2, clip_on=False)
-            ax.fill(angles, values, color=color, alpha=0.05, zorder=1)
+            # ax.fill(angles, values, color=color, alpha=0.05, zorder=1)
 
             legend_patches.append(mpatches.Patch(color=color, label=agent))
 
