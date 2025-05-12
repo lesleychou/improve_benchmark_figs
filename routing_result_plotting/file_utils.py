@@ -333,7 +333,7 @@ def plot_spider_charts(save_result_path, sample_num):
         angles += angles[:1]  # Close the loop
 
         # Create the plot with specific figure size for paper
-        fig, ax = plt.subplots(figsize=(6, 6), subplot_kw=dict(projection='polar'))
+        fig, ax = plt.subplots(figsize=(5.5, 5.5), subplot_kw=dict(projection='polar'))
 
         # Set the category labels with consistent formatting
         plt.xticks(angles[:-1], category_labels, fontsize=12, va='center')
