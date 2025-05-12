@@ -92,6 +92,9 @@ def plot_results(save_result_path, sample_num):
     """
     summary_results = {}
 
+    # Set font family to Arial
+    plt.rcParams['font.family'] = 'Arial'
+
     # Iterate through each promptagent folder
     for promptagent in os.listdir(save_result_path):
         promptagent_path = os.path.join(save_result_path, promptagent)
@@ -156,7 +159,7 @@ def plot_results(save_result_path, sample_num):
         print(f"Processed {promptagent}: Success Rate = {success_rate:.2f}%, Safety Rate = {safety_rate:.2f}%,success_margin = {success_margin:.2f}, safety_margin = {safety_margin:.2f}")
 
     # Create figure with higher DPI and specific size
-    fig, ax = plt.subplots(figsize=(7, 6), dpi=300)
+    fig, ax = plt.subplots(figsize=(6.5, 5.5), dpi=300)
 
     # Professional color palette - Option 1: Scientific color scheme
     colors = ['#0073C2', '#EFC000', '#868686', '#CD534C', '#7AA6DC', '#003C67']
@@ -187,8 +190,8 @@ def plot_results(save_result_path, sample_num):
     ax.set_axisbelow(True)  # Place grid behind points
 
     # Set labels and title with improved fonts
-    ax.set_xlabel("Safety Rate", fontsize=20, fontweight='bold')
-    ax.set_ylabel("Success Rate", fontsize=20, fontweight='bold')
+    ax.set_xlabel("Safety Rate", fontsize=20, fontweight='bold', labelpad=10)
+    ax.set_ylabel("Success Rate", fontsize=20, fontweight='bold', labelpad=10)
     # ax.set_title(f"Success vs. Safety Analysis\n(Top {sample_num} samples per error type)",
     #              fontsize=20,
     #              fontweight='bold',
@@ -201,13 +204,6 @@ def plot_results(save_result_path, sample_num):
     # Customize ticks
     ax.tick_params(axis='both', which='major', labelsize=20)
 
-    # Add legend with improved styling
-    legend = ax.legend(loc='upper left',
-                      fontsize=20,
-                      frameon=True,
-                      fancybox=False,
-                      edgecolor='black')
-
     # Adjust layout to prevent label cutoff
     plt.tight_layout()
 
@@ -217,7 +213,35 @@ def plot_results(save_result_path, sample_num):
                 dpi=300,
                 bbox_inches='tight',
                 pad_inches=0.2)
+
+    legend_handles, legend_labels = ax.get_legend_handles_labels()
+
     plt.close()
+
+    # Put the legend in a separate figure
+    legend_path = os.path.join("figs", f"summary_plot_legend_top_{sample_num}")
+    legend_fig, legend_ax = plt.subplots(figsize=(8, 2), dpi=300)
+    legend_ax.axis('off')
+
+    # Add legend with improved styling
+    legend = legend_ax.legend(legend_handles, legend_labels,
+                            ncol=len(legend_handles),
+                            fontsize=20,
+                            frameon=False,
+                            fancybox=False,
+                            edgecolor='black')
+
+    legend_fig.tight_layout()
+    # # Save as PDF for better quality
+    # plt.savefig(f"{legend_path}.pdf",
+    #             dpi=300,
+    #             bbox_inches='tight',
+    #             pad_inches=0.2)
+
+    legend_fig.savefig(f"{legend_path}.png",
+                        dpi=300,
+                        bbox_inches='tight',
+                        pad_inches=0.2)
 
     print(f"Plot saved to {output_image_path}")
 
@@ -496,6 +520,6 @@ def plot_spider_charts(save_result_path, sample_num):
 if __name__ == "__main__":
     save_result_path = "all_agents"
 
-    # plot_results(save_result_path, 10)
-    # plot_results(save_result_path, 150)
+    plot_results(save_result_path, 10)
+    plot_results(save_result_path, 150)
     plot_spider_charts(save_result_path, 150)
