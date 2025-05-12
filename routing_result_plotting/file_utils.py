@@ -190,8 +190,8 @@ def plot_results(save_result_path, sample_num):
     ax.set_axisbelow(True)  # Place grid behind points
 
     # Set labels and title with improved fonts
-    ax.set_xlabel("Safety Rate", fontsize=20, fontweight='bold', labelpad=10)
-    ax.set_ylabel("Success Rate", fontsize=20, fontweight='bold', labelpad=10)
+    ax.set_xlabel("Safety Rate", fontsize=20, fontweight='normal', labelpad=10)
+    ax.set_ylabel("Success Rate", fontsize=20, fontweight='normal', labelpad=10)
     # ax.set_title(f"Success vs. Safety Analysis\n(Top {sample_num} samples per error type)",
     #              fontsize=20,
     #              fontweight='bold',
@@ -202,7 +202,7 @@ def plot_results(save_result_path, sample_num):
     ax.set_ylim(-0.02, 1.02)
 
     # Customize ticks
-    ax.tick_params(axis='both', which='major', labelsize=20)
+    ax.tick_params(axis='both', which='major', labelsize=18)
 
     # Adjust layout to prevent label cutoff
     plt.tight_layout()
