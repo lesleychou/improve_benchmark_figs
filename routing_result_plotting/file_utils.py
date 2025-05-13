@@ -198,11 +198,15 @@ def plot_results(save_result_path, sample_num):
     #              pad=20)
 
     # Set axis ranges with padding
-    ax.set_xlim(-0.02, 1.02)
-    ax.set_ylim(-0.02, 1.02)
+    ax.set_xlim(-0.0, 1.00)
+    ax.set_ylim(-0.0, 1.00)
 
     # Customize ticks
     ax.tick_params(axis='both', which='major', labelsize=18)
+
+    # Remove top and right spines
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
 
     # Adjust layout to prevent label cutoff
     plt.tight_layout()
