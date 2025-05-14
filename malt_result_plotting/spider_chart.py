@@ -162,6 +162,12 @@ def main():
 
     print(f"Spider charts saved to figs/malt_correctness_spider_merged.pdf, figs/malt_safety_spider_merged.pdf, and figs/malt_latency_spider_merged.pdf")
 
+    # for all pdf file under "figs" folder, crop the margins to 0
+    for file in os.listdir("figs"):
+        if file.endswith(".pdf"):
+            os.system(f"pdfcrop --margins 0 {os.path.join('figs', file)} {os.path.join('figs', file)}")
+
+
 def create_spider_chart(data, categories, title, output_path, is_latency=False):
     """Create a polygon-style spider chart with the given data."""
     # Number of variables
@@ -180,6 +186,23 @@ def create_spider_chart(data, categories, title, output_path, is_latency=False):
     # Set the category labels with consistent formatting
     formatted_categories = [cat.replace(',', '\n') for cat in categories]
     plt.xticks(angles[:-1], formatted_categories)
+    
+    # Set consistent text alignment for the category labels
+    for angle, label in zip(angles[:-1], ax.get_xticklabels()):
+        if angle == 0:
+            label.set_horizontalalignment('left')
+        elif angle == np.pi:
+            label.set_horizontalalignment('right')
+        elif angle in (np.pi / 2, 3 * np.pi / 2):
+            label.set_horizontalalignment('center')
+        elif 0 < angle < np.pi / 2:
+            label.set_horizontalalignment('left')
+        elif np.pi / 2 < angle < np.pi:
+            label.set_horizontalalignment('right')
+        elif np.pi < angle < 3 * np.pi / 2:
+            label.set_horizontalalignment('right')
+        else:
+            label.set_horizontalalignment('left')
     
     # Set y-limits and ticks based on data type with consistent formatting
     if is_latency:
