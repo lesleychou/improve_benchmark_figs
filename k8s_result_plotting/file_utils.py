@@ -233,21 +233,21 @@ def plot_spider_charts_for_agents(save_result_path, number_query):
     # Error type abbreviation mapping - you can customize this for the k8s context
     # Example mapping based on common error types in k8s
     error_abbrev = {
-        "remove_ingress": "RI",
-        "add_ingress": "AI",
-        "change_port": "CP",
-        "change_protocol": "CPR",
-        "add_egress": "AE",
-        "remove_ingress+add_ingress": "RI+AI",
-        "remove_ingress+change_port": "RI+CP",
-        "remove_ingress+change_protocol": "RI+CPR",
-        "add_ingress+change_port": "AI+CP",
-        "add_ingress+change_protocol": "AI+CPR",
-        "change_port+change_protocol": "CP+CPR",
-        "change_port+add_egress": "CP+AE",
-        "change_protocol+add_egress": "CPR+AE",
-        "remove_ingress+add_egress": "RI+AE",
-        "add_ingress+add_egress": "AI+AE"
+        "remove_ingress": "level-1\nRI",
+        "add_ingress": "level-1\nAI",
+        "change_port": "level-1\nCP",
+        "change_protocol": "level-1\nCPR",
+        "add_egress": "level-1\nAE",
+        "remove_ingress+add_ingress": "level-2\nRI+AI",
+        "remove_ingress+change_port": "level-2\nRI+CP",
+        "remove_ingress+change_protocol": "level-2\nRI+CPR",
+        "add_ingress+change_port": "level-2\nAI+CP",
+        "add_ingress+change_protocol": "level-2\nAI+CPR",
+        "change_port+change_protocol": "level-2\nCP+CPR",
+        "change_port+add_egress": "level-3\nCP+AE",
+        "change_protocol+add_egress": "level-3\nCPR+AE",
+        "remove_ingress+add_egress": "level-3\nRI+AE",
+        "add_ingress+add_egress": "level-3\nAI+AE"
     }
     
     # Set global plotting style
@@ -317,7 +317,20 @@ def plot_spider_charts_for_agents(save_result_path, number_query):
     all_error_types = set()
     for agent_data in agent_results.values():
         all_error_types.update(agent_data.keys())
-    categories = sorted(list(all_error_types))
+    
+    # Sort categories by level 
+    def get_level(error_type):
+        if error_type in error_abbrev:
+            abbrev = error_abbrev[error_type]
+            if "level-1" in abbrev:
+                return 1
+            elif "level-2" in abbrev:
+                return 2
+            elif "level-3" in abbrev:
+                return 3
+        return 4  # For any unknown categories
+    
+    categories = sorted(list(all_error_types), key=get_level)
     
     # Create abbreviated category labels
     category_labels = [error_abbrev.get(cat, cat) for cat in categories]
