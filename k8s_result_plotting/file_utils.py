@@ -9,6 +9,15 @@ import matplotlib.pyplot as plt
 from scipy import stats
 import matplotlib.patches as mpatches
 
+# Create a consistent color mapping for all agent methods
+AGENT_COLOR_MAP = {
+    "GPT+CoT": "#1f77b4",        # Blue
+    "GPT+Fewshot": "#ff7f0e",    # Orange
+    "QWen+CoT": "#2ca02c",       # Green
+    "QWen+Fewshot": "#d62728",   # Red
+    "GPT+ReAct": "#9467bd"       # Purple
+}
+
 def summary_different_agent(directory, number_query):
     summary_results = {}
 
@@ -141,8 +150,14 @@ def plot_summary_results(directory_path, number_query):
     # Create figure with higher DPI and specific size
     fig, ax = plt.subplots(figsize=(6.5, 5.5), dpi=300)
     
-    # Professional color palette - Scientific color scheme
-    colors = ['#0073C2', '#EFC000', '#868686', '#CD534C', '#7AA6DC', '#003C67']
+    # Mapping for agent names in the legend
+    agent_name_mapping = {
+        "React_GPT": "GPT+ReAct",
+        "few_shot_basic_GPT": "GPT+Fewshot",
+        "cot_Qwen": "QWen+CoT",
+        "few_shot_basic_Qwen": "QWen+Fewshot",
+        "cot_GPT": "GPT+CoT"
+    }
 
     # Iterate through each folder's summary and plot points
     for i, (folder, stats) in enumerate(summary_results.items()):
@@ -151,19 +166,25 @@ def plot_summary_results(directory_path, number_query):
         x_err = stats["safety_margin"] / 100  # Error bar for safety rate (converted to 0-1 scale)
         y_err = stats["success_margin"] / 100  # Error bar for success rate (converted to 0-1 scale)
 
+        # Get the mapped agent name
+        agent_name = agent_name_mapping.get(folder, folder)
+        
+        # Get the color from the color map
+        color = AGENT_COLOR_MAP.get(agent_name, "#333333")  # Default to dark gray if not found
+
         # Plot points and error bars with improved styling
         ax.errorbar(x, y, 
                    xerr=x_err, 
                    yerr=y_err,
                    fmt='o',
-                   color=colors[i % len(colors)],
+                   color=color,
                    markersize=8,
                    markeredgewidth=1.5,
                    markeredgecolor='white',
                    capsize=5,
                    capthick=1.5,
                    elinewidth=1.5,
-                   label=folder)
+                   label=agent_name)
 
     # Customize grid
     ax.grid(True, linestyle='--', alpha=0.3, which='major')
@@ -230,6 +251,15 @@ def plot_spider_charts_for_agents(save_result_path, number_query):
         save_result_path (str): Root directory path containing agent result JSON files.
         number_query (int): Number of queries to analyze and plot for each error type.
     """
+    # Mapping for agent names in the legend
+    agent_name_mapping = {
+        "React_GPT": "GPT+ReAct",
+        "few_shot_basic_GPT": "GPT+Fewshot",
+        "cot_Qwen": "QWen+CoT",
+        "few_shot_basic_Qwen": "QWen+Fewshot",
+        "cot_GPT": "GPT+CoT"
+    }
+    
     # Error type abbreviation mapping - you can customize this for the k8s context
     # Example mapping based on common error types in k8s
     error_abbrev = {
@@ -267,9 +297,6 @@ def plot_spider_charts_for_agents(save_result_path, number_query):
     # Dictionary to store results by agent and error type
     agent_results = {}
     
-    # Professional color scheme
-    colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#17becf']  # Professional color scheme
-
     # Iterate through each agent directory
     for agent in os.listdir(save_result_path):
         agent_path = os.path.join(save_result_path, agent)
@@ -284,15 +311,18 @@ def plot_spider_charts_for_agents(save_result_path, number_query):
 
         with open(result_file, "r") as f:
             results = json.load(f)
+        
+        # Use the mapped name if available, otherwise use the original name
+        agent_name = agent_name_mapping.get(agent, agent)
             
         # Initialize agent results
-        if agent not in agent_results:
-            agent_results[agent] = {}
+        if agent_name not in agent_results:
+            agent_results[agent_name] = {}
 
         # Collect success, safety, and iteration metrics for each error type
         for error_type, error_data in results.items():
-            if error_type not in agent_results[agent]:
-                agent_results[agent][error_type] = {
+            if error_type not in agent_results[agent_name]:
+                agent_results[agent_name][error_type] = {
                     "success": [],
                     "safety": [],
                     "iteration": []
@@ -309,9 +339,9 @@ def plot_spider_charts_for_agents(save_result_path, number_query):
             normalized_iteration = min(avg_iteration * 10, 160)
             
             # Store the metrics
-            agent_results[agent][error_type]["success"].append(success_rate * 100)      # Convert to percentage 
-            agent_results[agent][error_type]["safety"].append(safety_rate * 100)        # Convert to percentage
-            agent_results[agent][error_type]["iteration"].append(normalized_iteration)  # Already normalized
+            agent_results[agent_name][error_type]["success"].append(success_rate * 100)      # Convert to percentage 
+            agent_results[agent_name][error_type]["safety"].append(safety_rate * 100)        # Convert to percentage
+            agent_results[agent_name][error_type]["iteration"].append(normalized_iteration)  # Already normalized
 
     # Get all unique error types
     all_error_types = set()
@@ -418,7 +448,9 @@ def plot_spider_charts_for_agents(save_result_path, number_query):
             # Close the plot by appending the first value
             values = np.concatenate((rates, [rates[0]]))
             
-            color = colors[idx % len(colors)]
+            # Get the color from the color map
+            color = AGENT_COLOR_MAP.get(agent, "#333333")  # Default to dark gray if not found
+            
             # Plot line with higher z-order to ensure it's above the fill
             ax.plot(angles, values, linewidth=1.5, linestyle='-', color=color, zorder=2, clip_on=False)
             # Lighter fill

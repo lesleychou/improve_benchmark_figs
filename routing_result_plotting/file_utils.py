@@ -233,7 +233,7 @@ def plot_results(save_result_path, sample_num):
     plt.tight_layout()
 
     # Save the chart with high quality
-    output_image_path = os.path.join("figs", f"summary_plot_top_{sample_num}.pdf")
+    output_image_path = os.path.join("figs", f"route_summary_plot_top_{sample_num}.pdf")
     plt.savefig(output_image_path,
                 dpi=300,
                 bbox_inches='tight',
@@ -244,7 +244,7 @@ def plot_results(save_result_path, sample_num):
     plt.close()
 
     # Put the legend in a separate figure
-    legend_path = os.path.join("figs", f"summary_plot_legend_top_{sample_num}")
+    legend_path = os.path.join("figs", f"route_summary_plot_legend_top_{sample_num}")
     legend_fig, legend_ax = plt.subplots(figsize=(8, 2), dpi=300)
     legend_ax.axis('off')
 

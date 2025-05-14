@@ -249,17 +249,9 @@ def create_spider_chart(data, categories, title, output_path, is_latency=False):
         
         # Plot line with higher z-order to ensure it's above the fill
         ax.plot(angles, values, linewidth=1.5, linestyle='-', color=color, zorder=2, clip_on=False)
-        ax.fill(angles, values, color=color, alpha=0.1, zorder=1)
+        # Removed the fill line to keep only the outline
         
         legend_patches.append(mpatches.Patch(color=color, label=agent_name))
-    
-    # # Add legend with improved positioning and styling
-    # legend = plt.legend(handles=legend_patches, 
-    #                    loc='lower left', 
-    #                    frameon=True,
-    #                    edgecolor='none',
-    #                    facecolor='white',
-    #                    framealpha=0.8)
     
     # Adjust layout to prevent text cutoff
     plt.tight_layout()
