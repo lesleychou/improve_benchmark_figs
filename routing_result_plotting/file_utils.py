@@ -212,7 +212,7 @@ def plot_results(save_result_path, sample_num):
     plt.tight_layout()
 
     # Save the chart with high quality
-    output_image_path = os.path.join("figs", f"summary_plot_top_{sample_num}.png")
+    output_image_path = os.path.join("figs", f"summary_plot_top_{sample_num}.pdf")
     plt.savefig(output_image_path,
                 dpi=300,
                 bbox_inches='tight',
@@ -242,7 +242,7 @@ def plot_results(save_result_path, sample_num):
     #             bbox_inches='tight',
     #             pad_inches=0.2)
 
-    legend_fig.savefig(f"{legend_path}.png",
+    legend_fig.savefig(f"{legend_path}.pdf",
                         dpi=300,
                         bbox_inches='tight',
                         pad_inches=0.2)
@@ -480,7 +480,7 @@ def plot_spider_charts(save_result_path, sample_num):
         #             pad_inches=0.2)
 
         # Also save as PNG for easy viewing
-        plt.savefig(f"{output_path}.png",
+        plt.savefig(f"{output_path}.pdf",
                     dpi=300,
                     bbox_inches='tight',
                     pad_inches=0.2)
@@ -509,12 +509,12 @@ def plot_spider_charts(save_result_path, sample_num):
         #             bbox_inches='tight',
         #             pad_inches=0.2)
 
-        legend_fig.savefig(f"{legend_path}.png",
+        legend_fig.savefig(f"{legend_path}.pdf",
                            dpi=300,
                            bbox_inches='tight',
                            pad_inches=0.2)
 
-        print(f"Spider chart for {metric} by agent saved to {output_path}.png")
+        print(f"Spider chart for {metric} by agent saved to {output_path}.pdf")
 
     # Print the abbreviation mapping for reference
     print("\nError Type Abbreviations:")
@@ -628,3 +628,8 @@ if __name__ == "__main__":
     plot_results(save_result_path, 10)
     plot_results(save_result_path, 150)
     plot_spider_charts(save_result_path, 150)
+
+    # for all pdf file under "figs" folder, crop the margins to 0
+    for file in os.listdir("figs"):
+        if file.endswith(".pdf"):
+            os.system(f"pdfcrop --margins 0 {os.path.join('figs', file)} {os.path.join('figs', file)}")
