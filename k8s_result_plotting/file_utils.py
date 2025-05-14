@@ -304,9 +304,9 @@ def plot_spider_charts_for_agents(save_result_path, number_query):
             # Assuming there's an average_iteration field, else use a default
             avg_iteration = error_data.get("average_iteration", 0)
             
-            # Normalize iteration to 0-100 scale (assuming max of 10 iterations would be 100%)
+            # Normalize iteration to 0-160 scale (assuming max of 16 iterations would be 160%)
             # You may need to adjust this scaling based on your actual iteration ranges
-            normalized_iteration = min(avg_iteration * 10, 100)
+            normalized_iteration = min(avg_iteration * 10, 160)
             
             # Store the metrics
             agent_results[agent][error_type]["success"].append(success_rate * 100)      # Convert to percentage 
@@ -368,8 +368,8 @@ def plot_spider_charts_for_agents(save_result_path, number_query):
         # Set y-limits and ticks
         if metric == "Iteration":
             # Use the original scale for iteration
-            ax.set_ylim(0, 100)
-            plt.yticks([20, 40, 60, 80, 100], ["2", "4", "6", "8", "10"], color="black", ha='right', va='bottom')
+            ax.set_ylim(0, 160)
+            plt.yticks([0, 40, 80, 120, 160], ["0", "4", "8", "12", "16"], color="black", ha='right', va='bottom')
             
             # Set radial axis label position
             ax.set_rlabel_position(angles[1] * 180 / np.pi)
@@ -385,7 +385,7 @@ def plot_spider_charts_for_agents(save_result_path, number_query):
         ax.spines['polar'].set_visible(False)
         
         # Draw polygon grid lines with more professional styling
-        grid_values = [20, 40, 60, 80, 100]
+        grid_values = [20, 40, 60, 80, 100] if metric != "Iteration" else [20, 40, 80, 120, 160]
             
         for i, grid_val in enumerate(grid_values):
             alpha = 1 if i == len(grid_values) - 1 else 0.15
