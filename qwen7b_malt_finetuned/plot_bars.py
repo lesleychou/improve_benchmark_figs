@@ -7,6 +7,10 @@ from scipy import stats
 import matplotlib as mpl
 from matplotlib import rcParams
 
+# create 'figs' folder if not exists
+if not os.path.exists("figs"):
+    os.makedirs("figs")
+    
 # Set global matplotlib parameters for professional ML paper look
 def set_paper_style():
     plt.style.use('seaborn-v0_8-whitegrid')

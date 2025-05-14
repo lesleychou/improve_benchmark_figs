@@ -5,6 +5,10 @@ from scipy import stats
 import numpy as np
 import matplotlib.patches as mpatches
 
+# create 'figs' folder if not exists
+if not os.path.exists("figs"):
+    os.makedirs("figs")
+
 # Create a consistent color mapping for all agent methods
 AGENT_COLOR_MAP = {
     "GPT+CoT": "#1f77b4",        # Blue
