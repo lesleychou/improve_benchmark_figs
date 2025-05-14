@@ -155,13 +155,18 @@ def create_spider_chart(data, categories, title, output_path, is_latency=False):
     plt.rcParams['font.family'] = 'Arial'
     
     # Set the category labels with consistent formatting
-    plt.xticks(angles[:-1], categories)
+    formatted_categories = [cat.replace(',', '\n') for cat in categories]
+    plt.xticks(angles[:-1], formatted_categories)
     
     # Set y-limits and ticks based on data type with consistent formatting
     if is_latency:
-        max_latency = max(max(agent_values.values()) for agent_values in data.values())
-        y_max = math.ceil(max_latency / 5) * 5
-        y_ticks = np.linspace(0, y_max, 6)
+        # Set fixed max value at 25 for consistent display
+        y_max = 25
+        # Create 6 ticks from 0 to 25 (inclusive)
+        y_ticks = np.linspace(0, y_max, 6)  # Will create [0, 5, 10, 15, 20, 25]
+        # Set y-limits to match the max value
+        ax.set_ylim(0, y_max)
+        # Display the tick labels with consistent formatting
         plt.yticks(y_ticks, [f"{tick:.1f}s" for tick in y_ticks], color="black")
     else:
         ax.set_ylim(0, 100)
