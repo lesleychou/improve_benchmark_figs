@@ -31,7 +31,6 @@ def plot_correctness(data, names, levels, output_name='qwen7b_performance_by_lev
     # Set paper style
     set_paper_style()
     
-def main():
     # Define paths
     results_dir = 'finetuned_results'
     qwen_rel_paths = [
@@ -107,7 +106,7 @@ def main():
         multiplier += 1
 
     # Add some text for labels, title and custom x-axis tick labels, etc.
-    ax.set_ylabel('Proportion Correct', fontsize=14, labelpad=10)
+    ax.set_ylabel('Correctness SEM', fontsize=14, labelpad=10)
     ax.set_xlabel('Level of Finetune Training Data', fontsize=14, labelpad=10)
 
     # remove top and right spines
@@ -116,13 +115,13 @@ def main():
 
     # ax.set_title('Performance of Qwen-7B Finetunes on Different Network Query Levels', fontsize=16)
     ax.set_xticks(x + width, names)
-    ax.legend(loc='upper center', ncols=3, bbox_to_anchor=(0.5, 1.35), frameon=False,
+    ax.legend(loc='upper center', ncols=3, bbox_to_anchor=(0.5, 1.15), frameon=False,
 
               handlelength=0.75, handleheight=0.75, fontsize=12)
     ax.tick_params(axis='both', which='major', labelsize=12)
 
     # Save figure
-    plt.savefig('figs/qwen7b_performance_by_level.png', dpi=300, bbox_inches='tight')
+    plt.savefig(f'figs/{output_name}.pdf', dpi=300, bbox_inches='tight')
 
 def plot_safety(data, names, levels, output_name='qwen7b_safety_by_level'):
     # Set paper style
@@ -168,74 +167,44 @@ def plot_safety(data, names, levels, output_name='qwen7b_safety_by_level'):
     print("Safety rates:", bar_heights)
     print("Safety 95% confidence intervals:", bar_errors)
     
-    # Different color palette for safety plots
-    colors = ['#8E44AD', '#2471A3', '#17A589']  # Professional color scheme for safety
-    
     # Create visualization
     x = np.arange(len(names))  # the label locations
     width = 0.25  # the width of the bars
     multiplier = 0
     
-    # Create figure with appropriate aspect ratio for publications
-    fig, ax = plt.subplots(figsize=(8, 5))
+    # Set the font to Arial
+    plt.rcParams['font.family'] = 'Arial'
     
-    # Add subtle background
-    ax.set_facecolor('#F8F8F8')
+    fig, ax = plt.subplots(layout='constrained', figsize=(6, 3.5))
+    
+    # Define safety colors - different from correctness plot
+    safety_colors = ['#8E44AD', '#2471A3', '#17A589']  # Purple, Blue, Teal
     
     for i, (level, safety_rate) in enumerate(bar_heights.items()):
         offset = width * multiplier
-        rects = ax.bar(x + offset, safety_rate, width, label=f'Level {level[-1]}', 
-                      yerr=bar_errors[level], 
-                      capsize=4,
-                      color=colors[i],
-                      edgecolor='black',
-                      linewidth=0.5,
-                      alpha=0.85,
-                      error_kw={'elinewidth': 1, 'capthick': 1, 'ecolor': 'black', 'alpha': 0.8})
-        
-        # Add value labels with cleaner formatting
-        for rect, value in zip(rects, safety_rate):
-            height = rect.get_height()
-            ax.text(rect.get_x() + rect.get_width()/2., height + 0.02,
-                   f'{value:.2f}', ha='center', va='bottom', fontsize=9, fontweight='bold')
-        
+        rects = ax.bar(x + offset, safety_rate, width, label=level,
+                      yerr=bar_errors[level],
+                      capsize=5,
+                      color=safety_colors[i],
+                      error_kw={'elinewidth': 0.5, 'capthick': 0.5})
+        ax.bar_label(rects, padding=3, fmt='%.2f', fontsize=9)
         multiplier += 1
     
-    # Improve y-axis formatting
-    ax.set_ylabel('Safety SEM')
-    ax.set_ylim(0, 1.1)  # Add headroom for labels
+    # Add some text for labels, title and custom x-axis tick labels, etc.
+    ax.set_ylabel('Safety SEM', fontsize=14, labelpad=10)
+    ax.set_xlabel('Level of Finetune Training Data', fontsize=14, labelpad=10)
     
-    # Add minor ticks for more precision
-    ax.yaxis.set_minor_locator(plt.MultipleLocator(0.05))
-    
-    # Refine x-axis
-    ax.set_xlabel('Training Data Level')
-    ax.set_xticks(x + width)
-    ax.set_xticklabels([f'Level {n[-1]}' if n != 'all' else 'All Levels' for n in names])
-    
-    # Improve legend with better positioning
-    ax.legend(loc='upper left', ncols=3, 
-             bbox_to_anchor=(0, 1.02, 1, 0.1), 
-             mode="expand", borderaxespad=0)
-    
-    # Remove unnecessary spines
+    # remove top and right spines
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
     
-    # Add a subtle box around the plot
-    for spine in ['left', 'bottom']:
-        ax.spines[spine].set_linewidth(0.8)
-        ax.spines[spine].set_color('#333333')
-        
-    # Tighten layout
-    plt.tight_layout()
+    ax.set_xticks(x + width, names)
+    ax.legend(loc='upper center', ncols=3, bbox_to_anchor=(0.5, 1.15), frameon=False,
+              handlelength=0.75, handleheight=0.75, fontsize=12)
+    ax.tick_params(axis='both', which='major', labelsize=12)
     
-    # Save figures
-    os.makedirs('figs', exist_ok=True)
+    # Save figure
     plt.savefig(f'figs/{output_name}.pdf', dpi=300, bbox_inches='tight')
-    plt.savefig(f'figs/{output_name}.png', dpi=300, bbox_inches='tight')
-    
-    plt.show()
 
 def main():
     # Define paths
