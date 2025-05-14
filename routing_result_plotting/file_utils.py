@@ -281,6 +281,17 @@ def plot_spider_charts(save_result_path, sample_num):
         "drop_traffic_to_from_subnet+wrong_routing_table": "level-2\nDT+WR"
     }
 
+    # Get the level from the abbreviation for sorting
+    def get_error_level(error_type):
+        abbrev = error_abbrev.get(error_type, "")
+        if "level-1" in abbrev:
+            return 1
+        elif "level-2" in abbrev:
+            return 2
+        elif "level-3" in abbrev:
+            return 3
+        return 4  # Default for unknown levels
+
     # Set global plotting style
     # plt.style.use('seaborn-v0_8-white')  # Clean, professional base style
     plt.rcParams.update({
@@ -346,7 +357,9 @@ def plot_spider_charts(save_result_path, sample_num):
     all_error_types = set()
     for agent_data in agent_results.values():
         all_error_types.update(agent_data.keys())
-    categories = sorted(list(all_error_types))
+    
+    # Sort categories by level first, then by name
+    categories = sorted(list(all_error_types), key=lambda x: (get_error_level(x), x))
 
     # Create abbreviated category labels
     category_labels = [error_abbrev.get(cat, cat) for cat in categories]
@@ -548,6 +561,17 @@ def print_safety_rates(save_result_path):
         "drop_traffic_to_from_subnet+wrong_routing_table": "level-2,DT+WR"
     }
 
+    # Get the level from the abbreviation for sorting
+    def get_error_level(error_type):
+        abbrev = error_abbrev.get(error_type, "")
+        if "level-1" in abbrev:
+            return 1
+        elif "level-2" in abbrev:
+            return 2
+        elif "level-3" in abbrev:
+            return 3
+        return 4  # Default for unknown levels
+
     # Dictionary to store results by agent and error type
     agent_results = {}
     
@@ -590,8 +614,8 @@ def print_safety_rates(save_result_path):
     for agent_data in agent_results.values():
         all_error_types.update(agent_data.keys())
     
-    # Convert to list and sort
-    categories = sorted(list(all_error_types))
+    # Sort categories by level first, then by name
+    categories = sorted(list(all_error_types), key=lambda x: (get_error_level(x), x))
     
     # Print header
     print("\nSafety Rates for Each Agent by Error Type:")
