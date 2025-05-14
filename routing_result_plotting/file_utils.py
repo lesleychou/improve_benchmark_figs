@@ -212,7 +212,7 @@ def plot_results(save_result_path, sample_num):
 
     # Set labels and title with improved fonts
     ax.set_xlabel("Safety Rate", fontsize=20, fontweight='normal', labelpad=10)
-    ax.set_ylabel("Success Rate", fontsize=20, fontweight='normal', labelpad=10)
+    ax.set_ylabel("Correctness Rate", fontsize=20, fontweight='normal', labelpad=10)
     # ax.set_title(f"Success vs. Safety Analysis\n(Top {sample_num} samples per error type)",
     #              fontsize=20,
     #              fontweight='bold',

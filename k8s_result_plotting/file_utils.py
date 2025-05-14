@@ -192,7 +192,7 @@ def plot_summary_results(directory_path, number_query):
     
     # Set labels with improved fonts
     ax.set_xlabel("Safety Rate", fontsize=20, fontweight='normal', labelpad=10)
-    ax.set_ylabel("Success Rate", fontsize=20, fontweight='normal', labelpad=10)
+    ax.set_ylabel("Correctness Rate", fontsize=20, fontweight='normal', labelpad=10)
 
     # Set axis ranges with padding
     ax.set_xlim(-0.0, 1.00)

@@ -6,6 +6,7 @@ import os
 import time
 import matplotlib.pyplot as plt
 import json
+import matplotlib.patches as mpatches
 
 import argparse
 from scipy import stats
@@ -30,15 +31,27 @@ AGENT_NAME_MAPPING = {
     "few_shot_GPT": "GPT+Fewshot",  # Add mapped name for few_shot_GPT
 }
 
-
-plt.rcParams['font.size'] = '20'
-plt.rcParams['axes.titleweight'] = 'bold'
-plt.rcParams['axes.labelweight'] = 'bold'
 def main():
     parser = argparse.ArgumentParser(description='Evaluate semantic error detection performance')
     parser.add_argument('--sampling_method', type=str, choices=['first', 'random'], default='first',
                         help='Method to sample: "first" takes first N samples, "random" takes random N samples')
+    parser.add_argument('--separate_legend', action='store_true',
+                        help='Create a separate legend file')
     args = parser.parse_args()
+
+    # Set font family to Arial
+    plt.rcParams['font.family'] = 'Arial'
+    
+    # Set global plotting style
+    plt.rcParams.update({
+        'font.size': 16,               # Base font size
+        'axes.labelsize': 20,          # Size for axis labels
+        'axes.titlesize': 20,          # Size for subplot titles
+        'figure.titlesize': 20,        # Size for figure titles
+        'legend.fontsize': 16,         # Size for legend text
+        'xtick.labelsize': 18,         # Size for x-tick labels
+        'ytick.labelsize': 18,         # Size for y-tick labels
+    })
 
     # Use merged files directly, like in spider_chart.py
     input_path = [
@@ -170,10 +183,10 @@ def main():
             })
         
         # Create a new figure for each sample size with professional styling
-        plt.figure(figsize=(7, 6), dpi=300)
+        fig, ax = plt.subplots(figsize=(6.5, 5.5), dpi=300)
         
-        # Use the consistent color map instead of a generic color palette
         # Plot the scatter points with error bars
+        legend_handles = []
         for j in range(len(safety_data)):
             s_data = safety_data[j]
             c_data = correctness_data[j]
@@ -181,7 +194,7 @@ def main():
             # Get color from the consistent color map
             color = AGENT_COLOR_MAP.get(s_data['name'], "#333333")  # Default to dark gray if not found
             
-            plt.errorbar(
+            ax.errorbar(
                 s_data['pass_rate'] / 100,  # Convert to decimal
                 c_data['pass_rate'] / 100,  # Convert to decimal
                 xerr=s_data['error_margin'] / 100,  # Convert to decimal
@@ -196,33 +209,72 @@ def main():
                 elinewidth=1.5,
                 label=s_data['name']
             )
+            
+            # Add to legend handles
+            legend_handles.append(mpatches.Patch(color=color, label=s_data['name']))
 
         # Customize grid
-        plt.grid(True, linestyle='--', alpha=0.3, which='major')
-        plt.gca().set_axisbelow(True)  # Place grid behind points
+        ax.grid(True, linestyle='--', alpha=0.3, which='major')
+        ax.set_axisbelow(True)  # Place grid behind points
 
-        # Set labels
-        plt.xlabel('Safety Rate')
-        plt.ylabel('Success Rate')
-        # plt.title(f'N = {sample_size}')  # Comment out title as in file_utils.py
+        # Set labels with improved fonts
+        ax.set_xlabel("Safety Rate", fontsize=20, fontweight='normal', labelpad=10)
+        ax.set_ylabel("Correctness Rate", fontsize=20, fontweight='normal', labelpad=10)
 
         # Set axis ranges with padding
-        plt.xlim(-0.02, 1.02)
-        plt.ylim(-0.02, 1.02)
+        ax.set_xlim(-0.0, 1.00)
+        ax.set_ylim(-0.0, 1.00)
+        
+        # Customize ticks
+        ax.tick_params(axis='both', which='major', labelsize=18)
+        
+        # Remove top and right spines
+        ax.spines['top'].set_visible(False)
+        ax.spines['right'].set_visible(False)
 
-        # Add legend with improved styling
-        legend = plt.legend(loc='lower right',
-                          frameon=True,
-                          fancybox=False,
-                          edgecolor='black')
-
+        # Adjust layout to prevent label cutoff
         plt.tight_layout()
+        
+        # Save file path
+        save_path = f'figs/malt_sampling_{args.sampling_method}_N{sample_size}.pdf'
+        
+        # # If not creating separate legend, add legend to main plot
+        # if not args.separate_legend:
+        #     # Add legend with improved styling
+        #     legend = ax.legend(loc='lower right',
+        #                     frameon=True,
+        #                     fancybox=False,
+        #                     edgecolor='black',
+        #                     fontsize=16)
+
         # Save individual figure
-        plt.savefig(f'figs/malt_sampling_{args.sampling_method}_N{sample_size}.pdf', 
+        plt.savefig(save_path, 
                     dpi=300,
                     bbox_inches='tight',
                     pad_inches=0.2)
         plt.close()
+        
+        # Create separate legend if requested
+        if args.separate_legend:
+            legend_path = f'figs/malt_sampling_{args.sampling_method}_legend_N{sample_size}'
+            legend_fig, legend_ax = plt.subplots(figsize=(8, 2), dpi=300)
+            legend_ax.axis('off')
+            
+            # Add legend with improved styling
+            legend_ax.legend(handles=legend_handles,
+                           loc='center',
+                           ncol=len(legend_handles),
+                           fontsize=20,
+                           frameon=False,
+                           fancybox=False,
+                           edgecolor='black')
+            
+            legend_fig.tight_layout()
+            legend_fig.savefig(f"{legend_path}.pdf",
+                             dpi=300,
+                             bbox_inches='tight',
+                             pad_inches=0.2)
+            plt.close(legend_fig)
 
     print(f"Individual figures saved as figs/malt_sampling_{args.sampling_method}_N[sample_size].pdf")
     
