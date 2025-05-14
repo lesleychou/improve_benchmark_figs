@@ -443,9 +443,111 @@ def plot_spider_charts(save_result_path, sample_num):
     for cat, abbrev in zip(categories, category_labels):
         print(f"{abbrev}: {cat}")
 
+def print_safety_rates(save_result_path):
+    """
+    Print the safety rate for each agent at each error type.
+    
+    Args:
+        save_result_path (str): Root directory path.
+    """
+    # Error type abbreviation mapping
+    error_abbrev = {
+        "disable_routing": "level-1,DR",
+        "disable_interface": "level-1,DI",
+        "remove_ip": "level-1,RI",
+        "drop_traffic_to_from_subnet": "level-1,DT",
+        "wrong_routing_table": "level-1,WR",
+        # For combined error types
+        "disable_routing+disable_interface": "level-2,DR+DI",
+        "disable_routing+remove_ip": "level-2,DR+RI",
+        "disable_routing+drop_traffic_to_from_subnet": "level-3,DR+DT",
+        "disable_routing+wrong_routing_table": "level-2,DR+WR",
+        "disable_interface+remove_ip": "level-3,DI+RI",
+        "disable_interface+drop_traffic_to_from_subnet": "level-2,DI+DT",
+        "disable_interface+wrong_routing_table": "level-3,DI+WR",
+        "remove_ip+drop_traffic_to_from_subnet": "level-3,RI+DT",
+        "remove_ip+wrong_routing_table": "level-2,RI+WR",
+        "drop_traffic_to_from_subnet+wrong_routing_table": "level-2,DT+WR"
+    }
+
+    # Dictionary to store results by agent and error type
+    agent_results = {}
+    
+    # Process each promptagent folder
+    for promptagent in os.listdir(save_result_path):
+        promptagent_path = os.path.join(save_result_path, promptagent)
+        if not os.path.isdir(promptagent_path):
+            continue
+            
+        # Load the result JSON file
+        result_path = os.path.join(save_result_path, f"{promptagent}.json")
+        if not os.path.exists(result_path):
+            print(f"Result JSON not found for {promptagent}")
+            continue
+            
+        with open(result_path, "r") as f:
+            results = json.load(f)
+            
+        # Initialize agent results
+        if promptagent not in agent_results:
+            agent_results[promptagent] = {}
+            
+        # Group results by error type for this agent
+        for result in results:
+            errortype = result["detail"]["errortype"]
+            if isinstance(errortype, list):
+                errortype = "+".join(errortype)  # Convert list to string
+                
+            if errortype not in agent_results[promptagent]:
+                agent_results[promptagent][errortype] = {
+                    "success": [],
+                    "safety": [],
+                }
+                
+            agent_results[promptagent][errortype]["success"].append(result["success"])
+            agent_results[promptagent][errortype]["safety"].append(result["safe"])
+    
+    # Get all unique error types
+    all_error_types = set()
+    for agent_data in agent_results.values():
+        all_error_types.update(agent_data.keys())
+    
+    # Convert to list and sort
+    categories = sorted(list(all_error_types))
+    
+    # Print header
+    print("\nSafety Rates for Each Agent by Error Type:")
+    print("=" * 80)
+    
+    # Print header row with error type abbreviations
+    header = "Agent"
+    for cat in categories:
+        abbrev = error_abbrev.get(cat, cat)
+        header += f" | {abbrev}"
+    print(header)
+    print("-" * len(header))
+    
+    # Print safety rates for each agent
+    for agent, agent_data in agent_results.items():
+        row = agent
+        for errortype in categories:
+            if errortype in agent_data and agent_data[errortype]["safety"]:
+                safety_rate = np.mean(agent_data[errortype]["safety"]) * 100
+                row += f" | {safety_rate:.1f}%"
+            else:
+                row += " | N/A"
+        print(row)
+    
+    print("=" * 80)
+    print("Error Type Abbreviations:")
+    for cat in categories:
+        abbrev = error_abbrev.get(cat, cat)
+        print(f"{abbrev}: {cat}")
+
 if __name__ == "__main__":
     save_result_path = "all_agents"
  
     plot_results(save_result_path, 10)
     plot_results(save_result_path, 150)
     plot_spider_charts(save_result_path, 150)
+    print_safety_rates(save_result_path)
