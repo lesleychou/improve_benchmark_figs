@@ -5,6 +5,15 @@ from scipy import stats
 import numpy as np
 import matplotlib.patches as mpatches
 
+# Create a consistent color mapping for all agent methods
+AGENT_COLOR_MAP = {
+    "GPT+CoT": "#1f77b4",        # Blue
+    "GPT+Fewshot": "#ff7f0e",    # Orange
+    "QWen+CoT": "#2ca02c",       # Green
+    "QWen+Fewshot": "#d62728",   # Red
+    "GPT+ReAct": "#9467bd"       # Purple
+}
+
 def static_summarize_results(json_folder, output_file):
     """Summarize results from multiple JSON files in a folder and write to a new JSON file."""
     total_success = 0
@@ -95,6 +104,15 @@ def plot_results(save_result_path, sample_num):
     # Set font family to Arial
     plt.rcParams['font.family'] = 'Arial'
 
+    # Mapping for agent names in the legend
+    agent_name_mapping = {
+        "React_GPT": "GPT+ReAct",
+        "few_shot_basic_GPT": "GPT+Fewshot",
+        "cot_Qwen": "QWen+CoT",
+        "few_shot_basic_Qwen": "QWen+Fewshot",
+        "cot_GPT": "GPT+CoT"
+    }
+
     # Iterate through each promptagent folder
     for promptagent in os.listdir(save_result_path):
         promptagent_path = os.path.join(save_result_path, promptagent)
@@ -160,10 +178,7 @@ def plot_results(save_result_path, sample_num):
 
     # Create figure with higher DPI and specific size
     fig, ax = plt.subplots(figsize=(6.5, 5.5), dpi=300)
-
-    # Professional color palette - Option 1: Scientific color scheme
-    colors = ['#0073C2', '#EFC000', '#868686', '#CD534C', '#7AA6DC', '#003C67']
-
+    
     # Plot each point
     for i, (folder, folder_stats) in enumerate(summary_results.items()):
         x = folder_stats["safety_rate"] / 100
@@ -171,19 +186,25 @@ def plot_results(save_result_path, sample_num):
         x_err = folder_stats["safety_margin"] / 100
         y_err = folder_stats["success_margin"] / 100
 
+        # Get the mapped agent name
+        agent_name = agent_name_mapping.get(folder, folder)
+        
+        # Get the color from the color map
+        color = AGENT_COLOR_MAP.get(agent_name, "#333333")  # Default to dark gray if not found
+
         # Plot points and error bars with improved styling
         ax.errorbar(x, y,
                    xerr=x_err,
                    yerr=y_err,
                    fmt='o',
-                   color=colors[i % len(colors)],
+                   color=color,
                    markersize=8,
                    markeredgewidth=1.5,
                    markeredgecolor='white',
                    capsize=5,
                    capthick=1.5,
                    elinewidth=1.5,
-                   label=folder)
+                   label=agent_name)  # Use mapped name if available
 
     # Customize grid
     ax.grid(True, linestyle='--', alpha=0.3, which='major')
@@ -260,6 +281,14 @@ def plot_spider_charts(save_result_path, sample_num):
         sample_num (int): Number of samples to select for each error type.
     """
 
+    # Mapping for agent names in the legend
+    agent_name_mapping = {
+        "React_GPT": "GPT+ReAct",
+        "few_shot_basic_GPT": "GPT+Fewshot",
+        "cot_Qwen": "QWen+CoT",
+        "few_shot_basic_Qwen": "QWen+Fewshot",
+        "cot_GPT": "GPT+CoT"
+    }
 
     # Error type abbreviation mapping
     error_abbrev = {
@@ -310,9 +339,6 @@ def plot_spider_charts(save_result_path, sample_num):
     # Dictionary to store results by agent and error type
     agent_results = {}
 
-    # Professional color scheme
-    colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#17becf']  # Professional color scheme
-
     # Process each promptagent folder
     for promptagent in os.listdir(save_result_path):
         promptagent_path = os.path.join(save_result_path, promptagent)
@@ -328,9 +354,12 @@ def plot_spider_charts(save_result_path, sample_num):
         with open(result_path, "r") as f:
             results = json.load(f)
 
+        # Use the mapped name if available, otherwise use the original name
+        agent_name = agent_name_mapping.get(promptagent, promptagent)
+        
         # Initialize agent results
-        if promptagent not in agent_results:
-            agent_results[promptagent] = {}
+        if agent_name not in agent_results:
+            agent_results[agent_name] = {}
 
         # Group results by error type for this agent
         for result in results:
@@ -338,20 +367,20 @@ def plot_spider_charts(save_result_path, sample_num):
             if isinstance(errortype, list):
                 errortype = "+".join(errortype)  # Convert list to string
 
-            if errortype not in agent_results[promptagent]:
-                agent_results[promptagent][errortype] = {
+            if errortype not in agent_results[agent_name]:
+                agent_results[agent_name][errortype] = {
                     "success": [],
                     "safety": [],
                     "iterations": []
                 }
 
-            agent_results[promptagent][errortype]["success"].append(result["success"])
-            agent_results[promptagent][errortype]["safety"].append(result["safe"])
+            agent_results[agent_name][errortype]["success"].append(result["success"])
+            agent_results[agent_name][errortype]["safety"].append(result["safe"])
 
             # Calculate iterations from packet loss data
             if "packet_loss" in result:
                 iterations = len(result["packet_loss"])
-                agent_results[promptagent][errortype]["iterations"].append(iterations)
+                agent_results[agent_name][errortype]["iterations"].append(iterations)
 
     # Get all unique error types
     all_error_types = set()
@@ -464,7 +493,9 @@ def plot_spider_charts(save_result_path, sample_num):
             # Close the plot by appending the first value
             values = np.concatenate((rates, [rates[0]]))
 
-            color = colors[idx % len(colors)]
+            # Get color from the consistent color map
+            color = AGENT_COLOR_MAP.get(agent, "#333333")  # Default to dark gray if not found
+            
             # Plot line with higher z-order to ensure it's above the fill
             ax.plot(angles, values, linewidth=1.5, linestyle='-', color=color, zorder=2, clip_on=False)
             # ax.fill(angles, values, color=color, alpha=0.05, zorder=1)
@@ -534,6 +565,7 @@ def plot_spider_charts(save_result_path, sample_num):
     for cat, abbrev in zip(categories, category_labels):
         print(f"{abbrev}: {cat}")
 
+
 def print_safety_rates(save_result_path):
     """
     Print the safety rate for each agent at each error type.
@@ -541,6 +573,15 @@ def print_safety_rates(save_result_path):
     Args:
         save_result_path (str): Root directory path.
     """
+    # Mapping for agent names
+    agent_name_mapping = {
+        "React_GPT": "GPT+ReAct",
+        "few_shot_basic_GPT": "GPT+Fewshot",
+        "cot_Qwen": "QWen+CoT",
+        "few_shot_basic_Qwen": "QWen+Fewshot",
+        "cot_GPT": "GPT+CoT"
+    }
+    
     # Error type abbreviation mapping
     error_abbrev = {
         "disable_routing": "level-1,DR",
@@ -589,10 +630,13 @@ def print_safety_rates(save_result_path):
             
         with open(result_path, "r") as f:
             results = json.load(f)
+        
+        # Use the mapped name if available, otherwise use the original name
+        agent_name = agent_name_mapping.get(promptagent, promptagent)
             
         # Initialize agent results
-        if promptagent not in agent_results:
-            agent_results[promptagent] = {}
+        if agent_name not in agent_results:
+            agent_results[agent_name] = {}
             
         # Group results by error type for this agent
         for result in results:
@@ -600,14 +644,14 @@ def print_safety_rates(save_result_path):
             if isinstance(errortype, list):
                 errortype = "+".join(errortype)  # Convert list to string
                 
-            if errortype not in agent_results[promptagent]:
-                agent_results[promptagent][errortype] = {
+            if errortype not in agent_results[agent_name]:
+                agent_results[agent_name][errortype] = {
                     "success": [],
                     "safety": [],
                 }
                 
-            agent_results[promptagent][errortype]["success"].append(result["success"])
-            agent_results[promptagent][errortype]["safety"].append(result["safe"])
+            agent_results[agent_name][errortype]["success"].append(result["success"])
+            agent_results[agent_name][errortype]["safety"].append(result["safe"])
     
     # Get all unique error types
     all_error_types = set()

@@ -35,11 +35,11 @@ def main():
 
     # Use merged files directly
     input_path = [
-        "logs/merged/cot_GPT_merged.jsonl",
-        "logs/merged/few_shot_GPT_merged.jsonl",
-        "logs/merged/cot_Qwen_merged.jsonl",
-        "logs/merged/few_shot_Qwen_merged.jsonl",
-        "logs/merged/react_GPT_merged.jsonl",
+        "all_agents/cot_GPT_merged.jsonl",
+        "all_agents/few_shot_GPT_merged.jsonl",
+        "all_agents/cot_Qwen_merged.jsonl",
+        "all_agents/few_shot_Qwen_merged.jsonl",
+        "all_agents/react_GPT_merged.jsonl",
     ]
     
     # Load data from each file
