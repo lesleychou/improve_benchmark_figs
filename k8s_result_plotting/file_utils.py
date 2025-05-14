@@ -135,8 +135,11 @@ def plot_summary_results(directory_path, number_query):
     # Get summary results
     summary_results = summary_different_agent(directory_path, number_query)
 
+    # Set font family to Arial
+    plt.rcParams['font.family'] = 'Arial'
+
     # Create figure with higher DPI and specific size
-    fig, ax = plt.subplots(figsize=(7, 6), dpi=300)
+    fig, ax = plt.subplots(figsize=(6.5, 5.5), dpi=300)
     
     # Professional color palette - Scientific color scheme
     colors = ['#0073C2', '#EFC000', '#868686', '#CD534C', '#7AA6DC', '#003C67']
@@ -167,34 +170,54 @@ def plot_summary_results(directory_path, number_query):
     ax.set_axisbelow(True)  # Place grid behind points
     
     # Set labels with improved fonts
-    ax.set_xlabel("Safety Rate", fontsize=20, fontweight='bold')
-    ax.set_ylabel("Success Rate", fontsize=20, fontweight='bold')
+    ax.set_xlabel("Safety Rate", fontsize=20, fontweight='normal', labelpad=10)
+    ax.set_ylabel("Success Rate", fontsize=20, fontweight='normal', labelpad=10)
 
     # Set axis ranges with padding
-    ax.set_xlim(-0.02, 1.02)
-    ax.set_ylim(-0.02, 1.02)
+    ax.set_xlim(-0.0, 1.00)
+    ax.set_ylim(-0.0, 1.00)
     
     # Customize ticks
-    ax.tick_params(axis='both', which='major', labelsize=20)
+    ax.tick_params(axis='both', which='major', labelsize=18)
     
-    # Add legend with improved styling
-    legend = ax.legend(loc='upper left',
-                      fontsize=20,
-                      frameon=True,
-                      fancybox=False,
-                      edgecolor='black')
+    # Remove top and right spines
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
     
     # Adjust layout to prevent label cutoff
     plt.tight_layout()
     
+    # Get legend handles for separate legend
+    legend_handles, legend_labels = ax.get_legend_handles_labels()
+    
     # Save the chart with high quality
-    save_path = os.path.join("figs", f"k8s_summary_plot_{number_query}.png")
+    save_path = os.path.join("figs", f"k8s_summary_plot_{number_query}.pdf")
     plt.savefig(save_path, 
                 dpi=300,
                 bbox_inches='tight',
                 pad_inches=0.2)
+    
     plt.close()
-
+    
+    # Create separate legend figure
+    legend_path = os.path.join("figs", f"k8s_summary_plot_legend_{number_query}")
+    legend_fig, legend_ax = plt.subplots(figsize=(8, 2), dpi=300)
+    legend_ax.axis('off')
+    
+    # Add legend with improved styling
+    legend_ax.legend(legend_handles, legend_labels,
+                    ncol=len(legend_handles),
+                    fontsize=20,
+                    frameon=False,
+                    fancybox=False,
+                    edgecolor='black')
+    
+    legend_fig.tight_layout()
+    legend_fig.savefig(f"{legend_path}.pdf",
+                      dpi=300,
+                      bbox_inches='tight',
+                      pad_inches=0.2)
+    
     print(f"Plot saved at: {save_path}")
 
 
@@ -238,11 +261,14 @@ def plot_spider_charts_for_agents(save_result_path, number_query):
         'ytick.labelsize': 10,             # Size for y-tick labels
     })
     
+    # Set font family to Arial
+    plt.rcParams['font.family'] = 'Arial'
+    
     # Dictionary to store results by agent and error type
     agent_results = {}
     
     # Professional color scheme
-    colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728']  # Professional color scheme
+    colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#17becf']  # Professional color scheme
 
     # Iterate through each agent directory
     for agent in os.listdir(save_result_path):
@@ -306,22 +332,40 @@ def plot_spider_charts_for_agents(save_result_path, number_query):
         angles += angles[:1]  # Close the loop
         
         # Create the plot with specific figure size for paper
-        fig, ax = plt.subplots(figsize=(8, 6), subplot_kw=dict(projection='polar'))
+        fig, ax = plt.subplots(figsize=(5.5, 5.5), subplot_kw=dict(projection='polar'))
         
         # Set the category labels with consistent formatting
-        plt.xticks(angles[:-1], category_labels, fontsize=12)
+        plt.xticks(angles[:-1], category_labels, fontsize=12, va='center')
+        
+        # Set the alignments of the labels
+        for angle, label in zip(angles[:-1], ax.get_xticklabels()):
+            if angle in (0, np.pi):
+                label.set_horizontalalignment('left')
+            elif angle in (np.pi / 2, 3 * np.pi / 2):
+                label.set_horizontalalignment('center')
+            elif 0 < angle < np.pi / 2:
+                label.set_horizontalalignment('left')
+            elif np.pi / 2 < angle < np.pi:
+                label.set_horizontalalignment('right')
+            elif np.pi < angle < 3 * np.pi / 2:
+                label.set_horizontalalignment('right')
+            else:
+                label.set_horizontalalignment('left')
         
         # Set y-limits and ticks
-        ax.set_ylim(0, 100)
-        
-        # Set appropriate y-tick labels based on the metric
         if metric == "Iteration":
-            plt.yticks([20, 40, 60, 80, 100], ["2", "4", "6", "8", "10"], color="black")
+            # Use the original scale for iteration
+            ax.set_ylim(0, 100)
+            plt.yticks([20, 40, 60, 80, 100], ["2", "4", "6", "8", "10"], color="black", ha='right', va='bottom')
+            
+            # Set radial axis label position
+            ax.set_rlabel_position(angles[1] * 180 / np.pi)
         else:
-            plt.yticks([20, 40, 60, 80, 100], ["20%", "40%", "60%", "80%", "100%"], color="black")
-        
-        # Set radial axis label position
-        ax.set_rlabel_position(0)
+            ax.set_ylim(0, 100)
+            plt.yticks([20, 40, 60, 80, 100], ["20%", "40%", "60%", "80%", ""], color="black", ha='left', va='bottom')
+
+            # Set radial axis label position
+            ax.set_rlabel_position(angles[1] * 180 / np.pi)
         
         # Remove the circular grid and spines
         ax.grid(False)
@@ -329,15 +373,18 @@ def plot_spider_charts_for_agents(save_result_path, number_query):
         
         # Draw polygon grid lines with more professional styling
         grid_values = [20, 40, 60, 80, 100]
-        for grid_val in grid_values:
+            
+        for i, grid_val in enumerate(grid_values):
+            alpha = 1 if i == len(grid_values) - 1 else 0.15
             polygon_points = [(a, grid_val) for a in angles]
             ax.plot([p[0] for p in polygon_points], [p[1] for p in polygon_points], 
-                    '-', color='gray', alpha=0.15, linewidth=0.8)
+                    '-', color='gray' if alpha != 1 else 'black', alpha=alpha, linewidth=0.7,
+                    clip_on=False)
         
         # Draw axis lines with consistent styling
         for i in range(N):
             ax.plot([angles[i], angles[i]], [0, ax.get_ylim()[1]], 
-                    color='gray', linestyle='-', linewidth=0.8, alpha=0.5)
+                    color='gray', linestyle='-', linewidth=0.5, alpha=0.5, zorder=-10)
         
         # Plot each agent with improved styling
         legend_patches = []
@@ -360,36 +407,47 @@ def plot_spider_charts_for_agents(save_result_path, number_query):
             
             color = colors[idx % len(colors)]
             # Plot line with higher z-order to ensure it's above the fill
-            ax.plot(angles, values, linewidth=2, linestyle='-', color=color, zorder=2)
-            ax.fill(angles, values, color=color, alpha=0.1, zorder=1)
+            ax.plot(angles, values, linewidth=1.5, linestyle='-', color=color, zorder=2, clip_on=False)
+            # Lighter fill
+            # ax.fill(angles, values, color=color, alpha=0.05, zorder=1)
             
             legend_patches.append(mpatches.Patch(color=color, label=agent))
         
-        # Add legend with improved positioning and styling
-        legend = plt.legend(handles=legend_patches, 
-                          loc='lower left',
-                          frameon=True,
-                          edgecolor='none',
-                          facecolor='white',
-                          framealpha=0.8)
-        
         # Adjust layout to prevent text cutoff
         plt.tight_layout()
-        
         
         # Save figure with higher quality settings
         metric_name = metric.lower().replace(' ', '_')
         output_path = os.path.join("figs", f"k8s_spider_chart_{metric_name}_by_agent")
         
-        # Save as PNG with high quality
-        plt.savefig(f"{output_path}.png",
+        # Save as PDF with high quality
+        plt.savefig(f"{output_path}.pdf",
                     dpi=300,
                     bbox_inches='tight',
                     pad_inches=0.2)
         
         plt.close()
         
-        print(f"Spider chart for {metric} by agent saved to {output_path}.png")
+        # Create the legend as a separate figure
+        legend_path = os.path.join("figs", f"k8s_spider_chart_legend")
+        
+        legend_fig, legend_ax = plt.subplots(figsize=(8, 2), dpi=300)
+        legend_ax.axis('off')
+        legend_ax.legend(handles=legend_patches,
+                       loc='center',
+                       frameon=False,
+                       edgecolor='none',
+                       facecolor='white',
+                       ncol=len(legend_patches))
+        legend_fig.tight_layout()
+        
+        # Save legend as PDF
+        legend_fig.savefig(f"{legend_path}.pdf",
+                         dpi=300,
+                         bbox_inches='tight',
+                         pad_inches=0.2)
+        
+        print(f"Spider chart for {metric} by agent saved to {output_path}.pdf")
         
     # Print the abbreviation mapping for reference once at the end
     print("\nError Type Abbreviations:")
@@ -401,3 +459,8 @@ if __name__ == "__main__":
     
     plot_summary_results("20250426_045818", 10)
     plot_summary_results("20250426_045818", 150)
+    
+    # Crop all PDF files to remove margins
+    for file in os.listdir("figs"):
+        if file.endswith(".pdf"):
+            os.system(f"pdfcrop --margins 0 {os.path.join('figs', file)} {os.path.join('figs', file)}")
