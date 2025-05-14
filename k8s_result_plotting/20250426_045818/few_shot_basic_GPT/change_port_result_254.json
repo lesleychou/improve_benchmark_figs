@@ -1,0 +1,17 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy currencyservice -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"currencyservice\",\"namespace\":\"default\"},\"spec\":{\"egress\":[{}],\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"checkoutservice\"}}}],\"ports\":[{\"port\":13470,\"protocol\":\"TCP\"}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"currencyservice\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n  creationTimestamp: \"2025-04-26T05:21:06Z\"\n  generation: 65\n  name: currencyservice\n  namespace: default\n  resourceVersion: \"8223\"\n  uid: 17fbc1d9-9dfd-44d6-b178-5c2d33a49dc1\nspec:\n  egress:\n  - {}\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    - podSelector:\n        matchLabels:\n          app: checkoutservice\n    ports:\n    - port: 13470\n      protocol: TCP\n  podSelector:\n    matchLabels:\n      app: currencyservice\n  policyTypes:\n  - Ingress\n  - Egress\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy currencyservice --type=merge -p $'\nspec:\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    - podSelector:\n        matchLabels:\n          app: checkoutservice\n    ports:\n    - port: 7000\n      protocol: TCP\n'",
+        "output": "networkpolicy.networking.k8s.io/currencyservice patched\n",
+        "mismatch_summary": "No mismatches found."
+    }
+]

@@ -1,0 +1,27 @@
+[
+    {
+        "llm_command": "NAME                  POD-SELECTOR   INGRESS   EGRESS   POLICYTYPES\n          frontend-policy       app=frontend   true      false    Ingress\n          checkout-policy       app=checkout   true      false    Ingress\n          recommendation-policy app=recommendation true   false    Ingress\n          cart-policy           app=cart       true      false    Ingress\n          redis-cache-policy    app=redis-cache true     false    Ingress",
+        "output": "/bin/bash: line 1: NAME: command not found\n/bin/bash: line 2: frontend-policy: command not found\n/bin/bash: line 3: checkout-policy: command not found\n/bin/bash: line 4: recommendation-policy: command not found\n/bin/bash: line 5: cart-policy: command not found\n/bin/bash: line 6: redis-cache-policy: command not found\n",
+        "mismatch_summary": "Mismatch: productcatalogservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 adservice:9555 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: productcatalogservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 adservice:9555 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n default",
+        "output": "NAME                    POD-SELECTOR                AGE\nadservice               app=adservice               179m\ncartservice             app=cartservice             179m\ncheckoutservice         app=checkoutservice         179m\ncurrencyservice         app=currencyservice         179m\nemailservice            app=emailservice            179m\nfrontend                app=frontend                179m\nloadgenerator           app=loadgenerator           179m\npaymentservice          app=paymentservice          179m\nproductcatalogservice   app=productcatalogservice   179m\nrecommendationservice   app=recommendationservice   179m\nredis-cart              app=redis-cart              179m\nshippingservice         app=shippingservice         179m\n",
+        "mismatch_summary": "Mismatch: productcatalogservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 adservice:9555 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy adservice -n default -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"adservice\",\"namespace\":\"default\"},\"spec\":{\"egress\":[{}],\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}}}],\"ports\":[{\"port\":9555,\"protocol\":\"TCP\"}]},{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"emailservice\"}}}]},{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"productcatalogservice\"}}}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"adservice\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n  creationTimestamp: \"2025-04-28T05:25:41Z\"\n  generation: 10\n  name: adservice\n  namespace: default\n  resourceVersion: \"15183\"\n  uid: d5bf7487-2140-4779-8b00-e06ebc6dab8b\nspec:\n  egress:\n  - {}\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    ports:\n    - port: 9555\n      protocol: TCP\n  - from:\n    - podSelector:\n        matchLabels:\n          app: emailservice\n  - from:\n    - podSelector:\n        matchLabels:\n          app: productcatalogservice\n  podSelector:\n    matchLabels:\n      app: adservice\n  policyTypes:\n  - Ingress\n  - Egress\n",
+        "mismatch_summary": "Mismatch: productcatalogservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 adservice:9555 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy adservice -n default -p '{\"spec\":{\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}}}],\"ports\":[{\"port\":9555,\"protocol\":\"TCP\"}]}]}}'",
+        "output": "networkpolicy.networking.k8s.io/adservice patched\n",
+        "mismatch_summary": "No mismatches found."
+    }
+]

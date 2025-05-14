@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: productcatalogservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "bash\nkubectl get networkpolicy -n cartservice -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: productcatalogservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n productcatalogservice -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: productcatalogservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "bash\nkubectl patch networkpolicy -n cartservice --type='json' -p='[{\n  \"op\": \"add\",\n  \"path\": \"/spec\",\n  \"value\": {\n    \"podSelector\": {},\n    \"policyTypes\": [\"Egress\"],\n    \"egress\": [{\n      \"to\": [{\n        \"podSelector\": {\n          \"matchLabels\": {\"app\": \"redis-cart\"}\n        }\n      }],\n      \"ports\": [{\n        \"protocol\": \"TCP\",\n        \"port\": 6379\n      }]\n    }]\n  }\n}]'",
+        "output": "bash: error reading input file: Bad file descriptor\nerror: resource(s) were provided, but no name was specified\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: productcatalogservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "bash\nkubectl apply -n cartservice -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-cart-to-redis\nspec:\n  podSelector: {}\n  policyTypes:\n  - Egress\n  egress:\n  - to:\n    - podSelector:\n        matchLabels:\n          app: redis-cart\n    ports:\n    - protocol: TCP\n      port: 6379\nEOF",
+        "output": "bash: error reading input file: Bad file descriptor\nerror: resource(s) were provided, but no name was specified\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: productcatalogservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "bash\nkubectl patch networkpolicy allow-cart-to-redis -n cartservice --type='merge' -p='{\n  \"spec\": {\n    \"podSelector\": {},\n    \"policyTypes\": [\"Egress\"],\n    \"egress\": [{\n      \"to\": [{\n        \"podSelector\": {\n          \"matchLabels\": {\"app\": \"redis-cart\"}\n        }\n      }],\n      \"ports\": [{\n        \"protocol\": \"TCP\",\n        \"port\": 6379\n      }]\n    }]\n  }\n}'",
+        "output": "bash: error reading input file: Bad file descriptor\nError from server (NotFound): namespaces \"cartservice\" not found\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: productcatalogservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "bash\nkubectl apply -n cartservice -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-cart-to-redis\nspec:\n  podSelector: {}\n  policyTypes:\n  - Egress\n  egress:\n  - to:\n    - podSelector:\n        matchLabels:\n          app: redis-cart\n    ports:\n    - protocol: TCP\n      port: 6379\nEOF",
+        "output": "bash: error reading input file: Bad file descriptor\nError from server (NotFound): namespaces \"cartservice\" not found\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: productcatalogservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\ndefault              Active   23h\nkube-node-lease      Active   23h\nkube-public          Active   23h\nkube-system          Active   23h\nlocal-path-storage   Active   23h\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: productcatalogservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get pods --all-namespaces -o wide | grep -E 'cartservice|redis-cart'",
+        "output": "default              cartservice-7c8966d6fd-c8rb4                 1/1     Running   0               23h   10.244.0.6    kind-control-plane   <none>           <none>\ndefault              redis-cart-5b6f47b748-9rgzw                  1/1     Running   0               23h   10.244.0.13   kind-control-plane   <none>           <none>\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: productcatalogservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    }
+]

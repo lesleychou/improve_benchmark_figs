@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: cartservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n cartservice -o yaml",
+        "output": "apiVersion: v1\nitems:\n- apiVersion: networking.k8s.io/v1\n  kind: NetworkPolicy\n  metadata:\n    annotations:\n      kubectl.kubernetes.io/last-applied-configuration: |\n        {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"allow-cart-to-redis\",\"namespace\":\"cartservice\"},\"spec\":{\"ingress\":[{\"from\":[{\"namespaceSelector\":{\"matchLabels\":{}}}],\"ports\":[{\"port\":6379,\"protocol\":\"TCP\"}]}],\"podSelector\":{},\"policyTypes\":[\"Ingress\"]}}\n    creationTimestamp: \"2025-04-26T05:19:07Z\"\n    generation: 16\n    name: allow-cart-to-redis\n    namespace: cartservice\n    resourceVersion: \"3441\"\n    uid: 4c9b1f55-8904-49ff-8270-cab94ede49b9\n  spec:\n    egress:\n    - ports:\n      - port: 6379\n        protocol: TCP\n      to:\n      - podSelector:\n          matchLabels:\n            app: redis\n    ingress:\n    - {}\n    podSelector: {}\n    policyTypes:\n    - Ingress\n    - Egress\n- apiVersion: networking.k8s.io/v1\n  kind: NetworkPolicy\n  metadata:\n    annotations:\n      kubectl.kubernetes.io/last-applied-configuration: |\n        {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"cartservice-policy\",\"namespace\":\"cartservice\"},\"spec\":{\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"redis\"}}}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"cartservice\"}}}}\n    creationTimestamp: \"2025-04-26T05:31:45Z\"\n    generation: 15\n    name: cartservice-policy\n    namespace: cartservice\n    resourceVersion: \"4090\"\n    uid: 21f73f58-014f-458a-9b75-0af604721328\n  spec:\n    egress:\n    - ports:\n      - port: 50051\n        protocol: TCP\n    - ports:\n      - port: 50051\n        protocol: TCP\n      to:\n      - podSelector:\n          matchLabels:\n            app: paymentservice\n    podSelector:\n      matchLabels:\n        app: cartservice\n    policyTypes:\n    - Ingress\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy cartservice-policy -n cartservice --type='json' -p='[{\"op\":\"replace\",\"path\":\"/spec/egress\",\"value\":[{\"ports\":[{\"port\":6379,\"protocol\":\"TCP\"}],\"to\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"redis\"}}}]}]}]'",
+        "output": "networkpolicy.networking.k8s.io/cartservice-policy patched\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy cartservice-policy -n cartservice --type='json' -p='[{\"op\":\"replace\",\"path\":\"/spec/egress\",\"value\":[{\"ports\":[{\"port\":6379,\"protocol\":\"TCP\"}],\"to\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"redis\"}}}]}]}]'",
+        "output": "networkpolicy.networking.k8s.io/cartservice-policy patched (no change)\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n adservice -o yaml",
+        "output": "apiVersion: v1\nitems:\n- apiVersion: networking.k8s.io/v1\n  kind: NetworkPolicy\n  metadata:\n    annotations:\n      kubectl.kubernetes.io/last-applied-configuration: |\n        {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"adservice-policy\",\"namespace\":\"adservice\"},\"spec\":{\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}}}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"adservice\"}},\"policyTypes\":[\"Ingress\"]}}\n    creationTimestamp: \"2025-04-26T05:28:12Z\"\n    generation: 16\n    name: adservice-policy\n    namespace: adservice\n    resourceVersion: \"3906\"\n    uid: 7a4fbdb4-17a3-4606-b447-b223280c53e6\n  spec:\n    ingress:\n    - from:\n      - podSelector:\n          matchLabels:\n            app: frontend\n    podSelector:\n      matchLabels:\n        app: adservice\n    policyTypes:\n    - Ingress\n- apiVersion: networking.k8s.io/v1\n  kind: NetworkPolicy\n  metadata:\n    annotations:\n      kubectl.kubernetes.io/last-applied-configuration: |\n        {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"allow-frontend-access\",\"namespace\":\"adservice\"},\"spec\":{\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}}}],\"ports\":[{\"port\":9555,\"protocol\":\"TCP\"}]}],\"podSelector\":{\"matchLabels\":{}}}}\n    creationTimestamp: \"2025-04-26T05:09:46Z\"\n    generation: 4\n    name: allow-frontend-access\n    namespace: adservice\n    resourceVersion: \"2884\"\n    uid: 1b55a872-ca84-4edc-b22f-9b8b613eed60\n  spec:\n    ingress:\n    - from:\n      - podSelector:\n          matchLabels:\n            app: frontend\n      ports:\n      - port: 9555\n        protocol: TCP\n    podSelector:\n      matchLabels:\n        app: adservice\n    policyTypes:\n    - Ingress\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy adservice-policy -n adservice --type='json' -p='[{\"op\":\"add\",\"path\":\"/spec/ingress/0/from/-\",\"value\":{\"podSelector\":{\"matchLabels\":{\"app\":\"cartservice\"}}}}]'",
+        "output": "networkpolicy.networking.k8s.io/adservice-policy patched\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy adservice-policy -n adservice --type='json' -p='[{\"op\":\"remove\",\"path\":\"/spec/ingress/0/from/1\"}]'",
+        "output": "networkpolicy.networking.k8s.io/adservice-policy patched\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n shippingservice -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy deny-all -n shippingservice --type='json' -p='[{\"op\":\"add\",\"path\":\"/spec\",\"value\":{\"podSelector\":{},\"policyTypes\":[\"Ingress\",\"Egress\"]}}]'",
+        "output": "Error from server (NotFound): namespaces \"shippingservice\" not found\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    }
+]

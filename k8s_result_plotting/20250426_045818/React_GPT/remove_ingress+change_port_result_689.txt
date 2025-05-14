@@ -1,0 +1,106 @@
+LLM Command: kubectl get networkpolicy -n frontend
+Output: 
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy <networkpolicy-name> -n frontend --type=json -p '[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "checkoutservice"}}}}, {"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 5050, "protocol": "TCP"}}]'
+Output: /bin/bash: line 1: networkpolicy-name: No such file or directory
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n frontend
+Output: 
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n frontend -o json
+Output: {
+    "apiVersion": "v1",
+    "items": [],
+    "kind": "List",
+    "metadata": {
+        "resourceVersion": ""
+    }
+}
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy frontend-policy -n frontend --type=json -p '[{"op": "add", "path": "/spec/ingress", "value": [{"from": [{"podSelector": {"matchLabels": {"app": "checkoutservice"}}}], "ports": [{"port": 5050, "protocol": "TCP"}]}, {"from": [{"podSelector": {"matchLabels": {"app": "productcatalogservice"}}}], "ports": [{"port": 3550, "protocol": "TCP"}]}]}]'
+Output: Error from server (NotFound): namespaces "frontend" not found
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get namespaces
+Output: NAME                 STATUS   AGE
+default              Active   9h
+kube-node-lease      Active   9h
+kube-public          Active   9h
+kube-system          Active   9h
+local-path-storage   Active   9h
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get pods -n default
+Output: NAME                                     READY   STATUS    RESTARTS      AGE
+adservice-7c7687ff5b-fbq2s               1/1     Running   0             9h
+cartservice-7c8966d6fd-c8rb4             1/1     Running   0             9h
+checkoutservice-769b8ff7b8-jxzrv         1/1     Running   0             9h
+currencyservice-578dcb55f6-bdvtr         1/1     Running   2 (95m ago)   9h
+emailservice-d5d54d4fc-lksfn             1/1     Running   0             9h
+frontend-7ffbffc6f7-9hb4b                1/1     Running   0             9h
+loadgenerator-7d9cfb7cb9-9zjhk           1/1     Running   0             9h
+paymentservice-b67c65d9c-ztkqg           1/1     Running   2 (47m ago)   9h
+productcatalogservice-5f94b6cd47-lk6vh   1/1     Running   0             9h
+recommendationservice-c468b6867-pcbbn    1/1     Running   0             9h
+redis-cart-5b6f47b748-9rgzw              1/1     Running   0             9h
+shippingservice-f6bc4cd5d-69r7d          1/1     Running   0             9h
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy frontend-policy -n default --type=json -p '[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "checkoutservice"}}}}, {"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 5050, "protocol": "TCP"}}]'
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "frontend-policy" not found
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n default
+Output: NAME                    POD-SELECTOR                AGE
+adservice               app=adservice               9h
+cartservice             app=cartservice             9h
+checkoutservice         app=checkoutservice         9h
+currencyservice         app=currencyservice         9h
+emailservice            app=emailservice            9h
+frontend                app=frontend                9h
+loadgenerator           app=loadgenerator           9h
+paymentservice          app=paymentservice          9h
+productcatalogservice   app=productcatalogservice   9h
+recommendationservice   app=recommendationservice   9h
+redis-cart              app=redis-cart              9h
+shippingservice         app=shippingservice         9h
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+

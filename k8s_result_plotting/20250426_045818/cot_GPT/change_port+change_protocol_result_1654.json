@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy frontend-policy -n frontend --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"adservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 9555, \"protocol\": \"TCP\"}}]'",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"frontend-policy\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend",
+        "output": "NAME                                   POD-SELECTOR   AGE\nallow-frontend-to-adservice            app=frontend   18h\nfrontend                               app=frontend   18h\nfrontend-allow                         app=frontend   16h\nfrontend-allow-adservice               app=frontend   6h3m\nfrontend-allow-cartservice             app=frontend   17h\nfrontend-allow-checkoutservice         app=frontend   17h\nfrontend-allow-currencyservice         app=frontend   17h\nfrontend-allow-egress                  app=frontend   17h\nfrontend-allow-productcatalogservice   app=frontend   17h\nfrontend-allow-recommendationservice   app=frontend   17h\nfrontend-deny-email                    app=frontend   3h43m\nfrontend-network-policy                app=frontend   6h8m\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy frontend-allow-adservice -n frontend --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"adservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 9555, \"protocol\": \"TCP\"}}]'",
+        "output": "The request is invalid: the server rejected our request due to an error in our request\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy frontend-allow-adservice -n frontend --type='json' -p='[{\"op\": \"replace\", \"path\": \"/spec/ingress\", \"value\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"adservice\"}}}], \"ports\": [{\"port\": 9555, \"protocol\": \"TCP\"}]}]}]'",
+        "output": "networkpolicy.networking.k8s.io/frontend-allow-adservice patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy frontend-allow-adservice -n frontend -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"frontend-allow-adservice\",\"namespace\":\"frontend\"},\"spec\":{\"egress\":[{\"ports\":[{\"port\":9555,\"protocol\":\"TCP\"}],\"to\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"adservice\"}}}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}},\"policyTypes\":[\"Egress\"]}}\n  creationTimestamp: \"2025-04-26T21:07:34Z\"\n  generation: 22\n  name: frontend-allow-adservice\n  namespace: frontend\n  resourceVersion: \"110486\"\n  uid: a5dc9bb1-7caa-42d0-b3c7-01d0450bc6b4\nspec:\n  egress:\n  - ports:\n    - port: 9555\n      protocol: TCP\n    to:\n    - podSelector:\n        matchLabels:\n          app: adservice\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: adservice\n    ports:\n    - port: 9555\n      protocol: TCP\n  podSelector:\n    matchLabels:\n      app: frontend\n  policyTypes:\n  - Egress\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy frontend-allow-adservice -n frontend -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"frontend-allow-adservice\",\"namespace\":\"frontend\"},\"spec\":{\"egress\":[{\"ports\":[{\"port\":9555,\"protocol\":\"TCP\"}],\"to\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"adservice\"}}}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}},\"policyTypes\":[\"Egress\"]}}\n  creationTimestamp: \"2025-04-26T21:07:34Z\"\n  generation: 22\n  name: frontend-allow-adservice\n  namespace: frontend\n  resourceVersion: \"110486\"\n  uid: a5dc9bb1-7caa-42d0-b3c7-01d0450bc6b4\nspec:\n  egress:\n  - ports:\n    - port: 9555\n      protocol: TCP\n    to:\n    - podSelector:\n        matchLabels:\n          app: adservice\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: adservice\n    ports:\n    - port: 9555\n      protocol: TCP\n  podSelector:\n    matchLabels:\n      app: frontend\n  policyTypes:\n  - Egress\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy frontend-allow-adservice -n frontend --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec/policyTypes/-\", \"value\": \"Ingress\"}]'",
+        "output": "networkpolicy.networking.k8s.io/frontend-allow-adservice patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get pods -n adservice --show-labels",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    }
+]

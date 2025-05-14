@@ -1,0 +1,126 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n shippingservice
+Output: NAME                                      POD-SELECTOR          AGE
+allow-checkout-to-shipping                app=shippingservice   9h
+allow-frontend-to-shipping                app=shipping          6h35m
+allow-frontend-to-shippingservice         app=shippingservice   16h
+deny-egress-to-checkout-and-payment       app=shippingservice   13h
+deny-payment-access                       app=shippingservice   20h
+deny-productcatalog-to-shipping           app=shippingservice   7h40m
+deny-shippingservice-egress               app=shippingservice   20h
+deny-shippingservice-to-checkoutservice   app=shippingservice   7h9m
+shippingservice                           app=shippingservice   9h
+shippingservice-deny-productcatalog       app=shippingservice   7h40m
+shippingservice-policy                    app=shippingservice   7h29m
+
+Mismatch Summary: Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n emailservice
+Output: NAME                            POD-SELECTOR       AGE
+deny-adservice                  app=emailservice   3h5m
+deny-adservice-ingress          app=emailservice   3h5m
+deny-egress-to-payment          app=emailservice   11h
+deny-frontend-access            <none>             5h41m
+deny-frontend-to-emailservice   app=emailservice   5h41m
+emailservice                    app=emailservice   20h
+emailservice-deny-frontend      app=emailservice   21h
+emailservice-deny-unexpected    app=emailservice   21h
+emailservice-policy             app=emailservice   18h
+restrict-emailservice-ingress   app=emailservice   5h41m
+
+Mismatch Summary: Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy deny-shippingservice-to-checkoutservice -n shippingservice --type='merge' -p '{"spec":{"egress":[{"to":[{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}],"ports":[{"port":5050,"protocol":"TCP"}]}]}}'
+Output: networkpolicy.networking.k8s.io/deny-shippingservice-to-checkoutservice patched
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy deny-egress-to-checkout-and-payment -n shippingservice --type='merge' -p '{"spec":{"egress":[{"to":[{"podSelector":{"matchLabels":{"app":"paymentservice"}}}],"ports":[{"port":50051,"protocol":"TCP"}]}]}}'
+Output: networkpolicy.networking.k8s.io/deny-egress-to-checkout-and-payment patched
+
+Mismatch Summary: Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy deny-egress-to-checkout-and-payment -n shippingservice -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"deny-egress-to-checkout-and-payment","namespace":"shippingservice"},"spec":{"egress":[{"ports":[{"port":5050,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}]},{"ports":[{"port":50051,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"paymentservice"}}}]}],"podSelector":{"matchLabels":{"app":"shippingservice"}},"policyTypes":["Egress"]}}
+  creationTimestamp: "2025-04-26T13:12:56Z"
+  generation: 182
+  name: deny-egress-to-checkout-and-payment
+  namespace: shippingservice
+  resourceVersion: "109851"
+  uid: 25225e0f-fde9-4853-aa8c-316f9d05d78b
+spec:
+  egress:
+  - ports:
+    - port: 50051
+      protocol: TCP
+    to:
+    - podSelector:
+        matchLabels:
+          app: paymentservice
+  podSelector:
+    matchLabels:
+      app: shippingservice
+  policyTypes:
+  - Egress
+
+Mismatch Summary: Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy deny-egress-to-checkout-and-payment -n shippingservice --type='merge' -p '{"spec":{"egress":[]}}'
+Output: networkpolicy.networking.k8s.io/deny-egress-to-checkout-and-payment patched
+
+Mismatch Summary: Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy deny-egress-to-checkout-and-payment -n shippingservice --type='merge' -p '{"spec":{"egress":[{"to":[{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}],"ports":[{"port":5050,"protocol":"TCP"}]},{"to":[{"podSelector":{"matchLabels":{"app":"paymentservice"}}}],"ports":[{"port":50051,"protocol":"TCP"}]}]}}'
+Output: networkpolicy.networking.k8s.io/deny-egress-to-checkout-and-payment patched
+
+Mismatch Summary: Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods -n shippingservice --show-labels
+Output: 
+Mismatch Summary: Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+

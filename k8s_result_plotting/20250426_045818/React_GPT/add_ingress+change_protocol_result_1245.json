@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "kubectl get networkpolicy -n user",
+        "output": "",
+        "mismatch_summary": "Mismatch: adservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n checkoutservice -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n adservice -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy -n adservice --type='merge' -p '{\"spec\":{\"ingress\":[{\"from\":[{\"namespaceSelector\":{\"matchLabels\":{\"name\":\"redis-cart\"}}}],\"ports\":[{\"port\":6379,\"protocol\":\"TCP\"}]}]}}'",
+        "output": "error: resource(s) were provided, but no name was specified\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n adservice",
+        "output": "",
+        "mismatch_summary": "Mismatch: adservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl apply -n adservice -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: deny-redis-cart-access\nspec:\n  podSelector: {}\n  policyTypes:\n  - Egress\n  egress:\n  - to:\n    - namespaceSelector:\n        matchLabels:\n          name: redis-cart\n    ports:\n    - port: 6379\n      protocol: TCP\nEOF",
+        "output": "",
+        "mismatch_summary": "Mismatch: adservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get namespace redis-cart --show-labels",
+        "output": "Error from server (NotFound): namespaces \"redis-cart\" not found\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get namespace --show-labels",
+        "output": "NAME                 STATUS   AGE   LABELS\ndefault              Active   19h   kubernetes.io/metadata.name=default\nkube-node-lease      Active   19h   kubernetes.io/metadata.name=kube-node-lease\nkube-public          Active   19h   kubernetes.io/metadata.name=kube-public\nkube-system          Active   19h   kubernetes.io/metadata.name=kube-system\nlocal-path-storage   Active   19h   kubernetes.io/metadata.name=local-path-storage\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubernetes redis-cart namespace",
+        "output": "/bin/bash: line 1: kubernetes: command not found\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    }
+]

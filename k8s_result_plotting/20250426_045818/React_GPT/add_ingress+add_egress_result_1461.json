@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: adservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n adservice -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n recommendationservice -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy deny-currencyservice -n adservice --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec\", \"value\": {\"podSelector\": {}, \"policyTypes\": [\"Egress\"], \"egress\": [{\"to\": [{\"namespaceSelector\": {\"matchLabels\": {\"name\": \"currencyservice\"}}}]}]}}]'",
+        "output": "Error from server (NotFound): namespaces \"adservice\" not found\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "Kubernetes check namespace for adservice and currencyservice",
+        "output": "/bin/bash: line 1: Kubernetes: command not found\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\ndefault              Active   23h\nkube-node-lease      Active   23h\nkube-public          Active   23h\nkube-system          Active   23h\nlocal-path-storage   Active   23h\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\ndefault              Active   23h\nkube-node-lease      Active   23h\nkube-public          Active   23h\nkube-system          Active   23h\nlocal-path-storage   Active   23h\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "bash\nkubectl get pods --all-namespaces",
+        "output": "NAMESPACE            NAME                                         READY   STATUS    RESTARTS       AGE\ndefault              adservice-7c7687ff5b-fbq2s                   1/1     Running   0              23h\ndefault              cartservice-7c8966d6fd-c8rb4                 1/1     Running   0              23h\ndefault              checkoutservice-769b8ff7b8-jxzrv             1/1     Running   0              23h\ndefault              currencyservice-578dcb55f6-bdvtr             1/1     Running   5 (175m ago)   23h\ndefault              emailservice-d5d54d4fc-lksfn                 1/1     Running   0              23h\ndefault              frontend-7ffbffc6f7-9hb4b                    1/1     Running   0              23h\ndefault              loadgenerator-7d9cfb7cb9-9zjhk               1/1     Running   0              23h\ndefault              paymentservice-b67c65d9c-ztkqg               1/1     Running   5 (55m ago)    23h\ndefault              productcatalogservice-5f94b6cd47-lk6vh       1/1     Running   0              23h\ndefault              recommendationservice-c468b6867-pcbbn        1/1     Running   0              23h\ndefault              redis-cart-5b6f47b748-9rgzw                  1/1     Running   0              23h\ndefault              shippingservice-f6bc4cd5d-69r7d              1/1     Running   0              23h\nkube-system          coredns-668d6bf9bc-g5z8v                     1/1     Running   0              23h\nkube-system          coredns-668d6bf9bc-l2w7d                     1/1     Running   0              23h\nkube-system          etcd-kind-control-plane                      1/1     Running   0              23h\nkube-system          kindnet-g596l                                1/1     Running   0              23h\nkube-system          kube-apiserver-kind-control-plane            1/1     Running   0              23h\nkube-system          kube-controller-manager-kind-control-plane   1/1     Running   0              23h\nkube-system          kube-proxy-48f5g                             1/1     Running   0              23h\nkube-system          kube-scheduler-kind-control-plane            1/1     Running   0              23h\nlocal-path-storage   local-path-provisioner-58cc7856b6-nfdzv      1/1     Running   0              23h\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl apply -n default -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: deny-adservice-to-currencyservice\n  namespace: default\nspec:\n  podSelector:\n    matchLabels:\n      app: adservice\n  policyTypes:\n  - Egress\n  egress:\n  - to:\n    - podSelector:\n        matchLabels:\n          app: currencyservice\n    ports:\n    - protocol: TCP\n      port: 7000\nEOF",
+        "output": "NAMESPACE            NAME                                         READY   STATUS    RESTARTS       AGE\ndefault              adservice-7c7687ff5b-fbq2s                   1/1     Running   0              23h\ndefault              cartservice-7c8966d6fd-c8rb4                 1/1     Running   0              23h\ndefault              checkoutservice-769b8ff7b8-jxzrv             1/1     Running   0              23h\ndefault              currencyservice-578dcb55f6-bdvtr             1/1     Running   5 (175m ago)   23h\ndefault              emailservice-d5d54d4fc-lksfn                 1/1     Running   0              23h\ndefault              frontend-7ffbffc6f7-9hb4b                    1/1     Running   0              23h\ndefault              loadgenerator-7d9cfb7cb9-9zjhk               1/1     Running   0              23h\ndefault              paymentservice-b67c65d9c-ztkqg               1/1     Running   5 (55m ago)    23h\ndefault              productcatalogservice-5f94b6cd47-lk6vh       1/1     Running   0              23h\ndefault              recommendationservice-c468b6867-pcbbn        1/1     Running   0              23h\ndefault              redis-cart-5b6f47b748-9rgzw                  1/1     Running   0              23h\ndefault              shippingservice-f6bc4cd5d-69r7d              1/1     Running   0              23h\nkube-system          coredns-668d6bf9bc-g5z8v                     1/1     Running   0              23h\nkube-system          coredns-668d6bf9bc-l2w7d                     1/1     Running   0              23h\nkube-system          etcd-kind-control-plane                      1/1     Running   0              23h\nkube-system          kindnet-g596l                                1/1     Running   0              23h\nkube-system          kube-apiserver-kind-control-plane            1/1     Running   0              23h\nkube-system          kube-controller-manager-kind-control-plane   1/1     Running   0              23h\nkube-system          kube-proxy-48f5g                             1/1     Running   0              23h\nkube-system          kube-scheduler-kind-control-plane            1/1     Running   0              23h\nlocal-path-storage   local-path-provisioner-58cc7856b6-nfdzv      1/1     Running   0              23h\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    }
+]

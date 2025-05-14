@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n shippingservice -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy deny-checkout-currency -n shippingservice --type='merge' -p '{\"spec\":{\"podSelector\":{},\"policyTypes\":[\"Egress\"],\"egress\":[{\"to\":[{\"namespaceSelector\":{\"matchLabels\":{\"name\":\"checkoutservice\"}}},{\"namespaceSelector\":{\"matchLabels\":{\"name\":\"currencyservice\"}}}],\"ports\":[{\"port\":5050,\"protocol\":\"TCP\"},{\"port\":7000,\"protocol\":\"TCP\"}]}]}}'",
+        "output": "Error from server (NotFound): namespaces \"shippingservice\" not found\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                    STATUS   AGE\nadservice               Active   43m\ncartservice             Active   34m\ncheckoutservice         Active   39m\ncurrencyservice         Active   22m\ndefault                 Active   54m\nemailservice            Active   39m\nkube-node-lease         Active   54m\nkube-public             Active   54m\nkube-system             Active   54m\nlocal-path-storage      Active   54m\nproductcatalogservice   Active   24m\nrecommendationservice   Active   12m\nredis-cart              Active   10m\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n emailservice -o yaml",
+        "output": "apiVersion: v1\nitems:\n- apiVersion: networking.k8s.io/v1\n  kind: NetworkPolicy\n  metadata:\n    annotations:\n      kubectl.kubernetes.io/last-applied-configuration: |\n        {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"deny-all\",\"namespace\":\"emailservice\"},\"spec\":{\"podSelector\":{},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n    creationTimestamp: \"2025-04-26T05:23:24Z\"\n    generation: 4\n    name: deny-all\n    namespace: emailservice\n    resourceVersion: \"5354\"\n    uid: 35ab8915-3f0f-4d25-9a8b-0d720efdf01a\n  spec:\n    ingress:\n    - from:\n      - podSelector:\n          matchLabels:\n            app: cartservice\n      ports:\n      - port: 5000\n        protocol: TCP\n    podSelector: {}\n    policyTypes:\n    - Ingress\n    - Egress\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy deny-checkout-currency -n shippingservice --type='merge' -p '{\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"name\":\"deny-checkout-currency\"},\"spec\":{\"podSelector\":{},\"policyTypes\":[\"Egress\"],\"egress\":[{\"to\":[{\"namespaceSelector\":{\"matchLabels\":{\"name\":\"checkoutservice\"}}},{\"namespaceSelector\":{\"matchLabels\":{\"name\":\"currencyservice\"}}}],\"ports\":[{\"port\":5050,\"protocol\":\"TCP\"},{\"port\":7000,\"protocol\":\"TCP\"}]}]}}'",
+        "output": "Error from server (NotFound): namespaces \"shippingservice\" not found\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl create namespace shippingservice",
+        "output": "namespace/shippingservice created\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy deny-checkout-currency -n shippingservice --type='merge' -p '{\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"name\":\"deny-checkout-currency\"},\"spec\":{\"podSelector\":{},\"policyTypes\":[\"Egress\"],\"egress\":[{\"to\":[{\"namespaceSelector\":{\"matchLabels\":{\"name\":\"checkoutservice\"}}},{\"namespaceSelector\":{\"matchLabels\":{\"name\":\"currencyservice\"}}}],\"ports\":[{\"port\":5050,\"protocol\":\"TCP\"},{\"port\":7000,\"protocol\":\"TCP\"}]}]}}'",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"deny-checkout-currency\" not found\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl apply -n shippingservice -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: deny-checkout-currency\nspec:\n  podSelector: {}\n  policyTypes:\n  - Egress\n  egress:\n  - to:\n    - namespaceSelector:\n        matchLabels:\n          name: checkoutservice\n    ports:\n    - port: 5050\n      protocol: TCP\n  - to:\n    - namespaceSelector:\n        matchLabels:\n          name: currencyservice\n    ports:\n    - port: 7000\n      protocol: TCP\nEOF",
+        "output": "networkpolicy.networking.k8s.io/deny-checkout-currency created\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    }
+]

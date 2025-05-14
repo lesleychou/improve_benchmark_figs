@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "bash\nkubectl get networkpolicy -n frontend -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n adservice -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n recommendationservice -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "bash\nkubectl patch networkpolicy allow-frontend -n adservice --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/-\", \"value\": {\"from\": [{\"namespaceSelector\": {\"matchLabels\": {\"name\": \"frontend\"}}}], \"ports\": [{\"protocol\": \"TCP\", \"port\": 9555}]}}]'",
+        "output": "bash: error reading input file: Bad file descriptor\nError from server (NotFound): namespaces \"adservice\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "bash\nkubectl patch networkpolicy allow-frontend -n adservice --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec\", \"value\": {\"podSelector\": {}, \"ingress\": [{\"from\": [{\"namespaceSelector\": {\"matchLabels\": {\"name\": \"frontend\"}}}], \"ports\": [{\"protocol\": \"TCP\", \"port\": 9555}]}]}}]'",
+        "output": "bash: error reading input file: Bad file descriptor\nError from server (NotFound): namespaces \"adservice\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\ndefault              Active   3h46m\nkube-node-lease      Active   3h46m\nkube-public          Active   3h46m\nkube-system          Active   3h46m\nlocal-path-storage   Active   3h46m\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get pods --all-namespaces",
+        "output": "NAMESPACE            NAME                                         READY   STATUS    RESTARTS   AGE\ndefault              adservice-597dc59b77-q8dfh                   1/1     Running   0          3h43m\ndefault              cartservice-577f8d8c75-5lfjl                 1/1     Running   0          3h43m\ndefault              checkoutservice-55698bfcc5-hrjtk             1/1     Running   0          3h43m\ndefault              currencyservice-c5968f8f5-dx7rq              1/1     Running   0          3h43m\ndefault              emailservice-6c56b65f6d-fkhwd                1/1     Running   0          3h43m\ndefault              frontend-797c8f7758-fkv9r                    1/1     Running   0          3h43m\ndefault              loadgenerator-6c5b65b44b-wp4z7               1/1     Running   0          3h42m\ndefault              paymentservice-76948fc564-dlnrz              1/1     Running   0          3h43m\ndefault              productcatalogservice-5f9d5c689b-x9sdp       1/1     Running   0          3h43m\ndefault              recommendationservice-67cbb84b7b-c2src       1/1     Running   0          3h43m\ndefault              redis-cart-866688457f-zsqdb                  1/1     Running   0          3h43m\ndefault              shippingservice-9ddf878c7-gr8bc              1/1     Running   0          3h43m\nkube-system          coredns-668d6bf9bc-2gvnv                     1/1     Running   0          3h46m\nkube-system          coredns-668d6bf9bc-kwdwg                     1/1     Running   0          3h46m\nkube-system          etcd-kind-control-plane                      1/1     Running   0          3h46m\nkube-system          kindnet-8b9cs                                1/1     Running   0          3h46m\nkube-system          kube-apiserver-kind-control-plane            1/1     Running   0          3h46m\nkube-system          kube-controller-manager-kind-control-plane   1/1     Running   0          3h46m\nkube-system          kube-proxy-fj5w5                             1/1     Running   0          3h46m\nkube-system          kube-scheduler-kind-control-plane            1/1     Running   0          3h46m\nlocal-path-storage   local-path-provisioner-58cc7856b6-mhn49      1/1     Running   0          3h46m\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "bash\nkubectl patch networkpolicy allow-frontend-to-adservice -n default --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"adservice\"}}, \"ingress\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}}], \"ports\": [{\"protocol\": \"TCP\", \"port\": 9555}]}]}}]'",
+        "output": "bash: error reading input file: Bad file descriptor\nError from server (NotFound): networkpolicies.networking.k8s.io \"allow-frontend-to-adservice\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)"
+    }
+]

@@ -1,0 +1,266 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy cartservice -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"cartservice","namespace":"default"},"spec":{"egress":[{}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}},{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}],"ports":[{"port":7070,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"cartservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-04-26T05:21:06Z"
+  generation: 14
+  name: cartservice
+  namespace: default
+  resourceVersion: "2306"
+  uid: fa1f8101-29b0-4426-87a2-3d23516b47b1
+spec:
+  egress:
+  - {}
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+    ports:
+    - port: 7070
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: cartservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy cartservice --type=merge -p $'
+spec:
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: redis-cart
+  ports:
+    - port: 6379
+      protocol: TCP
+'
+Output: networkpolicy.networking.k8s.io/cartservice patched
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy redis-cart -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"redis-cart","namespace":"default"},"spec":{"egress":[{}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"cartservice"}}}],"ports":[{"port":6379,"protocol":"SCTP"}]}],"podSelector":{"matchLabels":{"app":"redis-cart"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-04-26T05:21:07Z"
+  generation: 4
+  name: redis-cart
+  namespace: default
+  resourceVersion: "2307"
+  uid: 0e56ab84-8410-4f6d-898c-7e5ff1451e6d
+spec:
+  egress:
+  - {}
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: cartservice
+    ports:
+    - port: 6379
+      protocol: SCTP
+  podSelector:
+    matchLabels:
+      app: redis-cart
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy redis-cart --type=merge -p $'
+spec:
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: cartservice
+  ports:
+    - port: 6379
+      protocol: TCP
+'
+Output: networkpolicy.networking.k8s.io/redis-cart patched
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy cartservice -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"cartservice","namespace":"default"},"spec":{"egress":[{}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}},{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}],"ports":[{"port":7070,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"cartservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-04-26T05:21:06Z"
+  generation: 15
+  name: cartservice
+  namespace: default
+  resourceVersion: "2317"
+  uid: fa1f8101-29b0-4426-87a2-3d23516b47b1
+spec:
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: redis-cart
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+    ports:
+    - port: 7070
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: cartservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy cartservice --type=merge -p $'
+spec:
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: redis-cart
+    ports:
+    - port: 6379
+      protocol: TCP
+'
+Output: networkpolicy.networking.k8s.io/cartservice patched
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+
+LLM Command: kubectl get pods -o wide
+Output: NAME                                     READY   STATUS    RESTARTS   AGE   IP            NODE                 NOMINATED NODE   READINESS GATES
+adservice-6c49d7486b-28qcp               1/1     Running   0          14m   10.244.0.5    kind-control-plane   <none>           <none>
+cartservice-76588f7644-tz86b             1/1     Running   0          14m   10.244.0.6    kind-control-plane   <none>           <none>
+checkoutservice-79548dfd9c-2kxln         1/1     Running   0          14m   10.244.0.7    kind-control-plane   <none>           <none>
+currencyservice-8f74c6fd9-2xqkh          1/1     Running   0          14m   10.244.0.9    kind-control-plane   <none>           <none>
+emailservice-78559f4596-4lnkc            1/1     Running   0          14m   10.244.0.8    kind-control-plane   <none>           <none>
+frontend-698586bd84-qsvjn                1/1     Running   0          14m   10.244.0.11   kind-control-plane   <none>           <none>
+loadgenerator-5b66f88bc5-5k5mq           1/1     Running   0          14m   10.244.0.16   kind-control-plane   <none>           <none>
+paymentservice-77b9846f54-bvvm2          1/1     Running   0          14m   10.244.0.10   kind-control-plane   <none>           <none>
+productcatalogservice-6cbf7dc99f-zhtzc   1/1     Running   0          14m   10.244.0.14   kind-control-plane   <none>           <none>
+recommendationservice-69bd8d649f-xwfrs   1/1     Running   0          14m   10.244.0.12   kind-control-plane   <none>           <none>
+redis-cart-897cb46d-g69dd                1/1     Running   0          14m   10.244.0.13   kind-control-plane   <none>           <none>
+shippingservice-84f8847578-vdvwg         1/1     Running   0          14m   10.244.0.15   kind-control-plane   <none>           <none>
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+
+LLM Command: kubectl describe pod redis-cart-897cb46d-g69dd
+Output: Name:             redis-cart-897cb46d-g69dd
+Namespace:        default
+Priority:         0
+Service Account:  default
+Node:             kind-control-plane/172.18.0.2
+Start Time:       Sat, 26 Apr 2025 05:19:58 +0000
+Labels:           app=redis-cart
+                  pod-template-hash=897cb46d
+                  skaffold.dev/run-id=74139e59-b472-4183-b244-3471d720de64
+Annotations:      <none>
+Status:           Running
+IP:               10.244.0.13
+IPs:
+  IP:           10.244.0.13
+Controlled By:  ReplicaSet/redis-cart-897cb46d
+Containers:
+  redis:
+    Container ID:   containerd://abbc62d6a19d34d32b25405424cefc4dcb841c69b40da926a40e4532da377215
+    Image:          redis:alpine
+    Image ID:       docker.io/library/redis@sha256:f773b35a95e170d92dd4214a3ec4859b1b7960bf56896ae687646d695f311187
+    Port:           6379/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Sat, 26 Apr 2025 05:20:04 +0000
+    Ready:          True
+    Restart Count:  0
+    Limits:
+      cpu:     125m
+      memory:  256Mi
+    Requests:
+      cpu:        70m
+      memory:     200Mi
+    Liveness:     tcp-socket :6379 delay=0s timeout=1s period=5s #success=1 #failure=3
+    Readiness:    tcp-socket :6379 delay=0s timeout=1s period=5s #success=1 #failure=3
+    Environment:  <none>
+    Mounts:
+      /data from redis-data (rw)
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-cmldd (ro)
+Ephemeral Containers:
+  debugger-lxjtz:
+    Container ID:  containerd://6f71fd785eca65f60ba166457158779c977fed5d243ce7b66e7d45d3cfda021d
+    Image:         busybox
+    Image ID:      docker.io/library/busybox@sha256:37f7b378a29ceb4c551b1b5582e27747b855bbfaa73fa11914fe0df028dc581f
+    Port:          <none>
+    Host Port:     <none>
+    Command:
+      sleep
+      infinity
+    State:          Running
+      Started:      Sat, 26 Apr 2025 05:21:03 +0000
+    Ready:          False
+    Restart Count:  0
+    Environment:    <none>
+    Mounts:         <none>
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       True 
+  ContainersReady             True 
+  PodScheduled                True 
+Volumes:
+  redis-data:
+    Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:     
+    SizeLimit:  <unset>
+  kube-api-access-cmldd:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   Burstable
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type    Reason     Age   From               Message
+  ----    ------     ----  ----               -------
+  Normal  Scheduled  14m   default-scheduler  Successfully assigned default/redis-cart-897cb46d-g69dd to kind-control-plane
+  Normal  Pulling    14m   kubelet            Pulling image "redis:alpine"
+  Normal  Pulled     14m   kubelet            Successfully pulled image "redis:alpine" in 3.757s (3.757s including waiting). Image size: 17241461 bytes.
+  Normal  Created    14m   kubelet            Created container: redis
+  Normal  Started    14m   kubelet            Started container redis
+  Normal  Pulling    13m   kubelet            Pulling image "busybox"
+  Normal  Pulled     13m   kubelet            Successfully pulled image "busybox" in 583ms (583ms including waiting). Image size: 2156519 bytes.
+  Normal  Created    13m   kubelet            Created container: debugger-lxjtz
+  Normal  Started    13m   kubelet            Started container debugger-lxjtz
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+

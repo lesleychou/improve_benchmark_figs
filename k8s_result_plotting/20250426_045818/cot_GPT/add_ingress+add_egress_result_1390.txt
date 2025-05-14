@@ -1,0 +1,326 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: productcatalogservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy redis-cart-policy -n redis-cart --type=json -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "productcatalogservice"}}}}]'
+Output: networkpolicy.networking.k8s.io/redis-cart-policy patched
+
+Mismatch Summary: Mismatch: productcatalogservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy redis-cart-policy -n redis-cart --type=json -p='[{"op": "remove", "path": "/spec/ingress/0/from"}]'
+Output: networkpolicy.networking.k8s.io/redis-cart-policy patched
+
+Mismatch Summary: Mismatch: productcatalogservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy productcatalog-policy -n productcatalogservice --type=json -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "recommendationservice"}}}}]'
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "productcatalog-policy" not found
+
+Mismatch Summary: Mismatch: productcatalogservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy productcatalog-policy -n productcatalogservice --type=json -p='[{"op": "add", "path": "", "value": {"apiVersion": "networking.k8s.io/v1", "kind": "NetworkPolicy", "metadata": {"name": "productcatalog-policy"}, "spec": {"podSelector": {"matchLabels": {"app": "productcatalogservice"}}, "policyTypes": ["Ingress"], "ingress": [{"from": [{"podSelector": {"matchLabels": {"app": "recommendationservice"}}}]}]}}}]'
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "productcatalog-policy" not found
+
+Mismatch Summary: Mismatch: productcatalogservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: productcatalog-policy
+  namespace: productcatalogservice
+spec:
+  podSelector:
+    matchLabels:
+      app: productcatalogservice
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: recommendationservice
+EOF
+Output: networkpolicy.networking.k8s.io/productcatalog-policy created
+
+Mismatch Summary: Mismatch: productcatalogservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n productcatalogservice
+Output: NAME                                      POD-SELECTOR                AGE
+allow-checkout-to-productcatalog          app=productcatalogservice   6h13m
+allow-frontend-to-productcatalog          app=productcatalog          3h7m
+allow-frontend-to-productcatalogservice   app=productcatalogservice   13h
+allow-recommendation-to-productcatalog    app=productcatalogservice   14h
+deny-ad-to-productcatalog                 app=productcatalogservice   70m
+deny-adservice                            app=productcatalogservice   18h
+deny-productcatalog-egress                app=productcatalog          3h6m
+productcatalog-network-policy             app=productcatalogservice   13h
+productcatalog-policy                     app=productcatalogservice   5s
+productcatalogservice                     app=productcatalogservice   4h58m
+productcatalogservice-deny-redis          <none>                      69m
+productcatalogservice-policy              app=productcatalogservice   17h
+restrict-egress-to-redis-cart             app=productcatalogservice   17h
+restrict-productcatalog-egress            app=productcatalog          3h6m
+
+Mismatch Summary: Mismatch: productcatalogservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy productcatalog-policy -n productcatalogservice --type=json -p='[{"op": "add", "path": "/spec/ingress/0/ports", "value": [{"protocol": "TCP", "port": 3550}]}]'
+Output: networkpolicy.networking.k8s.io/productcatalog-policy patched
+
+Mismatch Summary: Mismatch: productcatalogservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl describe networkpolicy -n productcatalogservice
+Output: Name:         allow-checkout-to-productcatalog
+Namespace:    productcatalogservice
+Created on:   2025-04-26 17:21:50 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=productcatalogservice
+  Allowing ingress traffic:
+    To Port: 3550/TCP
+    From:
+      PodSelector: app=checkoutservice
+  Not affecting egress traffic
+  Policy Types: Ingress
+
+
+Name:         allow-frontend-to-productcatalog
+Namespace:    productcatalogservice
+Created on:   2025-04-26 20:27:47 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=productcatalog
+  Allowing ingress traffic:
+    To Port: 3550/TCP
+    From:
+      PodSelector: app=frontend
+  Not affecting egress traffic
+  Policy Types: Ingress
+
+
+Name:         allow-frontend-to-productcatalogservice
+Namespace:    productcatalogservice
+Created on:   2025-04-26 10:34:21 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=productcatalogservice
+  Allowing ingress traffic:
+    To Port: 3550/TCP
+    From:
+      PodSelector: app=frontend
+  Not affecting egress traffic
+  Policy Types: Ingress
+
+
+Name:         allow-recommendation-to-productcatalog
+Namespace:    productcatalogservice
+Created on:   2025-04-26 09:24:24 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=productcatalogservice
+  Allowing ingress traffic:
+    To Port: 3550/TCP
+    From:
+      PodSelector: app=recommendationservice
+  Not affecting egress traffic
+  Policy Types: Ingress
+
+
+Name:         deny-ad-to-productcatalog
+Namespace:    productcatalogservice
+Created on:   2025-04-26 22:24:13 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=productcatalogservice
+  Allowing ingress traffic:
+    <none> (Selected pods are isolated for ingress connectivity)
+  Not affecting egress traffic
+  Policy Types: Ingress
+
+
+Name:         deny-adservice
+Namespace:    productcatalogservice
+Created on:   2025-04-26 05:33:46 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=productcatalogservice
+  Allowing ingress traffic:
+    To Port: 9555/TCP
+    From:
+      PodSelector: app=adservice
+  Not affecting egress traffic
+  Policy Types: Ingress
+
+
+Name:         deny-productcatalog-egress
+Namespace:    productcatalogservice
+Created on:   2025-04-26 20:28:13 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=productcatalog
+  Allowing ingress traffic:
+    <none> (Selected pods are isolated for ingress connectivity)
+  Allowing egress traffic:
+    To Port: <any> (traffic allowed to all ports)
+    To: <any> (traffic not restricted by destination)
+  Policy Types: Ingress, Egress
+
+
+Name:         productcatalog-network-policy
+Namespace:    productcatalogservice
+Created on:   2025-04-26 09:55:00 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=productcatalogservice
+  Allowing ingress traffic:
+    To Port: 3550/TCP
+    From: <any> (traffic not restricted by source)
+  Not affecting egress traffic
+  Policy Types: Ingress
+
+
+Name:         productcatalog-policy
+Namespace:    productcatalogservice
+Created on:   2025-04-26 23:34:58 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=productcatalogservice
+  Allowing ingress traffic:
+    To Port: 3550/TCP
+    From:
+      PodSelector: app=recommendationservice
+  Not affecting egress traffic
+  Policy Types: Ingress
+
+
+Name:         productcatalogservice
+Namespace:    productcatalogservice
+Created on:   2025-04-26 18:36:04 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=productcatalogservice
+  Allowing ingress traffic:
+    To Port: 3550/TCP
+    From:
+      PodSelector: app=frontend
+  Not affecting egress traffic
+  Policy Types: Ingress
+
+
+Name:         productcatalogservice-deny-redis
+Namespace:    productcatalogservice
+Created on:   2025-04-26 22:25:27 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     <none> (Allowing the specific traffic to all pods in this namespace)
+  Not affecting ingress traffic
+  Allowing egress traffic:
+    To Port: 6379/TCP
+    To:
+      PodSelector: app=redis-cart
+  Policy Types: Egress
+
+
+Name:         productcatalogservice-policy
+Namespace:    productcatalogservice
+Created on:   2025-04-26 06:12:21 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=productcatalogservice
+  Allowing ingress traffic:
+    <none> (Selected pods are isolated for ingress connectivity)
+  Allowing egress traffic:
+    <none> (Selected pods are isolated for egress connectivity)
+  Policy Types: Ingress, Egress
+
+
+Name:         restrict-egress-to-redis-cart
+Namespace:    productcatalogservice
+Created on:   2025-04-26 06:34:32 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=productcatalogservice
+  Not affecting ingress traffic
+  Allowing egress traffic:
+    To Port: 6379/TCP
+    To:
+      PodSelector: app=redis-cart
+    ----------
+    To Port: 50051/TCP
+    To:
+      PodSelector: app=shippingservice
+  Policy Types: Egress
+
+
+Name:         restrict-productcatalog-egress
+Namespace:    productcatalogservice
+Created on:   2025-04-26 20:28:10 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=productcatalog
+  Allowing ingress traffic:
+    <none> (Selected pods are isolated for ingress connectivity)
+  Allowing egress traffic:
+    <none> (Selected pods are isolated for egress connectivity)
+  Policy Types: Ingress, Egress
+
+Mismatch Summary: Mismatch: productcatalogservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+

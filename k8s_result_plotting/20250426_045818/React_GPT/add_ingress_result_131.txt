@@ -1,0 +1,144 @@
+LLM Command: kubectl get networkpolicy -n frontend
+Output: 
+Mismatch Summary: Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → currencyservice:7000 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n currencyservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → currencyservice:7000 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy -n currencyservice --type='merge' -p '{
+  "apiVersion": "networking.k8s.io/v1",
+  "kind": "NetworkPolicy",
+  "metadata": {
+    "name": "currencyservice-allow-specific"
+  },
+  "spec": {
+    "podSelector": {},
+    "policyTypes": ["Ingress"],
+    "ingress": [
+      {
+        "from": [
+          {
+            "namespaceSelector": {
+              "matchLabels": {
+                "name": "frontend"
+              }
+            }
+          },
+          {
+            "namespaceSelector": {
+              "matchLabels": {
+                "name": "checkout"
+              }
+            }
+          }
+        ],
+        "ports": [
+          {
+            "port": 7000,
+            "protocol": "TCP"
+          }
+        ]
+      }
+    ]
+  }
+}'
+Output: error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → currencyservice:7000 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy currencyservice-allow-specific -n currencyservice --type='merge' -p '{
+  "apiVersion": "networking.k8s.io/v1",
+  "kind": "NetworkPolicy",
+  "metadata": {
+    "name": "currencyservice-allow-specific"
+  },
+  "spec": {
+    "podSelector": {},
+    "policyTypes": ["Ingress"],
+    "ingress": [
+      {
+        "from": [
+          {
+            "namespaceSelector": {
+              "matchLabels": {
+                "name": "frontend"
+              }
+            }
+          },
+          {
+            "namespaceSelector": {
+              "matchLabels": {
+                "name": "checkout"
+              }
+            }
+          }
+        ],
+        "ports": [
+          {
+            "port": 7000,
+            "protocol": "TCP"
+          }
+        ]
+      }
+    ]
+  }
+}'
+Output: Error from server (NotFound): namespaces "currencyservice" not found
+
+Mismatch Summary: Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → currencyservice:7000 (Expected: False, Actual: True)
+
+LLM Command: kubectl get namespaces
+Output: NAME                 STATUS   AGE
+default              Active   108m
+kube-node-lease      Active   108m
+kube-public          Active   108m
+kube-system          Active   108m
+local-path-storage   Active   108m
+
+Mismatch Summary: Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → currencyservice:7000 (Expected: False, Actual: True)
+
+LLM Command: kubectl get namespaces
+Output: NAME                 STATUS   AGE
+default              Active   108m
+kube-node-lease      Active   108m
+kube-public          Active   108m
+kube-system          Active   108m
+local-path-storage   Active   108m
+
+Mismatch Summary: Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → currencyservice:7000 (Expected: False, Actual: True)
+
+LLM Command: kubectl get namespaces
+Output: NAME                 STATUS   AGE
+default              Active   108m
+kube-node-lease      Active   108m
+kube-public          Active   108m
+kube-system          Active   108m
+local-path-storage   Active   108m
+
+Mismatch Summary: Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → currencyservice:7000 (Expected: False, Actual: True)
+
+LLM Command: DuckDuckGo Search: "currencyservice namespace Kubernetes"
+Output: /bin/bash: line 1: DuckDuckGo: command not found
+
+Mismatch Summary: Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → currencyservice:7000 (Expected: False, Actual: True)
+
+LLM Command: currencyservice namespace Kubernetes microservices architecture
+Output: /bin/bash: line 1: currencyservice: command not found
+
+Mismatch Summary: Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → currencyservice:7000 (Expected: False, Actual: True)
+

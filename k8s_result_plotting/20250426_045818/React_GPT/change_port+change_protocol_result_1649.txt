@@ -1,0 +1,147 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n frontend -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n checkoutservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy -n frontend --type='json' -p='[{"op": "add", "path": "/spec/ingress", "value": [{"from": [{"podSelector": {"matchLabels": {"app": "productcatalogservice"}}}], "ports": [{"protocol": "TCP", "port": 3550}]}]}]'
+Output: error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl apply -n frontend -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-productcatalogservice
+spec:
+  podSelector:
+    matchLabels: {}
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: productcatalogservice
+    ports:
+    - protocol: TCP
+      port: 3550
+EOF
+Output: error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl apply -n frontend -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-productcatalogservice
+spec:
+  podSelector:
+    matchLabels: {}
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: productcatalogservice
+    ports:
+    - protocol: TCP
+      port: 3550
+EOF
+Output: error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl create networkpolicy allow-productcatalogservice -n frontend --pod-selector=app=frontend --ingress --from-pod-selector=app=productcatalogservice --port=3550
+Output: error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: bash
+kubectl apply -n frontend -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-productcatalogservice
+spec:
+  podSelector:
+    matchLabels:
+      app: frontend
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: productcatalogservice
+    ports:
+    - protocol: TCP
+      port: 3550
+EOF
+Output: error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: bash
+kubectl apply -n frontend -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-productcatalogservice-to-frontend
+spec:
+  podSelector:
+    matchLabels:
+      app: frontend
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: productcatalogservice
+    ports:
+    - protocol: TCP
+      port: 3550
+EOF
+Output: error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+

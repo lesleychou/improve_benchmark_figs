@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend -o yaml",
+        "output": "apiVersion: v1\nitems:\n- apiVersion: networking.k8s.io/v1\n  kind: NetworkPolicy\n  metadata:\n    annotations:\n      kubectl.kubernetes.io/last-applied-configuration: |\n        {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"frontend-allow-adservice\",\"namespace\":\"frontend\"},\"spec\":{\"ingress\":[{\"from\":[{\"namespaceSelector\":{\"matchLabels\":{\"name\":\"adservice\"}}}],\"ports\":[{\"port\":9555,\"protocol\":\"TCP\"}]}],\"podSelector\":{},\"policyTypes\":[\"Ingress\"]}}\n    creationTimestamp: \"2025-04-27T15:36:39Z\"\n    generation: 3\n    name: frontend-allow-adservice\n    namespace: frontend\n    resourceVersion: \"1299\"\n    uid: 7abeb705-11ae-467e-8fe1-f72eabc1710b\n  spec:\n    ingress:\n    - from:\n      - namespaceSelector:\n          matchLabels:\n            kubernetes.io/metadata.name: adservice\n      ports:\n      - port: 9555\n        protocol: TCP\n    podSelector: {}\n    policyTypes:\n    - Ingress\n- apiVersion: networking.k8s.io/v1\n  kind: NetworkPolicy\n  metadata:\n    annotations:\n      kubectl.kubernetes.io/last-applied-configuration: |\n        {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"frontend-policy\",\"namespace\":\"frontend\"},\"spec\":{\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"adservice\"}}}],\"ports\":[{\"port\":9555,\"protocol\":\"TCP\"}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}}}}\n    creationTimestamp: \"2025-04-27T15:37:10Z\"\n    generation: 5\n    name: frontend-policy\n    namespace: frontend\n    resourceVersion: \"1534\"\n    uid: bbdb2b23-ff7c-4637-bff2-4072d54fac16\n  spec:\n    ingress:\n    - from:\n      - podSelector:\n          matchLabels:\n            app: adservice\n      - namespaceSelector:\n          matchLabels:\n            kubernetes.io/metadata.name: shippingservice\n      - namespaceSelector:\n          matchLabels:\n            kubernetes.io/metadata.name: checkoutservice\n      ports:\n      - port: 9555\n        protocol: TCP\n      - port: 50051\n        protocol: TCP\n      - port: 5050\n        protocol: TCP\n    podSelector:\n      matchLabels:\n        app: frontend\n    policyTypes:\n    - Ingress\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy frontend-policy -n frontend --type='json' -p='[{\"op\":\"add\",\"path\":\"/spec/ingress/0/ports/-\",\"value\":{\"port\":8080,\"protocol\":\"TCP\"}},{\"op\":\"add\",\"path\":\"/spec/ingress/0/from/-\",\"value\":{\"namespaceSelector\":{\"matchLabels\":{\"kubernetes.io/metadata.name\":\"recommendationservice\"}}}}]'",
+        "output": "networkpolicy.networking.k8s.io/frontend-policy patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get namespace recommendationservice --show-labels",
+        "output": "Error from server (NotFound): namespaces \"recommendationservice\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get pods --all-namespaces -l app=recommendation",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get pods --all-namespaces -l app=recommendation -o wide",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\nadservice            Active   5m44s\ndefault              Active   10m\nfrontend             Active   5m55s\nkube-node-lease      Active   10m\nkube-public          Active   10m\nkube-system          Active   10m\nlocal-path-storage   Active   10m\nshippingservice      Active   2m2s\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl create namespace recommendationservice",
+        "output": "namespace/recommendationservice created\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get namespace recommendationservice --show-labels",
+        "output": "NAME                    STATUS   AGE   LABELS\nrecommendationservice   Active   4s    kubernetes.io/metadata.name=recommendationservice\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    }
+]

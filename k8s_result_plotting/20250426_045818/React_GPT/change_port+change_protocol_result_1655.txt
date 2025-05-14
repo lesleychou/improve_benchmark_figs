@@ -1,0 +1,58 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n adservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy -n frontend --type='json' -p='[{"op": "add", "path": "/spec/ingress/-", "value": {"from": [{"podSelector": {"matchLabels": {"app": "frontend"}}}], "ports": [{"protocol": "TCP", "port": 9555}]}}]'
+Output: error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n frontend -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy -n adservice --type='json' -p='[{"op": "add", "path": "/spec", "value": {"podSelector": {"matchLabels": {"app": "adservice"}}, "ingress": [{"from": [{"namespaceSelector": {"matchLabels": {"name": "frontend"}}}], "ports": [{"protocol": "TCP", "port": 9555}]}]}}]'
+Output: error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n adservice
+Output: 
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy --all-namespaces
+Output: NAMESPACE   NAME                    POD-SELECTOR                AGE
+default     adservice               app=adservice               6h30m
+default     cartservice             app=cartservice             6h30m
+default     checkoutservice         app=checkoutservice         6h30m
+default     currencyservice         app=currencyservice         6h30m
+default     emailservice            app=emailservice            6h30m
+default     frontend                app=frontend                6h30m
+default     loadgenerator           app=loadgenerator           6h30m
+default     paymentservice          app=paymentservice          6h30m
+default     productcatalogservice   app=productcatalogservice   6h30m
+default     recommendationservice   app=recommendationservice   6h30m
+default     redis-cart              app=redis-cart              6h30m
+default     shippingservice         app=shippingservice         6h30m
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy adservice -n default --type='json' -p='[{"op": "add", "path": "/spec/ingress/-", "value": {"from": [{"podSelector": {"matchLabels": {"app": "frontend"}}}], "ports": [{"protocol": "TCP", "port": 9555}]}}]'
+Output: networkpolicy.networking.k8s.io/adservice patched
+
+Mismatch Summary: No mismatches found.
+

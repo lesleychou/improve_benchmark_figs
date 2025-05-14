@@ -1,0 +1,90 @@
+LLM Command: kubectl get networkpolicy --all-namespaces
+Output: NAMESPACE   NAME                    POD-SELECTOR                AGE
+default     adservice               app=adservice               19h
+default     cartservice             app=cartservice             19h
+default     checkoutservice         app=checkoutservice         19h
+default     currencyservice         app=currencyservice         19h
+default     emailservice            app=emailservice            19h
+default     frontend                app=frontend                19h
+default     loadgenerator           app=loadgenerator           19h
+default     paymentservice          app=paymentservice          19h
+default     productcatalogservice   app=productcatalogservice   19h
+default     recommendationservice   app=recommendationservice   19h
+default     redis-cart              app=redis-cart              19h
+default     shippingservice         app=shippingservice         19h
+
+Mismatch Summary: Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: adservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: emailservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy frontend -n default --type=json -p '[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "shippingservice"}}}}, {"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 50051, "protocol": "TCP"}}]'
+Output: The request is invalid: the server rejected our request due to an error in our request
+
+Mismatch Summary: Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: adservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: emailservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy frontend -n default --type=json -p '[{"op": "add", "path": "/spec/ingress/0/from", "value": [{"podSelector": {"matchLabels": {"app": "shippingservice"}}}]}, {"op": "add", "path": "/spec/ingress/0/ports", "value": [{"port": 50051, "protocol": "TCP"}]}]'
+Output: networkpolicy.networking.k8s.io/frontend patched
+
+Mismatch Summary: Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: adservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: emailservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy checkoutservice -n default --type=json -p '[{"op": "add", "path": "/spec/ingress/0/from", "value": [{"podSelector": {"matchLabels": {"app": "shippingservice"}}}]}, {"op": "add", "path": "/spec/ingress/0/ports", "value": [{"port": 50051, "protocol": "TCP"}]}]'
+Output: networkpolicy.networking.k8s.io/checkoutservice patched
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: adservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: emailservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy frontend -n default --type=json -p '[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "checkoutservice"}}}}, {"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 5050, "protocol": "TCP"}}]'
+Output: networkpolicy.networking.k8s.io/frontend patched
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: adservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: emailservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy frontend -n default --type=json -p '[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "shippingservice"}}}}, {"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 50051, "protocol": "TCP"}}]'
+Output: networkpolicy.networking.k8s.io/frontend patched
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: adservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: emailservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy frontend -n default --type=json -p '[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "checkoutservice"}}}}, {"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 5050, "protocol": "TCP"}}]'
+Output: networkpolicy.networking.k8s.io/frontend patched
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: adservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: emailservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy adservice -n default --type=json -p '[{"op": "add", "path": "/spec/egress/0/to/-", "value": {"podSelector": {"matchLabels": {"app": "redis-cart"}}}}, {"op": "add", "path": "/spec/egress/0/ports/-", "value": {"port": 6379, "protocol": "TCP"}}]'
+Output: The request is invalid: the server rejected our request due to an error in our request
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: adservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: emailservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy frontend -n default --type=json -p '[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "checkoutservice"}}}}, {"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 5050, "protocol": "TCP"}}]'
+Output: networkpolicy.networking.k8s.io/frontend patched
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: adservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: emailservice → redis-cart:6379 (Expected: False, Actual: True)
+

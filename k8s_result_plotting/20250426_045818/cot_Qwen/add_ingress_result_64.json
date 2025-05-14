@@ -1,0 +1,27 @@
+[
+    {
+        "llm_command": "NAME                  POD-SELECTOR   INGRESS   EGRESS   POLICYTYPES\n          frontend-policy       app=frontend   true      false    Ingress\n          checkout-policy       app=checkout   true      false    Ingress\n          recommendation-policy app=recommendation true   false    Ingress\n          cart-policy           app=cart       true      false    Ingress\n          redis-cache-policy    app=redis-cache true     false    Ingress",
+        "output": "/bin/bash: line 1: NAME: command not found\n/bin/bash: line 2: frontend-policy: command not found\n/bin/bash: line 3: checkout-policy: command not found\n/bin/bash: line 4: recommendation-policy: command not found\n/bin/bash: line 5: cart-policy: command not found\n/bin/bash: line 6: redis-cache-policy: command not found\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: adservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n default",
+        "output": "NAME                    POD-SELECTOR                AGE\nadservice               app=adservice               3h19m\ncartservice             app=cartservice             3h19m\ncheckoutservice         app=checkoutservice         3h19m\ncurrencyservice         app=currencyservice         3h19m\nemailservice            app=emailservice            3h19m\nfrontend                app=frontend                3h19m\nloadgenerator           app=loadgenerator           3h19m\npaymentservice          app=paymentservice          3h19m\nproductcatalogservice   app=productcatalogservice   3h19m\nrecommendationservice   app=recommendationservice   3h19m\nredis-cart              app=redis-cart              3h19m\nshippingservice         app=shippingservice         3h19m\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy cartservice -n default -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"cartservice\",\"namespace\":\"default\"},\"spec\":{\"egress\":[{}],\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"checkoutservice\"}}}],\"ports\":[{\"port\":7070,\"protocol\":\"TCP\"}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"cartservice\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n  creationTimestamp: \"2025-04-28T05:25:41Z\"\n  generation: 29\n  name: cartservice\n  namespace: default\n  resourceVersion: \"16771\"\n  uid: 39184e6f-f6f1-49f6-92fb-899e4150ac6c\nspec:\n  egress:\n  - {}\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    - podSelector:\n        matchLabels:\n          app: checkoutservice\n    ports:\n    - port: 7070\n      protocol: TCP\n  podSelector:\n    matchLabels:\n      app: cartservice\n  policyTypes:\n  - Ingress\n  - Egress\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy redis-cart -n default -p '{\"spec\":{\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"cartservice\"}}}],\"ports\":[{\"port\":6379,\"protocol\":\"TCP\"}]}]}}'",
+        "output": "networkpolicy.networking.k8s.io/redis-cart patched\n",
+        "mismatch_summary": "No mismatches found."
+    }
+]

@@ -1,0 +1,12 @@
+[
+    {
+        "llm_command": "kubectl get networkpolicy -A",
+        "output": "NAMESPACE   NAME                    POD-SELECTOR                AGE\ndefault     adservice               app=adservice               3h51m\ndefault     cartservice             app=cartservice             3h51m\ndefault     checkoutservice         app=checkoutservice         3h51m\ndefault     currencyservice         app=currencyservice         3h51m\ndefault     emailservice            app=emailservice            3h51m\ndefault     frontend                app=frontend                3h51m\ndefault     loadgenerator           app=loadgenerator           3h51m\ndefault     paymentservice          app=paymentservice          3h51m\ndefault     productcatalogservice   app=productcatalogservice   3h51m\ndefault     recommendationservice   app=recommendationservice   3h51m\ndefault     redis-cart              app=redis-cart              3h51m\ndefault     shippingservice         app=shippingservice         3h51m\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy checkoutservice -n default --type=json -p '[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 5050, \"protocol\": \"TCP\"}}]'",
+        "output": "networkpolicy.networking.k8s.io/checkoutservice patched\n",
+        "mismatch_summary": "No mismatches found."
+    }
+]

@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n cartservice -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy -n cartservice --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"cartservice\"}}, \"policyTypes\": [\"Egress\"], \"egress\": [{\"to\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"redis-cart\"}}}], \"ports\": [{\"protocol\": \"TCP\", \"port\": 6379}]}]}}]'",
+        "output": "error: resource(s) were provided, but no name was specified\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n redis-cart -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy allow-cartservice-to-redis -n cartservice --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"cartservice\"}}, \"policyTypes\": [\"Egress\"], \"egress\": [{\"to\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"redis-cart\"}}}], \"ports\": [{\"protocol\": \"TCP\", \"port\": 6379}]}]}}]'",
+        "output": "Error from server (NotFound): namespaces \"cartservice\" not found\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\ndefault              Active   8h\nkube-node-lease      Active   8h\nkube-public          Active   8h\nkube-system          Active   8h\nlocal-path-storage   Active   8h\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get pods -n default -o wide",
+        "output": "NAME                                     READY   STATUS    RESTARTS        AGE   IP            NODE                 NOMINATED NODE   READINESS GATES\nadservice-597dc59b77-q8dfh               1/1     Running   0               8h    10.244.0.6    kind-control-plane   <none>           <none>\ncartservice-577f8d8c75-5lfjl             1/1     Running   0               8h    10.244.0.5    kind-control-plane   <none>           <none>\ncheckoutservice-55698bfcc5-hrjtk         1/1     Running   0               8h    10.244.0.7    kind-control-plane   <none>           <none>\ncurrencyservice-c5968f8f5-dx7rq          1/1     Running   1 (3h57m ago)   8h    10.244.0.8    kind-control-plane   <none>           <none>\nemailservice-6c56b65f6d-fkhwd            1/1     Running   0               8h    10.244.0.9    kind-control-plane   <none>           <none>\nfrontend-797c8f7758-fkv9r                1/1     Running   0               8h    10.244.0.11   kind-control-plane   <none>           <none>\nloadgenerator-6c5b65b44b-wp4z7           1/1     Running   0               8h    10.244.0.16   kind-control-plane   <none>           <none>\npaymentservice-76948fc564-dlnrz          1/1     Running   1 (3h42m ago)   8h    10.244.0.10   kind-control-plane   <none>           <none>\nproductcatalogservice-5f9d5c689b-x9sdp   1/1     Running   0               8h    10.244.0.12   kind-control-plane   <none>           <none>\nrecommendationservice-67cbb84b7b-c2src   1/1     Running   0               8h    10.244.0.14   kind-control-plane   <none>           <none>\nredis-cart-866688457f-zsqdb              1/1     Running   0               8h    10.244.0.13   kind-control-plane   <none>           <none>\nshippingservice-9ddf878c7-gr8bc          1/1     Running   0               8h    10.244.0.15   kind-control-plane   <none>           <none>\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl apply -n default -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-cartservice-to-redis\n  namespace: default\nspec:\n  podSelector:\n    matchLabels:\n      app: cartservice\n  policyTypes:\n  - Egress\n  egress:\n  - to:\n    - podSelector:\n        matchLabels:\n          app: redis-cart\n    ports:\n    - protocol: TCP\n      port: 6379\nEOF",
+        "output": "NAME                                     READY   STATUS    RESTARTS        AGE   IP            NODE                 NOMINATED NODE   READINESS GATES\nadservice-597dc59b77-q8dfh               1/1     Running   0               8h    10.244.0.6    kind-control-plane   <none>           <none>\ncartservice-577f8d8c75-5lfjl             1/1     Running   0               8h    10.244.0.5    kind-control-plane   <none>           <none>\ncheckoutservice-55698bfcc5-hrjtk         1/1     Running   0               8h    10.244.0.7    kind-control-plane   <none>           <none>\ncurrencyservice-c5968f8f5-dx7rq          1/1     Running   1 (3h57m ago)   8h    10.244.0.8    kind-control-plane   <none>           <none>\nemailservice-6c56b65f6d-fkhwd            1/1     Running   0               8h    10.244.0.9    kind-control-plane   <none>           <none>\nfrontend-797c8f7758-fkv9r                1/1     Running   0               8h    10.244.0.11   kind-control-plane   <none>           <none>\nloadgenerator-6c5b65b44b-wp4z7           1/1     Running   0               8h    10.244.0.16   kind-control-plane   <none>           <none>\npaymentservice-76948fc564-dlnrz          1/1     Running   1 (3h42m ago)   8h    10.244.0.10   kind-control-plane   <none>           <none>\nproductcatalogservice-5f9d5c689b-x9sdp   1/1     Running   0               8h    10.244.0.12   kind-control-plane   <none>           <none>\nrecommendationservice-67cbb84b7b-c2src   1/1     Running   0               8h    10.244.0.14   kind-control-plane   <none>           <none>\nredis-cart-866688457f-zsqdb              1/1     Running   0               8h    10.244.0.13   kind-control-plane   <none>           <none>\nshippingservice-9ddf878c7-gr8bc          1/1     Running   0               8h    10.244.0.15   kind-control-plane   <none>           <none>\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy allow-cartservice-to-redis -n default -o yaml",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"allow-cartservice-to-redis\" not found\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)"
+    }
+]

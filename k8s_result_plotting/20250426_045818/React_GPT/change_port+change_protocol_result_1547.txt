@@ -1,0 +1,184 @@
+LLM Command: kubectl get networkpolicy --all-namespaces
+Output: NAMESPACE   NAME                    POD-SELECTOR                AGE
+default     adservice               app=adservice               3h9m
+default     cartservice             app=cartservice             3h8m
+default     checkoutservice         app=checkoutservice         3h8m
+default     currencyservice         app=currencyservice         3h8m
+default     emailservice            app=emailservice            3h8m
+default     frontend                app=frontend                3h8m
+default     loadgenerator           app=loadgenerator           3h8m
+default     paymentservice          app=paymentservice          3h8m
+default     productcatalogservice   app=productcatalogservice   3h8m
+default     recommendationservice   app=recommendationservice   3h8m
+default     redis-cart              app=redis-cart              3h8m
+default     shippingservice         app=shippingservice         3h8m
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy adservice -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"adservice","namespace":"default"},"spec":{"egress":[{}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":18052,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"adservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-05-09T15:32:21Z"
+  generation: 31
+  name: adservice
+  namespace: default
+  resourceVersion: "16069"
+  uid: 5669c3f4-2bd2-49b7-9040-0aab6c5e6558
+spec:
+  egress:
+  - {}
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    ports:
+    - port: 18052
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: adservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy emailservice -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"emailservice","namespace":"default"},"spec":{"egress":[{}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}],"ports":[{"port":8080,"protocol":"SCTP"}]}],"podSelector":{"matchLabels":{"app":"emailservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-05-09T15:32:22Z"
+  generation: 22
+  name: emailservice
+  namespace: default
+  resourceVersion: "16072"
+  uid: 89417178-7d02-4f9d-bee6-0ac73ff2fa71
+spec:
+  egress:
+  - {}
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+    ports:
+    - port: 8080
+      protocol: SCTP
+  podSelector:
+    matchLabels:
+      app: emailservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy adservice -n default --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 9555, "protocol": "TCP"}}]'
+Output: networkpolicy.networking.k8s.io/adservice patched
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy emailservice -n default --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 5000, "protocol": "TCP"}}]'
+Output: networkpolicy.networking.k8s.io/emailservice patched
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy emailservice -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"emailservice","namespace":"default"},"spec":{"egress":[{}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}],"ports":[{"port":8080,"protocol":"SCTP"}]}],"podSelector":{"matchLabels":{"app":"emailservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-05-09T15:32:22Z"
+  generation: 23
+  name: emailservice
+  namespace: default
+  resourceVersion: "16163"
+  uid: 89417178-7d02-4f9d-bee6-0ac73ff2fa71
+spec:
+  egress:
+  - {}
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+    ports:
+    - port: 8080
+      protocol: SCTP
+    - port: 5000
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: emailservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy checkoutservice -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"checkoutservice","namespace":"default"},"spec":{"egress":[{}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":5050,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"checkoutservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-05-09T15:32:22Z"
+  generation: 91
+  name: checkoutservice
+  namespace: default
+  resourceVersion: "16070"
+  uid: 11bd4b2d-4216-4683-9384-215c5ffceb93
+spec:
+  egress:
+  - {}
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    ports:
+    - port: 5050
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: checkoutservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy checkoutservice -n default --type='json' -p='[{"op": "add", "path": "/spec/egress/0/to", "value": [{"podSelector": {"matchLabels": {"app": "emailservice"}}, "ports": [{"port": 5000, "protocol": "TCP"}]}]}]'
+Output: networkpolicy.networking.k8s.io/checkoutservice patched
+
+Mismatch Summary: Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy checkoutservice -n default --type='json' -p='[{"op": "add", "path": "/spec/egress/0/to/-", "value": {"podSelector": {"matchLabels": {"app": "cartservice"}}, "ports": [{"port": 7070, "protocol": "TCP"}]}}]'
+Output: networkpolicy.networking.k8s.io/checkoutservice patched
+
+Mismatch Summary: Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+

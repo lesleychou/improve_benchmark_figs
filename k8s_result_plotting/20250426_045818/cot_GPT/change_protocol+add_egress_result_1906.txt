@@ -1,0 +1,113 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy checkoutservice-policy -n checkoutservice --type=json -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "cartservice"}}, "namespaceSelector": {"matchLabels": {"name": "cartservice"}}}}]'
+Output: Error from server (NotFound): namespaces "checkoutservice" not found
+
+Mismatch Summary: Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl
+kubectl patch networkpolicy checkoutservice-policy -n cartservice --type=json -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "cartservice"}}}}]'
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "checkoutservice-policy" not found
+
+Mismatch Summary: Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy --all-namespaces
+Output: NAMESPACE               NAME                                     POD-SELECTOR                AGE
+adservice               allow-frontend-ingress                   app=adservice               44m
+adservice               allow-frontend-to-adservice              app=adservice               47m
+adservice               deny-egress-to-checkout                  app=adservice               23m
+cartservice             allow-frontend-to-cartservice            app=cartservice             12m
+cartservice             allow-redis-access                       app=cartservice             23m
+cartservice             cart-allow-redis                         app=cartservice             9m17s
+cartservice             cartservice                              app=cartservice             13m
+cartservice             cartservice-policy                       app=cartservice             72m
+cartservice             redis-cart                               app=redis-cart              14m
+default                 adservice                                app=adservice               96m
+default                 allow-cart-to-redis                      app=cartservice             93m
+default                 allow-checkout-to-currency               app=currencyservice         32m
+default                 allow-checkout-to-email                  app=checkoutservice         92m
+default                 allow-frontend-to-currencyservice        app=currencyservice         80m
+default                 allow-paymentservice                     <none>                      35m
+default                 cartservice                              app=cartservice             96m
+default                 cartservice-network-policy               app=cartservice             87m
+default                 cartservice-policy                       app=cartservice             75m
+default                 checkout-policy                          app=checkoutservice         87m
+default                 checkoutservice                          app=checkoutservice         96m
+default                 checkoutservice-policy                   app=checkoutservice         80m
+default                 currencyservice                          app=currencyservice         96m
+default                 emailservice                             app=emailservice            96m
+default                 frontend                                 app=frontend                96m
+default                 loadgenerator                            app=loadgenerator           96m
+default                 paymentservice                           app=paymentservice          96m
+default                 productcatalogservice                    app=productcatalogservice   96m
+default                 productcatalogservice-policy             app=productcatalogservice   78m
+default                 recommendationservice                    app=recommendationservice   96m
+default                 redis-cart                               app=redis-cart              96m
+default                 redis-cart-policy                        app=redis-cart              78m
+default                 shippingservice                          app=shippingservice         96m
+frontend                frontend-allow                           app=frontend                82m
+frontend                frontend-allow-adservice                 app=frontend                95m
+frontend                frontend-allow-shipping                  app=frontend                24m
+frontend                frontend-network-policy                  app=frontend                15m
+frontend                frontend-policy                          app=frontend                95m
+recommendationservice   allow-frontend-to-recommendation         app=recommendationservice   8m48s
+recommendationservice   allow-recommendation-to-productcatalog   app=recommendationservice   25m
+recommendationservice   recommendationservice-allow              app=recommendationservice   71m
+recommendationservice   recommendationservice-policy             app=recommendationservice   83m
+redis-cart              allow-cartservice-to-redis               app=redis-cart              7m34s
+shippingservice         allow-checkout-to-shipping               app=shippingservice         28m
+shippingservice         allow-frontend-ingress                   app=shippingservice         33m
+shippingservice         allow-frontend-to-shipping               app=shippingservice         28m
+shippingservice         allow-frontend-to-shippingservice        app=shippingservice         32m
+shippingservice         shippingservice-allow-frontend           app=shippingservice         61m
+
+Mismatch Summary: Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy checkoutservice-policy -n default --type=json -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "cartservice"}}, "namespaceSelector": {"matchLabels": {"name": "cartservice"}}}}]'
+Output: networkpolicy.networking.k8s.io/checkoutservice-policy patched
+
+Mismatch Summary: Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy checkoutservice-policy -n default --type=json -p='[{"op": "add", "path": "/spec/ingress/-", "value": {"from": [{"podSelector": {"matchLabels": {"app": "cartservice"}}}], "ports": [{"port": 5050, "protocol": "TCP"}]}}]'
+Output: networkpolicy.networking.k8s.io/checkoutservice-policy patched
+
+Mismatch Summary: Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy checkoutservice-policy -n default --type=json -p='[{"op": "remove", "path": "/spec/ingress/0/from"}]'
+Output: networkpolicy.networking.k8s.io/checkoutservice-policy patched
+
+Mismatch Summary: Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: redis-cart → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: loadgenerator → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy productcatalogservice-policy -n default --type=json -p='[{"op": "add", "path": "/spec/ingress/-", "value": {"from": [{"podSelector": {"matchLabels": {"app": "recommendationservice"}}}], "ports": [{"port": 3550, "protocol": "TCP"}]}}]'
+Output: networkpolicy.networking.k8s.io/productcatalogservice-policy patched
+
+Mismatch Summary: Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: redis-cart → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: loadgenerator → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy checkoutservice-policy -n default --type=json -p='[{"op": "replace", "path": "/spec/ingress", "value": [{"from": [{"podSelector": {"matchLabels": {"app": "frontend"}}}, {"podSelector": {"matchLabels": {"app": "checkout"}}}], "ports": [{"port": 5050, "protocol": "TCP"}]}]}]'
+Output: networkpolicy.networking.k8s.io/checkoutservice-policy patched
+
+Mismatch Summary: Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+

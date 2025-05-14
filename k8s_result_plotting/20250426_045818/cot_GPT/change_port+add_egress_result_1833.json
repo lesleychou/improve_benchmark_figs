@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy recommendationservice-policy -n recommendationservice --type=json -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"productcatalogservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 3550, \"protocol\": \"TCP\"}}]'",
+        "output": "networkpolicy.networking.k8s.io/recommendationservice-policy patched\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy recommendationservice-policy -n recommendationservice --type=json -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"namespaceSelector\": {\"matchLabels\": {\"name\": \"productcatalogservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 3550, \"protocol\": \"TCP\"}}]'",
+        "output": "networkpolicy.networking.k8s.io/recommendationservice-policy patched\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy recommendationservice-policy -n recommendationservice --type=json -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"productcatalogservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 3550, \"protocol\": \"TCP\"}}]'",
+        "output": "networkpolicy.networking.k8s.io/recommendationservice-policy patched\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy recommendationservice-policy -n recommendationservice --type=json -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"productcatalogservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 3550, \"protocol\": \"TCP\"}}]'",
+        "output": "networkpolicy.networking.k8s.io/recommendationservice-policy patched\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy recommendationservice-policy -n recommendationservice -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"recommendationservice-policy\",\"namespace\":\"recommendationservice\"},\"spec\":{\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}}}],\"ports\":[{\"port\":8080,\"protocol\":\"TCP\"}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"recommendationservice\"}},\"policyTypes\":[\"Ingress\"]}}\n  creationTimestamp: \"2025-04-27T15:49:16Z\"\n  generation: 8\n  name: recommendationservice-policy\n  namespace: recommendationservice\n  resourceVersion: \"4621\"\n  uid: 35e282ac-57e5-4431-bac5-5c72ddb1bc62\nspec:\n  egress:\n  - ports:\n    - port: 3550\n      protocol: TCP\n    to:\n    - podSelector:\n        matchLabels:\n          app: productcatalogservice\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    - podSelector:\n        matchLabels:\n          app: frontend\n    - podSelector:\n        matchLabels:\n          app: frontend\n    - podSelector:\n        matchLabels:\n          app: productcatalogservice\n    - namespaceSelector:\n        matchLabels:\n          name: productcatalogservice\n    - podSelector:\n        matchLabels:\n          app: productcatalogservice\n    - podSelector:\n        matchLabels:\n          app: productcatalogservice\n    ports:\n    - port: 8080\n      protocol: TCP\n    - port: 3550\n      protocol: TCP\n    - port: 3550\n      protocol: TCP\n    - port: 3550\n      protocol: TCP\n    - port: 3550\n      protocol: TCP\n  podSelector:\n    matchLabels:\n      app: recommendationservice\n  policyTypes:\n  - Ingress\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy recommendationservice-policy -n recommendationservice --type=json -p='[{\"op\": \"replace\", \"path\": \"/spec/ingress\", \"value\": [{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"productcatalogservice\"}}}],\"ports\":[{\"port\":3550,\"protocol\":\"TCP\"}]}]}]'",
+        "output": "networkpolicy.networking.k8s.io/recommendationservice-policy patched\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy recommendationservice-policy -n recommendationservice --type=json -p='[{\"op\": \"replace\", \"path\": \"/spec/ingress\", \"value\": [{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"productcatalogservice\"}}}],\"ports\":[{\"port\":3550,\"protocol\":\"TCP\"}]}]}]'",
+        "output": "networkpolicy.networking.k8s.io/recommendationservice-policy patched (no change)\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get pods -n productcatalogservice --show-labels",
+        "output": "",
+        "mismatch_summary": "Mismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    }
+]

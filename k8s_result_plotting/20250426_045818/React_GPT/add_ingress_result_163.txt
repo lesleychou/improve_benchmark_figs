@@ -1,0 +1,81 @@
+LLM Command: kubectl get networkpolicy -n frontend
+Output: 
+Mismatch Summary: Mismatch: cartservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n shippingservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: cartservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy -n shippingservice --type='merge' -p '{"apiVersion": "networking.k8s.io/v1", "kind": "NetworkPolicy", "metadata": {"name": "deny-unexpected-traffic"}, "spec": {"podSelector": {}, "policyTypes": ["Ingress"], "ingress": [{"from": [{"namespaceSelector": {"matchLabels": {"name": "frontend"}}}, {"namespaceSelector": {"matchLabels": {"name": "checkout"}}}]}]}}'
+Output: error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: cartservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy -n shippingservice --type='merge' -p '{"apiVersion": "networking.k8s.io/v1", "kind": "NetworkPolicy", "metadata": {"name": "deny-unexpected-traffic"}, "spec": {"podSelector": {}, "policyTypes": ["Ingress"], "ingress": [{"from": [{"namespaceSelector": {"matchLabels": {"name": "checkout"}}}]}]}}'
+Output: error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: cartservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -n shippingservice -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-unexpected-traffic
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: checkout
+EOF
+Output: error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: cartservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy deny-unexpected-traffic -n shippingservice --type='merge' -p '{"spec": {"ingress": [{"from": [{"namespaceSelector": {"matchLabels": {"name": "checkout"}}}]}]}}'
+Output: Error from server (NotFound): namespaces "shippingservice" not found
+
+Mismatch Summary: Mismatch: cartservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get namespaces
+Output: NAME                 STATUS   AGE
+default              Active   133m
+kube-node-lease      Active   133m
+kube-public          Active   133m
+kube-system          Active   133m
+local-path-storage   Active   133m
+
+Mismatch Summary: Mismatch: cartservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get namespaces
+Output: NAME                 STATUS   AGE
+default              Active   133m
+kube-node-lease      Active   133m
+kube-public          Active   133m
+kube-system          Active   133m
+local-path-storage   Active   133m
+
+Mismatch Summary: Mismatch: cartservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: shippingservice namespace Kubernetes
+Output: /bin/bash: line 1: shippingservice: command not found
+
+Mismatch Summary: Mismatch: cartservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → shippingservice:50051 (Expected: False, Actual: True)
+

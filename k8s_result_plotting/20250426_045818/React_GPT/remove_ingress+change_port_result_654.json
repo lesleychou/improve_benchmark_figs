@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "python\n\"kubectl get networkpolicy -n frontend\"",
+        "output": "/bin/bash: line 2: kubectl get networkpolicy -n frontend: command not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy -n frontend --type='json' -p '[{\"op\": \"add\", \"path\": \"/spec\", \"value\": {\"podSelector\": {}, \"policyTypes\": [\"Ingress\"], \"ingress\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}}], \"ports\": [{\"protocol\": \"TCP\", \"port\": 5050}]}]}}]'",
+        "output": "error: resource(s) were provided, but no name was specified\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl apply -n frontend -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-frontend-to-checkout\n  namespace: frontend\nspec:\n  podSelector:\n    matchLabels:\n      app: checkoutservice\n  policyTypes:\n  - Ingress\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    ports:\n    - protocol: TCP\n      port: 5050\nEOF",
+        "output": "error: resource(s) were provided, but no name was specified\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl apply -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-frontend-to-checkout\n  namespace: frontend\nspec:\n  podSelector:\n    matchLabels:\n      app: checkoutservice\n  policyTypes:\n  - Ingress\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    ports:\n    - protocol: TCP\n      port: 5050\nEOF",
+        "output": "error: resource(s) were provided, but no name was specified\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy allow-frontend-to-checkout -n frontend --type='json' -p '[{\"op\": \"add\", \"path\": \"/spec\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"checkoutservice\"}}, \"policyTypes\": [\"Ingress\"], \"ingress\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}}], \"ports\": [{\"protocol\": \"TCP\", \"port\": 5050}]}]}}]'",
+        "output": "Error from server (NotFound): namespaces \"frontend\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\ndefault              Active   9h\nkube-node-lease      Active   9h\nkube-public          Active   9h\nkube-system          Active   9h\nlocal-path-storage   Active   9h\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get pods --all-namespaces",
+        "output": "NAMESPACE            NAME                                         READY   STATUS    RESTARTS      AGE\ndefault              adservice-7c7687ff5b-fbq2s                   1/1     Running   0             9h\ndefault              cartservice-7c8966d6fd-c8rb4                 1/1     Running   0             9h\ndefault              checkoutservice-769b8ff7b8-jxzrv             1/1     Running   0             9h\ndefault              currencyservice-578dcb55f6-bdvtr             1/1     Running   2 (65m ago)   9h\ndefault              emailservice-d5d54d4fc-lksfn                 1/1     Running   0             9h\ndefault              frontend-7ffbffc6f7-9hb4b                    1/1     Running   0             9h\ndefault              loadgenerator-7d9cfb7cb9-9zjhk               1/1     Running   0             9h\ndefault              paymentservice-b67c65d9c-ztkqg               1/1     Running   2 (17m ago)   9h\ndefault              productcatalogservice-5f94b6cd47-lk6vh       1/1     Running   0             9h\ndefault              recommendationservice-c468b6867-pcbbn        1/1     Running   0             9h\ndefault              redis-cart-5b6f47b748-9rgzw                  1/1     Running   0             9h\ndefault              shippingservice-f6bc4cd5d-69r7d              1/1     Running   0             9h\nkube-system          coredns-668d6bf9bc-g5z8v                     1/1     Running   0             9h\nkube-system          coredns-668d6bf9bc-l2w7d                     1/1     Running   0             9h\nkube-system          etcd-kind-control-plane                      1/1     Running   0             9h\nkube-system          kindnet-g596l                                1/1     Running   0             9h\nkube-system          kube-apiserver-kind-control-plane            1/1     Running   0             9h\nkube-system          kube-controller-manager-kind-control-plane   1/1     Running   0             9h\nkube-system          kube-proxy-48f5g                             1/1     Running   0             9h\nkube-system          kube-scheduler-kind-control-plane            1/1     Running   0             9h\nlocal-path-storage   local-path-provisioner-58cc7856b6-nfdzv      1/1     Running   0             9h\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl apply -n default -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-frontend-to-checkout\n  namespace: default\nspec:\n  podSelector:\n    matchLabels:\n      app: checkoutservice\n  policyTypes:\n  - Ingress\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    ports:\n    - protocol: TCP\n      port: 5050\nEOF",
+        "output": "NAMESPACE            NAME                                         READY   STATUS    RESTARTS      AGE\ndefault              adservice-7c7687ff5b-fbq2s                   1/1     Running   0             9h\ndefault              cartservice-7c8966d6fd-c8rb4                 1/1     Running   0             9h\ndefault              checkoutservice-769b8ff7b8-jxzrv             1/1     Running   0             9h\ndefault              currencyservice-578dcb55f6-bdvtr             1/1     Running   2 (65m ago)   9h\ndefault              emailservice-d5d54d4fc-lksfn                 1/1     Running   0             9h\ndefault              frontend-7ffbffc6f7-9hb4b                    1/1     Running   0             9h\ndefault              loadgenerator-7d9cfb7cb9-9zjhk               1/1     Running   0             9h\ndefault              paymentservice-b67c65d9c-ztkqg               1/1     Running   2 (17m ago)   9h\ndefault              productcatalogservice-5f94b6cd47-lk6vh       1/1     Running   0             9h\ndefault              recommendationservice-c468b6867-pcbbn        1/1     Running   0             9h\ndefault              redis-cart-5b6f47b748-9rgzw                  1/1     Running   0             9h\ndefault              shippingservice-f6bc4cd5d-69r7d              1/1     Running   0             9h\nkube-system          coredns-668d6bf9bc-g5z8v                     1/1     Running   0             9h\nkube-system          coredns-668d6bf9bc-l2w7d                     1/1     Running   0             9h\nkube-system          etcd-kind-control-plane                      1/1     Running   0             9h\nkube-system          kindnet-g596l                                1/1     Running   0             9h\nkube-system          kube-apiserver-kind-control-plane            1/1     Running   0             9h\nkube-system          kube-controller-manager-kind-control-plane   1/1     Running   0             9h\nkube-system          kube-proxy-48f5g                             1/1     Running   0             9h\nkube-system          kube-scheduler-kind-control-plane            1/1     Running   0             9h\nlocal-path-storage   local-path-provisioner-58cc7856b6-nfdzv      1/1     Running   0             9h\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)"
+    }
+]

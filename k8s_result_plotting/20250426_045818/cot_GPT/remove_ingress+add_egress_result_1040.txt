@@ -1,0 +1,379 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy allow-productcatalog-access -n recommendationservice --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "productcatalogservice"}}}}]'
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "allow-productcatalog-access" not found
+
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -n recommendationservice -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-productcatalog-access
+  namespace: recommendationservice
+spec:
+  podSelector:
+    matchLabels:
+      app: recommendationservice
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: productcatalogservice
+    ports:
+    - protocol: TCP
+      port: 3550
+EOF
+Output: networkpolicy.networking.k8s.io/allow-productcatalog-access created
+
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods -n productcatalogservice --show-labels
+Output: 
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods -n productcatalogservice -o jsonpath='{.items[*].metadata.labels}'
+Output: 
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods -n recommendationservice --show-labels
+Output: 
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods -n recommendationservice -o jsonpath='{.items[*].metadata.labels}'
+Output: 
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods --all-namespaces --show-labels
+Output: NAMESPACE            NAME                                         READY   STATUS    RESTARTS      AGE   LABELS
+default              adservice-76f594d56f-2prlg                   1/1     Running   0             13h   app=adservice,pod-template-hash=76f594d56f,skaffold.dev/run-id=00adce13-6ae0-4db6-9ff3-9bd0af686efb
+default              cartservice-5958849bb7-49tjm                 1/1     Running   0             13h   app=cartservice,pod-template-hash=5958849bb7,skaffold.dev/run-id=00adce13-6ae0-4db6-9ff3-9bd0af686efb
+default              checkoutservice-55d99bbf75-z49bp             1/1     Running   0             13h   app=checkoutservice,pod-template-hash=55d99bbf75,skaffold.dev/run-id=00adce13-6ae0-4db6-9ff3-9bd0af686efb
+default              currencyservice-649964f87f-nxj9q             1/1     Running   3             13h   app=currencyservice,pod-template-hash=649964f87f,skaffold.dev/run-id=00adce13-6ae0-4db6-9ff3-9bd0af686efb
+default              emailservice-6d85f47b76-rdnmb                1/1     Running   0             13h   app=emailservice,pod-template-hash=6d85f47b76,skaffold.dev/run-id=00adce13-6ae0-4db6-9ff3-9bd0af686efb
+default              frontend-fc4bf5fdb-rmj59                     1/1     Running   0             13h   app=frontend,pod-template-hash=fc4bf5fdb,skaffold.dev/run-id=00adce13-6ae0-4db6-9ff3-9bd0af686efb
+default              loadgenerator-6d98cc6686-4m4tn               1/1     Running   0             13h   app=loadgenerator,pod-template-hash=6d98cc6686,skaffold.dev/run-id=00adce13-6ae0-4db6-9ff3-9bd0af686efb
+default              paymentservice-7dc8859fb8-vnwl8              1/1     Running   3 (53m ago)   13h   app=paymentservice,pod-template-hash=7dc8859fb8,skaffold.dev/run-id=00adce13-6ae0-4db6-9ff3-9bd0af686efb
+default              productcatalogservice-5bd4cb4488-7m8zm       1/1     Running   0             13h   app=productcatalogservice,pod-template-hash=5bd4cb4488,skaffold.dev/run-id=00adce13-6ae0-4db6-9ff3-9bd0af686efb
+default              recommendationservice-c64454f56-4k2kx        1/1     Running   0             13h   app=recommendationservice,pod-template-hash=c64454f56,skaffold.dev/run-id=00adce13-6ae0-4db6-9ff3-9bd0af686efb
+default              redis-cart-799f8fc4c-p9wps                   1/1     Running   0             13h   app=redis-cart,pod-template-hash=799f8fc4c,skaffold.dev/run-id=00adce13-6ae0-4db6-9ff3-9bd0af686efb
+default              shippingservice-5dd466d969-ppcwn             1/1     Running   0             13h   app=shippingservice,pod-template-hash=5dd466d969,skaffold.dev/run-id=00adce13-6ae0-4db6-9ff3-9bd0af686efb
+kube-system          coredns-668d6bf9bc-7vskf                     1/1     Running   0             13h   k8s-app=kube-dns,pod-template-hash=668d6bf9bc
+kube-system          coredns-668d6bf9bc-vhtsb                     1/1     Running   0             13h   k8s-app=kube-dns,pod-template-hash=668d6bf9bc
+kube-system          etcd-kind-control-plane                      1/1     Running   0             13h   component=etcd,tier=control-plane
+kube-system          kindnet-kf59t                                1/1     Running   0             13h   app=kindnet,controller-revision-hash=5494cdbb46,k8s-app=kindnet,pod-template-generation=1,tier=node
+kube-system          kube-apiserver-kind-control-plane            1/1     Running   0             13h   component=kube-apiserver,tier=control-plane
+kube-system          kube-controller-manager-kind-control-plane   1/1     Running   0             13h   component=kube-controller-manager,tier=control-plane
+kube-system          kube-proxy-t9chz                             1/1     Running   0             13h   controller-revision-hash=64b9dbc74b,k8s-app=kube-proxy,pod-template-generation=1
+kube-system          kube-scheduler-kind-control-plane            1/1     Running   0             13h   component=kube-scheduler,tier=control-plane
+local-path-storage   local-path-provisioner-58cc7856b6-czqc8      1/1     Running   0             13h   app=local-path-provisioner,pod-template-hash=58cc7856b6
+
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n recommendationservice -o yaml
+Output: apiVersion: v1
+items:
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"allow-frontend-to-recommendationservice","namespace":"recommendationservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":8080,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"recommendationservice"}}}}
+    creationTimestamp: "2025-04-26T10:34:25Z"
+    generation: 10
+    name: allow-frontend-to-recommendationservice
+    namespace: recommendationservice
+    resourceVersion: "36867"
+    uid: 07803501-e71e-4459-808e-5a7ae4ddfc22
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: frontend
+      - podSelector:
+          matchLabels:
+            app: frontend
+      ports:
+      - port: 8080
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: recommendationservice
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"allow-productcatalog-access","namespace":"recommendationservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"productcatalogservice"}}}],"ports":[{"port":3550,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"recommendationservice"}}}}
+    creationTimestamp: "2025-04-26T18:44:07Z"
+    generation: 1
+    name: allow-productcatalog-access
+    namespace: recommendationservice
+    resourceVersion: "68959"
+    uid: 2f3791a9-9a68-47f4-8e88-27b7af534a74
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: productcatalogservice
+      ports:
+      - port: 3550
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: recommendationservice
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"allow-productcatalog-to-recommendation","namespace":"recommendationservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"productcatalogservice"}}}],"ports":[{"port":3550,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"recommendationservice"}}}}
+    creationTimestamp: "2025-04-26T10:26:37Z"
+    generation: 1
+    name: allow-productcatalog-to-recommendation
+    namespace: recommendationservice
+    resourceVersion: "27827"
+    uid: 76f49f8c-a59d-4537-83a6-1109d6538487
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: productcatalogservice
+      ports:
+      - port: 3550
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: recommendationservice
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"deny-cart-access","namespace":"recommendationservice"},"spec":{"egress":[{"ports":[{"port":7070,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"cartservice"}}}]}],"podSelector":{"matchLabels":{"app":"recommendationservice"}},"policyTypes":["Egress"]}}
+    creationTimestamp: "2025-04-26T12:51:57Z"
+    generation: 1
+    name: deny-cart-access
+    namespace: recommendationservice
+    resourceVersion: "40105"
+    uid: 0051cfed-3c82-4b37-bde3-7305100af46a
+  spec:
+    egress:
+    - ports:
+      - port: 7070
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: cartservice
+    podSelector:
+      matchLabels:
+        app: recommendationservice
+    policyTypes:
+    - Egress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"deny-checkout-access","namespace":"recommendationservice"},"spec":{"egress":[{"ports":[{"port":5050,"protocol":"TCP"}],"to":[{"namespaceSelector":{"matchLabels":{"name":"checkoutservice"}}}]}],"podSelector":{},"policyTypes":["Egress"]}}
+    creationTimestamp: "2025-04-26T06:55:56Z"
+    generation: 2
+    name: deny-checkout-access
+    namespace: recommendationservice
+    resourceVersion: "40900"
+    uid: 91cd2119-da71-4fdc-bb15-d020e49a841f
+  spec:
+    egress:
+    - ports:
+      - port: 5050
+        protocol: TCP
+      to:
+      - namespaceSelector:
+          matchLabels:
+            name: checkoutservice
+      - podSelector:
+          matchLabels:
+            app: checkoutservice
+    podSelector: {}
+    policyTypes:
+    - Egress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"deny-checkout-to-recommendation","namespace":"recommendationservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}],"ports":[{"port":8080,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"recommendationservice"}},"policyTypes":["Ingress"]}}
+    creationTimestamp: "2025-04-26T13:01:11Z"
+    generation: 1
+    name: deny-checkout-to-recommendation
+    namespace: recommendationservice
+    resourceVersion: "40913"
+    uid: 6efe3415-c9bc-470e-9618-098419622b29
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: checkoutservice
+      ports:
+      - port: 8080
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: recommendationservice
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"recommendationservice","namespace":"recommendationservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":8080,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"recommendationservice"}}}}
+    creationTimestamp: "2025-04-26T06:26:36Z"
+    generation: 73
+    name: recommendationservice
+    namespace: recommendationservice
+    resourceVersion: "68302"
+    uid: 46a0585b-a6b9-4c71-9ddf-a6f63264b340
+  spec:
+    egress:
+    - ports:
+      - port: 3550
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: productcatalogservice
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: frontend
+      ports:
+      - port: 8080
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: recommendationservice
+    policyTypes:
+    - Ingress
+    - Egress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"recommendationservice-allow-productcatalog","namespace":"recommendationservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"productcatalogservice"}}}],"ports":[{"port":3550,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"recommendationservice"}}}}
+    creationTimestamp: "2025-04-26T17:45:37Z"
+    generation: 1
+    name: recommendationservice-allow-productcatalog
+    namespace: recommendationservice
+    resourceVersion: "64186"
+    uid: 79c803a5-052f-4627-82f1-70223a69f2a4
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: productcatalogservice
+      ports:
+      - port: 3550
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: recommendationservice
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"recommendationservice-policy","namespace":"recommendationservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"productcatalogservice"}}}],"ports":[{"port":3550,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"recommendationservice"}}}}
+    creationTimestamp: "2025-04-26T10:29:15Z"
+    generation: 106
+    name: recommendationservice-policy
+    namespace: recommendationservice
+    resourceVersion: "68656"
+    uid: ba6bf6fa-9a28-44ee-845c-1a4d935eebeb
+  spec:
+    egress:
+    - ports:
+      - port: 3550
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: productcatalogservice
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: productcatalogservice
+      - podSelector:
+          matchLabels:
+            app: productcatalogservice
+      ports:
+      - port: 3550
+        protocol: TCP
+      - port: 3550
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: recommendationservice
+    policyTypes:
+    - Ingress
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+

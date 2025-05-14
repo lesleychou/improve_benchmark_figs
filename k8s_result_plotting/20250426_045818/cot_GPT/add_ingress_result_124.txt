@@ -1,0 +1,122 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: adservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy redis-cart-deny-adservice -n redis-cart --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "adservice"}}}}]'
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "redis-cart-deny-adservice" not found
+
+Mismatch Summary: Mismatch: adservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-adservice-to-redis-cart
+  namespace: redis-cart
+spec:
+  podSelector:
+    matchLabels:
+      app: redis-cart
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: adservice
+      ports:
+        - protocol: TCP
+          port: 6379
+EOF
+Output: networkpolicy.networking.k8s.io/deny-adservice-to-redis-cart created
+
+Mismatch Summary: Mismatch: adservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n redis-cart
+Output: NAME                           POD-SELECTOR     AGE
+allow-cartservice              app=redis-cart   47m
+deny-adservice-to-redis-cart   app=redis-cart   3s
+
+Mismatch Summary: Mismatch: adservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl describe networkpolicy deny-adservice-to-redis-cart -n redis-cart
+Output: Name:         deny-adservice-to-redis-cart
+Namespace:    redis-cart
+Created on:   2025-04-26 06:31:03 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=redis-cart
+  Allowing ingress traffic:
+    To Port: 6379/TCP
+    From:
+      PodSelector: app=adservice
+  Not affecting egress traffic
+  Policy Types: Ingress
+
+Mismatch Summary: Mismatch: adservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: `
+kubectl patch networkpolicy deny-adservice-to-redis-cart -n redis-cart --type='json' -p='[{"op": "replace", "path": "/spec/ingress", "value": []}]'
+Output: /bin/bash: -c: line 1: unexpected EOF while looking for matching ``'
+/bin/bash: -c: line 3: syntax error: unexpected end of file
+
+Mismatch Summary: Mismatch: adservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy deny-adservice-to-redis-cart -n redis-cart --type='json' -p='[{"op": "replace", "path": "/spec/ingress", "value": [{"from": [{"podSelector": {"matchLabels": {"app": "adservice"}}}], "ports": [{"protocol": "TCP", "port": 6379}]}]}]'
+Output: networkpolicy.networking.k8s.io/deny-adservice-to-redis-cart patched (no change)
+
+Mismatch Summary: Mismatch: adservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: adservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy deny-adservice-to-redis-cart -n redis-cart --type='json' -p='[{"op": "replace", "path": "/spec/ingress", "value": [{"from": [], "ports": [{"protocol": "TCP", "port": 6379}]}]}]'
+Output: networkpolicy.networking.k8s.io/deny-adservice-to-redis-cart patched
+
+Mismatch Summary: Mismatch: adservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → redis-cart:6379 (Expected: False, Actual: True)
+

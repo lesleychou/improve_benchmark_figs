@@ -1,0 +1,306 @@
+LLM Command: kubectl get networkpolicy -n frontend -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy -n frontend --type='merge' -p '{
+  "apiVersion": "networking.k8s.io/v1",
+  "kind": "NetworkPolicy",
+  "metadata": {
+    "name": "allow-frontend-to-services"
+  },
+  "spec": {
+    "podSelector": {
+      "matchLabels": {
+        "app": "frontend"
+      }
+    },
+    "policyTypes": ["Ingress"],
+    "ingress": [
+      {
+        "from": [
+          {
+            "podSelector": {
+              "matchLabels": {
+                "app": "checkoutservice"
+              }
+            }
+          }
+        ],
+        "ports": [
+          {
+            "protocol": "TCP",
+            "port": 5050
+          }
+        ]
+      },
+      {
+        "from": [
+          {
+            "podSelector": {
+              "matchLabels": {
+                "app": "recommendationservice"
+              }
+            }
+          }
+        ],
+        "ports": [
+          {
+            "protocol": "TCP",
+            "port": 8080
+          }
+        ]
+      }
+    ]
+  }
+}'
+Output: error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy -n frontend --type='merge' -p '{
+  "apiVersion": "networking.k8s.io/v1",
+  "kind": "NetworkPolicy",
+  "metadata": {
+    "name": "allow-frontend-to-services"
+  },
+  "spec": {
+    "podSelector": {
+      "matchLabels": {
+        "app": "frontend"
+      }
+    },
+    "policyTypes": ["Ingress"],
+    "ingress": [
+      {
+        "from": [
+          {
+            "podSelector": {
+              "matchLabels": {
+                "app": "checkoutservice"
+              }
+            }
+          }
+        ],
+        "ports": [
+          {
+            "protocol": "TCP",
+            "port": 5050
+          }
+        ]
+      },
+      {
+        "from": [
+          {
+            "podSelector": {
+              "matchLabels": {
+                "app": "recommendationservice"
+              }
+            }
+          }
+        ],
+        "ports": [
+          {
+            "protocol": "TCP",
+            "port": 8080
+          }
+        ]
+      }
+    ]
+  }
+}'
+Output: error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n checkoutservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy allow-frontend-to-services -n frontend --type='merge' -p '{
+  "apiVersion": "networking.k8s.io/v1",
+  "kind": "NetworkPolicy",
+  "metadata": {
+    "name": "allow-frontend-to-services"
+  },
+  "spec": {
+    "podSelector": {
+      "matchLabels": {
+        "app": "frontend"
+      }
+    },
+    "policyTypes": ["Ingress"],
+    "ingress": [
+      {
+        "from": [
+          {
+            "podSelector": {
+              "matchLabels": {
+                "app": "checkoutservice"
+              }
+            }
+          }
+        ],
+        "ports": [
+          {
+            "protocol": "TCP",
+            "port": 5050
+          }
+        ]
+      },
+      {
+        "from": [
+          {
+            "podSelector": {
+              "matchLabels": {
+                "app": "recommendationservice"
+              }
+            }
+          }
+        ],
+        "ports": [
+          {
+            "protocol": "TCP",
+            "port": 8080
+          }
+        ]
+      }
+    ]
+  }
+}'
+Output: Error from server (NotFound): namespaces "frontend" not found
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+
+LLM Command: kubectl get namespaces
+Output: NAME                 STATUS   AGE
+default              Active   9h
+kube-node-lease      Active   9h
+kube-public          Active   9h
+kube-system          Active   9h
+local-path-storage   Active   9h
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+
+LLM Command: kubectl get pods -n default
+Output: NAME                                     READY   STATUS    RESTARTS      AGE
+adservice-7c7687ff5b-fbq2s               1/1     Running   0             9h
+cartservice-7c8966d6fd-c8rb4             1/1     Running   0             9h
+checkoutservice-769b8ff7b8-jxzrv         1/1     Running   0             9h
+currencyservice-578dcb55f6-bdvtr         1/1     Running   2 (88m ago)   9h
+emailservice-d5d54d4fc-lksfn             1/1     Running   0             9h
+frontend-7ffbffc6f7-9hb4b                1/1     Running   0             9h
+loadgenerator-7d9cfb7cb9-9zjhk           1/1     Running   0             9h
+paymentservice-b67c65d9c-ztkqg           1/1     Running   2 (40m ago)   9h
+productcatalogservice-5f94b6cd47-lk6vh   1/1     Running   0             9h
+recommendationservice-c468b6867-pcbbn    1/1     Running   0             9h
+redis-cart-5b6f47b748-9rgzw              1/1     Running   0             9h
+shippingservice-f6bc4cd5d-69r7d          1/1     Running   0             9h
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy allow-frontend-to-services -n default --type='merge' -p '{
+  "apiVersion": "networking.k8s.io/v1",
+  "kind": "NetworkPolicy",
+  "metadata": {
+    "name": "allow-frontend-to-services"
+  },
+  "spec": {
+    "podSelector": {
+      "matchLabels": {
+        "app": "frontend"
+      }
+    },
+    "policyTypes": ["Ingress"],
+    "ingress": [
+      {
+        "from": [
+          {
+            "podSelector": {
+              "matchLabels": {
+                "app": "checkoutservice"
+              }
+            }
+          }
+        ],
+        "ports": [
+          {
+            "protocol": "TCP",
+            "port": 5050
+          }
+        ]
+      },
+      {
+        "from": [
+          {
+            "podSelector": {
+              "matchLabels": {
+                "app": "recommendationservice"
+              }
+            }
+          }
+        ],
+        "ports": [
+          {
+            "protocol": "TCP",
+            "port": 8080
+          }
+        ]
+      }
+    ]
+  }
+}'
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "allow-frontend-to-services" not found
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+
+LLM Command: kubectl apply -n default -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-frontend-to-services
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: frontend
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+    ports:
+    - protocol: TCP
+      port: 5050
+  - from:
+    - podSelector:
+        matchLabels:
+          app: recommendationservice
+    ports:
+    - protocol: TCP
+      port: 8080
+EOF
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "allow-frontend-to-services" not found
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+

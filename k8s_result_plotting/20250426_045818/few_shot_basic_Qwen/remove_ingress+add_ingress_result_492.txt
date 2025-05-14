@@ -1,0 +1,157 @@
+LLM Command: kubectl get networkpolicy frontend -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"frontend","namespace":"default"},"spec":{"egress":[{}],"ingress":[{}],"podSelector":{"matchLabels":{"app":"frontend"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-04-29T16:15:24Z"
+  generation: 96
+  name: frontend
+  namespace: default
+  resourceVersion: "113419"
+  uid: 8d0deebf-c29d-4122-90ea-0561f7a2bb4e
+spec:
+  egress:
+  - {}
+  ingress:
+  - {}
+  podSelector:
+    matchLabels:
+      app: frontend
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy shippingservice -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"shippingservice","namespace":"default"},"spec":{"egress":[{}],"ingress":[],"podSelector":{"matchLabels":{"app":"shippingservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-04-29T16:15:25Z"
+  generation: 62
+  name: shippingservice
+  namespace: default
+  resourceVersion: "113422"
+  uid: 82d4f6cd-73da-4495-adb3-6fdbf9cb4c65
+spec:
+  egress:
+  - {}
+  podSelector:
+    matchLabels:
+      app: shippingservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy currencyservice -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"currencyservice","namespace":"default"},"spec":{"egress":[{}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}},{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}],"ports":[{"port":7000,"protocol":"TCP"}]},{"from":[{"podSelector":{"matchLabels":{"app":"emailservice"}}}]},{"from":[{"podSelector":{"matchLabels":{"app":"cartservice"}}}]}],"podSelector":{"matchLabels":{"app":"currencyservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-04-29T16:15:24Z"
+  generation: 82
+  name: currencyservice
+  namespace: default
+  resourceVersion: "113417"
+  uid: 854a6176-b607-43a9-a5d1-4205211c361f
+spec:
+  egress:
+  - {}
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+    ports:
+    - port: 7000
+      protocol: TCP
+  - from:
+    - podSelector:
+        matchLabels:
+          app: emailservice
+  - from:
+    - podSelector:
+        matchLabels:
+          app: cartservice
+  podSelector:
+    matchLabels:
+      app: currencyservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy shippingservice --type=merge -p $'
+spec:
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+  ports:
+    - port: 50051
+      protocol: TCP
+'
+Output: networkpolicy.networking.k8s.io/shippingservice patched
+
+Mismatch Summary: Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+

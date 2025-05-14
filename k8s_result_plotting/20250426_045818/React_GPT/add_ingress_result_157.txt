@@ -1,0 +1,65 @@
+LLM Command: kubectl get networkpolicy --all-namespaces
+Output: NAMESPACE   NAME                    POD-SELECTOR                AGE
+default     adservice               app=adservice               124m
+default     cartservice             app=cartservice             124m
+default     checkoutservice         app=checkoutservice         124m
+default     currencyservice         app=currencyservice         124m
+default     emailservice            app=emailservice            124m
+default     frontend                app=frontend                124m
+default     loadgenerator           app=loadgenerator           124m
+default     paymentservice          app=paymentservice          124m
+default     productcatalogservice   app=productcatalogservice   124m
+default     recommendationservice   app=recommendationservice   124m
+default     redis-cart              app=redis-cart              124m
+default     shippingservice         app=shippingservice         124m
+
+Mismatch Summary: Mismatch: checkoutservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → adservice:9555 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy adservice -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"adservice","namespace":"default"},"spec":{"egress":[{}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":9555,"protocol":"TCP"}]},{"from":[{"podSelector":{"matchLabels":{"app":"productcatalogservice"}}}]},{"from":[{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}]}],"podSelector":{"matchLabels":{"app":"adservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-05-07T16:33:45Z"
+  generation: 79
+  name: adservice
+  namespace: default
+  resourceVersion: "11199"
+  uid: 2acfba7a-0315-464e-9e9a-2eb9d717536e
+spec:
+  egress:
+  - {}
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    ports:
+    - port: 9555
+      protocol: TCP
+  - from:
+    - podSelector:
+        matchLabels:
+          app: productcatalogservice
+  - from:
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+  podSelector:
+    matchLabels:
+      app: adservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: checkoutservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → adservice:9555 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy adservice -n default --type=json -p '[{"op": "remove", "path": "/spec/ingress/2"}, {"op": "remove", "path": "/spec/ingress/1"}]'
+Output: networkpolicy.networking.k8s.io/adservice patched
+
+Mismatch Summary: No mismatches found.
+

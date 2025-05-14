@@ -1,0 +1,206 @@
+LLM Command: kubectl get networkpolicy --all-namespaces
+Output: NAMESPACE   NAME                    POD-SELECTOR                AGE
+default     adservice               app=adservice               5h20m
+default     cartservice             app=cartservice             5h20m
+default     checkoutservice         app=checkoutservice         5h20m
+default     currencyservice         app=currencyservice         5h20m
+default     emailservice            app=emailservice            5h20m
+default     frontend                app=frontend                5h20m
+default     loadgenerator           app=loadgenerator           5h20m
+default     paymentservice          app=paymentservice          5h20m
+default     productcatalogservice   app=productcatalogservice   5h20m
+default     recommendationservice   app=recommendationservice   5h20m
+default     redis-cart              app=redis-cart              5h20m
+default     shippingservice         app=shippingservice         5h20m
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy cartservice -n default --type=json -p '[{"op": "add", "path": "/spec/egress", "value": [{"to": [{"podSelector": {"matchLabels": {"app": "redis-cart"}}}], "ports": [{"port": 6379, "protocol": "TCP"}]}]}]'
+Output: networkpolicy.networking.k8s.io/cartservice patched
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy cartservice -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"cartservice","namespace":"default"},"spec":{"egress":[{"to":[{"podSelector":{"matchLabels":{"app":"paymentservice"}}}]},{"to":[{"podSelector":{"matchLabels":{"app":"currencyservice"}}}]}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}},{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}],"ports":[{"port":7070,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"cartservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-05-07T16:33:45Z"
+  generation: 262
+  name: cartservice
+  namespace: default
+  resourceVersion: "26925"
+  uid: 4d84a894-3a45-4049-9e7b-cc68eaff1fc6
+spec:
+  egress:
+  - ports:
+    - port: 6379
+      protocol: TCP
+    to:
+    - podSelector:
+        matchLabels:
+          app: redis-cart
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+    ports:
+    - port: 7070
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: cartservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy redis-cart -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"redis-cart","namespace":"default"},"spec":{"egress":[{}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"cartservice"}}}],"ports":[{"port":6379,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"redis-cart"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-05-07T16:33:46Z"
+  generation: 90
+  name: redis-cart
+  namespace: default
+  resourceVersion: "26706"
+  uid: c854c8da-db1b-4b5f-a8ff-74f2574f7bda
+spec:
+  egress:
+  - {}
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: cartservice
+    ports:
+    - port: 6379
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: redis-cart
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy redis-cart -n default --type=json -p '[{"op": "replace", "path": "/spec/egress", "value": [{"to": [{"podSelector": {"matchLabels": {"app": "cartservice"}}}], "ports": [{"port": 6379, "protocol": "TCP"}]}]}]'
+Output: networkpolicy.networking.k8s.io/redis-cart patched
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+
+LLM Command: kubectl get pods -n default --show-labels
+Output: NAME                                     READY   STATUS    RESTARTS      AGE     LABELS
+adservice-7c7687ff5b-fbq2s               1/1     Running   0             5h22m   app=adservice,pod-template-hash=7c7687ff5b,skaffold.dev/run-id=d9aabfde-b7ab-4584-b757-8c80f6c37263
+cartservice-7c8966d6fd-c8rb4             1/1     Running   0             5h22m   app=cartservice,pod-template-hash=7c8966d6fd,skaffold.dev/run-id=d9aabfde-b7ab-4584-b757-8c80f6c37263
+checkoutservice-769b8ff7b8-jxzrv         1/1     Running   0             5h22m   app=checkoutservice,pod-template-hash=769b8ff7b8,skaffold.dev/run-id=d9aabfde-b7ab-4584-b757-8c80f6c37263
+currencyservice-578dcb55f6-bdvtr         1/1     Running   1 (70m ago)   5h22m   app=currencyservice,pod-template-hash=578dcb55f6,skaffold.dev/run-id=d9aabfde-b7ab-4584-b757-8c80f6c37263
+emailservice-d5d54d4fc-lksfn             1/1     Running   0             5h22m   app=emailservice,pod-template-hash=d5d54d4fc,skaffold.dev/run-id=d9aabfde-b7ab-4584-b757-8c80f6c37263
+frontend-7ffbffc6f7-9hb4b                1/1     Running   0             5h22m   app=frontend,pod-template-hash=7ffbffc6f7,skaffold.dev/run-id=d9aabfde-b7ab-4584-b757-8c80f6c37263
+loadgenerator-7d9cfb7cb9-9zjhk           1/1     Running   0             5h21m   app=loadgenerator,pod-template-hash=7d9cfb7cb9,skaffold.dev/run-id=d9aabfde-b7ab-4584-b757-8c80f6c37263
+paymentservice-b67c65d9c-ztkqg           1/1     Running   1 (44m ago)   5h22m   app=paymentservice,pod-template-hash=b67c65d9c,skaffold.dev/run-id=d9aabfde-b7ab-4584-b757-8c80f6c37263
+productcatalogservice-5f94b6cd47-lk6vh   1/1     Running   0             5h22m   app=productcatalogservice,pod-template-hash=5f94b6cd47,skaffold.dev/run-id=d9aabfde-b7ab-4584-b757-8c80f6c37263
+recommendationservice-c468b6867-pcbbn    1/1     Running   0             5h22m   app=recommendationservice,pod-template-hash=c468b6867,skaffold.dev/run-id=d9aabfde-b7ab-4584-b757-8c80f6c37263
+redis-cart-5b6f47b748-9rgzw              1/1     Running   0             5h22m   app=redis-cart,pod-template-hash=5b6f47b748,skaffold.dev/run-id=d9aabfde-b7ab-4584-b757-8c80f6c37263
+shippingservice-f6bc4cd5d-69r7d          1/1     Running   0             5h22m   app=shippingservice,pod-template-hash=f6bc4cd5d,skaffold.dev/run-id=d9aabfde-b7ab-4584-b757-8c80f6c37263
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy redis-cart -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"redis-cart","namespace":"default"},"spec":{"egress":[{}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"cartservice"}}}],"ports":[{"port":6379,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"redis-cart"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-05-07T16:33:46Z"
+  generation: 91
+  name: redis-cart
+  namespace: default
+  resourceVersion: "26948"
+  uid: c854c8da-db1b-4b5f-a8ff-74f2574f7bda
+spec:
+  egress:
+  - ports:
+    - port: 6379
+      protocol: TCP
+    to:
+    - podSelector:
+        matchLabels:
+          app: cartservice
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: cartservice
+    ports:
+    - port: 6379
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: redis-cart
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy cartservice -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"cartservice","namespace":"default"},"spec":{"egress":[{"to":[{"podSelector":{"matchLabels":{"app":"paymentservice"}}}]},{"to":[{"podSelector":{"matchLabels":{"app":"currencyservice"}}}]}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}},{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}],"ports":[{"port":7070,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"cartservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-05-07T16:33:45Z"
+  generation: 262
+  name: cartservice
+  namespace: default
+  resourceVersion: "26925"
+  uid: 4d84a894-3a45-4049-9e7b-cc68eaff1fc6
+spec:
+  egress:
+  - ports:
+    - port: 6379
+      protocol: TCP
+    to:
+    - podSelector:
+        matchLabels:
+          app: redis-cart
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+    ports:
+    - port: 7070
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: cartservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+
+LLM Command: kubectl get pods -n default --selector=app=cartservice --show-labels
+Output: NAME                           READY   STATUS    RESTARTS   AGE     LABELS
+cartservice-7c8966d6fd-c8rb4   1/1     Running   0          5h22m   app=cartservice,pod-template-hash=7c8966d6fd,skaffold.dev/run-id=d9aabfde-b7ab-4584-b757-8c80f6c37263
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+

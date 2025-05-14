@@ -1,0 +1,112 @@
+LLM Command: kubectl get networkpolicy -n frontend -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy -n frontend --type='json' -p='[{"op": "add", "path": "/spec", "value": {"podSelector": {}, "policyTypes": ["Ingress"], "ingress": [{"from": [{"podSelector": {"matchLabels": {"app": "adservice"}}}], "ports": [{"protocol": "TCP", "port": 9555}]}]}}]'
+Output: error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+
+LLM Command: kubectl apply -n frontend -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: frontend-allow-adservice
+  namespace: frontend
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: adservice
+    ports:
+    - protocol: TCP
+      port: 9555
+EOF
+Output: error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy frontend-allow-adservice -n frontend --type='json' -p='[{"op": "add", "path": "/spec", "value": {"podSelector": {}, "policyTypes": ["Ingress"], "ingress": [{"from": [{"podSelector": {"matchLabels": {"app": "adservice"}}}], "ports": [{"protocol": "TCP", "port": 9555}]}]}}]'
+Output: Error from server (NotFound): namespaces "frontend" not found
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+
+LLM Command: kubectl get namespaces
+Output: NAME                 STATUS   AGE
+default              Active   4m42s
+kube-node-lease      Active   4m42s
+kube-public          Active   4m42s
+kube-system          Active   4m42s
+local-path-storage   Active   4m37s
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+
+LLM Command: kubectl get pods --all-namespaces -o wide | grep frontend
+Output: default              frontend-7ffbffc6f7-9hb4b                    1/1     Running   0          101s    10.244.0.10   kind-control-plane   <none>           <none>
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy frontend-allow-adservice -n default --type='json' -p='[{"op": "add", "path": "/spec", "value": {"podSelector": {}, "policyTypes": ["Ingress"], "ingress": [{"from": [{"podSelector": {"matchLabels": {"app": "adservice"}}}], "ports": [{"protocol": "TCP", "port": 9555}]}]}}]'
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "frontend-allow-adservice" not found
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+
+LLM Command: kubectl apply -n default -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: frontend-allow-adservice
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: frontend
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: adservice
+    ports:
+    - protocol: TCP
+      port: 9555
+EOF
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "frontend-allow-adservice" not found
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+
+LLM Command: kubectl apply -n default -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: frontend-allow-adservice
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: frontend
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: adservice
+    ports:
+    - protocol: TCP
+      port: 9555
+EOF
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "frontend-allow-adservice" not found
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+

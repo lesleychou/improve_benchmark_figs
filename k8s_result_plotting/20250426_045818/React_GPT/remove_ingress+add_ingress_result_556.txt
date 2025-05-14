@@ -1,0 +1,133 @@
+LLM Command: kubectl get networkpolicy -n frontend
+Output: 
+Mismatch Summary: Mismatch: adservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → cartservice:7070 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy -n checkoutservice -p '{"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"paymentservice"}}}],"ports":[{"port":50051,"protocol":"TCP"}]}]}}'
+Output: error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: adservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → cartservice:7070 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy <networkpolicy-name> -n checkoutservice -p '{"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"paymentservice"}}}],"ports":[{"port":50051,"protocol":"TCP"}]}]}}'
+Output: /bin/bash: line 1: networkpolicy-name: No such file or directory
+
+Mismatch Summary: Mismatch: adservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → cartservice:7070 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n checkoutservice
+Output: 
+Mismatch Summary: Mismatch: adservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → cartservice:7070 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n checkoutservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: adservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → cartservice:7070 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -n checkoutservice -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-paymentservice
+  namespace: checkoutservice
+spec:
+  podSelector: {}
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: paymentservice
+    ports:
+    - protocol: TCP
+      port: 50051
+EOF
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: adservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → cartservice:7070 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -n checkoutservice -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-paymentservice
+  namespace: checkoutservice
+spec:
+  podSelector:
+    matchLabels:
+      app: checkoutservice
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: paymentservice
+    ports:
+    - protocol: TCP
+      port: 50051
+EOF
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: adservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → cartservice:7070 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -n checkoutservice -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-paymentservice
+  namespace: checkoutservice
+spec:
+  podSelector:
+    matchLabels:
+      app: checkoutservice
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: paymentservice
+    ports:
+    - protocol: TCP
+      port: 50051
+EOF
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: adservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → cartservice:7070 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n adservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: adservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → cartservice:7070 (Expected: False, Actual: True)
+

@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 adservice:9555 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy <networkpolicy-name> -n frontend --type=json -p '[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"shippingservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 50051, \"protocol\": \"TCP\"}}]'",
+        "output": "/bin/bash: line 1: networkpolicy-name: No such file or directory\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 adservice:9555 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 adservice:9555 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl apply -n frontend -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-frontend-shipping\n  namespace: frontend\nspec:\n  podSelector:\n    matchLabels:\n      app: frontend\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: shippingservice\n    ports:\n    - protocol: TCP\n      port: 50051\nEOF",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 adservice:9555 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy allow-frontend-shipping -n frontend --type=json -p '[{\"op\": \"add\", \"path\": \"/spec/ingress\", \"value\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"shippingservice\"}}}], \"ports\": [{\"port\": 50051, \"protocol\": \"TCP\"}]}]}]'",
+        "output": "Error from server (NotFound): namespaces \"frontend\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 adservice:9555 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\ndefault              Active   21h\nkube-node-lease      Active   21h\nkube-public          Active   21h\nkube-system          Active   21h\nlocal-path-storage   Active   21h\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 adservice:9555 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get pods --all-namespaces -o wide | grep -E 'shippingservice|checkoutservice|recommendationservice|adservice'",
+        "output": "default              adservice-7c7687ff5b-fbq2s                   1/1     Running   0               21h   10.244.0.5    kind-control-plane   <none>           <none>\ndefault              checkoutservice-769b8ff7b8-jxzrv             1/1     Running   0               21h   10.244.0.7    kind-control-plane   <none>           <none>\ndefault              recommendationservice-c468b6867-pcbbn        1/1     Running   0               21h   10.244.0.12   kind-control-plane   <none>           <none>\ndefault              shippingservice-f6bc4cd5d-69r7d              1/1     Running   0               21h   10.244.0.14   kind-control-plane   <none>           <none>\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 adservice:9555 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy allow-frontend-shipping -n default --type=json -p '[{\"op\": \"add\", \"path\": \"/spec/ingress\", \"value\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"shippingservice\"}}}], \"ports\": [{\"port\": 50051, \"protocol\": \"TCP\"}]}]}]'",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"allow-frontend-shipping\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 adservice:9555 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "bash\nkubectl apply -n default -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-frontend-shipping\n  namespace: default\nspec:\n  podSelector:\n    matchLabels:\n      app: frontend\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: shippingservice\n    ports:\n    - protocol: TCP\n      port: 50051\nEOF",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"allow-frontend-shipping\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 adservice:9555 (Expected: False, Actual: True)"
+    }
+]

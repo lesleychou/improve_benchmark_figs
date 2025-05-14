@@ -1,0 +1,218 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy recommendationservice -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"recommendationservice","namespace":"default"},"spec":{"egress":[{"to":[{"podSelector":{"matchLabels":{"app":"currencyservice"}}}]},{"to":[{"podSelector":{"matchLabels":{"app":"redis-cart"}}}]}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":8080,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"recommendationservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-04-26T05:21:07Z"
+  generation: 187
+  name: recommendationservice
+  namespace: default
+  resourceVersion: "18937"
+  uid: 86dd0329-94d7-4215-9c9c-a6bfa49e534b
+spec:
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: currencyservice
+  - to:
+    - podSelector:
+        matchLabels:
+          app: redis-cart
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    ports:
+    - port: 8080
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: recommendationservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy recommendationservice --type=merge -p $'
+spec:
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: currencyservice
+    - podSelector:
+        matchLabels:
+          app: redis-cart
+    - podSelector:
+        matchLabels:
+          app: productcatalogservice
+  ports:
+    - port: 3550
+      protocol: TCP
+'
+Output: networkpolicy.networking.k8s.io/recommendationservice patched
+
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy productcatalogservice -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"productcatalogservice","namespace":"default"},"spec":{"egress":[{}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}},{"podSelector":{"matchLabels":{"app":"checkoutservice"}}},{"podSelector":{"matchLabels":{"app":"recommendationservice"}}}],"ports":[{"port":3550,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"productcatalogservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-04-26T05:21:07Z"
+  generation: 89
+  name: productcatalogservice
+  namespace: default
+  resourceVersion: "18466"
+  uid: 8233b476-048a-4017-b2f2-3f826b5618de
+spec:
+  egress:
+  - {}
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+    - podSelector:
+        matchLabels:
+          app: recommendationservice
+    ports:
+    - port: 3550
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: productcatalogservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy recommendationservice -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"recommendationservice","namespace":"default"},"spec":{"egress":[{"to":[{"podSelector":{"matchLabels":{"app":"currencyservice"}}}]},{"to":[{"podSelector":{"matchLabels":{"app":"redis-cart"}}}]}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":8080,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"recommendationservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-04-26T05:21:07Z"
+  generation: 188
+  name: recommendationservice
+  namespace: default
+  resourceVersion: "18949"
+  uid: 86dd0329-94d7-4215-9c9c-a6bfa49e534b
+spec:
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: currencyservice
+    - podSelector:
+        matchLabels:
+          app: redis-cart
+    - podSelector:
+        matchLabels:
+          app: productcatalogservice
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    ports:
+    - port: 8080
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: recommendationservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy productcatalogservice --type=merge -p $'
+spec:
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+    - podSelector:
+        matchLabels:
+          app: recommendationservice
+  ports:
+    - port: 3550
+      protocol: TCP
+'
+Output: networkpolicy.networking.k8s.io/productcatalogservice patched
+
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl describe networkpolicy recommendationservice
+Output: Name:         recommendationservice
+Namespace:    default
+Created on:   2025-04-26 05:21:07 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=recommendationservice
+  Allowing ingress traffic:
+    To Port: 8080/TCP
+    From:
+      PodSelector: app=frontend
+  Allowing egress traffic:
+    To Port: <any> (traffic allowed to all ports)
+    To:
+      PodSelector: app=currencyservice
+    To:
+      PodSelector: app=redis-cart
+    To:
+      PodSelector: app=productcatalogservice
+  Policy Types: Ingress, Egress
+
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl describe networkpolicy productcatalogservice
+Output: Name:         productcatalogservice
+Namespace:    default
+Created on:   2025-04-26 05:21:07 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=productcatalogservice
+  Allowing ingress traffic:
+    To Port: <any> (traffic allowed to all ports)
+    From:
+      PodSelector: app=frontend
+    From:
+      PodSelector: app=checkoutservice
+    From:
+      PodSelector: app=recommendationservice
+  Allowing egress traffic:
+    To Port: <any> (traffic allowed to all ports)
+    To: <any> (traffic not restricted by destination)
+  Policy Types: Ingress, Egress
+
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+

@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: adservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n adservice -o yaml",
+        "output": "apiVersion: v1\nitems:\n- apiVersion: networking.k8s.io/v1\n  kind: NetworkPolicy\n  metadata:\n    annotations:\n      kubectl.kubernetes.io/last-applied-configuration: |\n        {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"adservice-policy\",\"namespace\":\"adservice\"},\"spec\":{\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}}}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"adservice\"}},\"policyTypes\":[\"Ingress\"]}}\n    creationTimestamp: \"2025-04-26T05:28:12Z\"\n    generation: 18\n    name: adservice-policy\n    namespace: adservice\n    resourceVersion: \"4198\"\n    uid: 7a4fbdb4-17a3-4606-b447-b223280c53e6\n  spec:\n    ingress:\n    - from:\n      - podSelector:\n          matchLabels:\n            app: frontend\n    podSelector:\n      matchLabels:\n        app: adservice\n    policyTypes:\n    - Ingress\n- apiVersion: networking.k8s.io/v1\n  kind: NetworkPolicy\n  metadata:\n    annotations:\n      kubectl.kubernetes.io/last-applied-configuration: |\n        {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"allow-frontend-access\",\"namespace\":\"adservice\"},\"spec\":{\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}}}],\"ports\":[{\"port\":9555,\"protocol\":\"TCP\"}]}],\"podSelector\":{\"matchLabels\":{}}}}\n    creationTimestamp: \"2025-04-26T05:09:46Z\"\n    generation: 4\n    name: allow-frontend-access\n    namespace: adservice\n    resourceVersion: \"2884\"\n    uid: 1b55a872-ca84-4edc-b22f-9b8b613eed60\n  spec:\n    ingress:\n    - from:\n      - podSelector:\n          matchLabels:\n            app: frontend\n      ports:\n      - port: 9555\n        protocol: TCP\n    podSelector:\n      matchLabels:\n        app: adservice\n    policyTypes:\n    - Ingress\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy adservice-policy -n adservice --type='json' -p='[{\"op\": \"replace\", \"path\": \"/spec/ingress\", \"value\": [{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}}}]}]}]'",
+        "output": "networkpolicy.networking.k8s.io/adservice-policy patched (no change)\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n recommendationservice -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy recommendationservice-policy -n recommendationservice --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"recommendationservice\"}}, \"policyTypes\": [\"Ingress\"], \"ingress\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}}, {\"podSelector\": {\"matchLabels\": {\"app\": \"productcatalog\"}}}]}]}}]'",
+        "output": "Error from server (NotFound): namespaces \"recommendationservice\" not found\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                    STATUS   AGE\nadservice               Active   31m\ncartservice             Active   22m\ncheckoutservice         Active   27m\ncurrencyservice         Active   10m\ndefault                 Active   42m\nemailservice            Active   26m\nkube-node-lease         Active   42m\nkube-public             Active   42m\nkube-system             Active   42m\nlocal-path-storage      Active   42m\nproductcatalogservice   Active   11m\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl create namespace recommendationservice",
+        "output": "namespace/recommendationservice created\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy recommendationservice-policy -n recommendationservice --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"recommendationservice\"}}, \"policyTypes\": [\"Ingress\"], \"ingress\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}}, {\"podSelector\": {\"matchLabels\": {\"app\": \"productcatalog\"}}}]}]}}]'",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"recommendationservice-policy\" not found\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy recommendationservice-policy -n recommendationservice --type='json' -p='[{\"op\": \"add\", \"path\": \"/\", \"value\": {\"apiVersion\": \"networking.k8s.io/v1\", \"kind\": \"NetworkPolicy\", \"metadata\": {\"name\": \"recommendationservice-policy\", \"namespace\": \"recommendationservice\"}, \"spec\": {\"podSelector\": {\"matchLabels\": {\"app\": \"recommendationservice\"}}, \"policyTypes\": [\"Ingress\"], \"ingress\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}}, {\"podSelector\": {\"matchLabels\": {\"app\": \"productcatalog\"}}}]}]}}}]'",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"recommendationservice-policy\" not found\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)"
+    }
+]

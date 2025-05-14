@@ -1,0 +1,45 @@
+LLM Command: kubectl get networkpolicy -A
+Output: NAMESPACE   NAME                    POD-SELECTOR                AGE
+default     adservice               app=adservice               47m
+default     cartservice             app=cartservice             47m
+default     checkoutservice         app=checkoutservice         47m
+default     currencyservice         app=currencyservice         47m
+default     emailservice            app=emailservice            47m
+default     frontend                app=frontend                47m
+default     loadgenerator           app=loadgenerator           47m
+default     paymentservice          app=paymentservice          47m
+default     productcatalogservice   app=productcatalogservice   47m
+default     recommendationservice   app=recommendationservice   47m
+default     redis-cart              app=redis-cart              47m
+default     shippingservice         app=shippingservice         47m
+
+Mismatch Summary: Mismatch: productcatalogservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → emailservice:5000 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy productcatalogservice -n default --type='json' -p='[{"op": "add", "path": "/spec/egress/-", "value": {"to": [{"podSelector": {"matchLabels": {"app": "emailservice"}}}], "ports": [{"port": 5000, "protocol": "TCP"}]}}]'
+Output: networkpolicy.networking.k8s.io/productcatalogservice patched
+
+Mismatch Summary: Mismatch: productcatalogservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → emailservice:5000 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy shippingservice -n default --type='json' -p='[{"op": "remove", "path": "/spec/egress/-", "value": {"to": [{"podSelector": {"matchLabels": {"app": "emailservice"}}}], "ports": [{"port": 5000, "protocol": "TCP"}]}}]'
+Output: The request is invalid: the server rejected our request due to an error in our request
+
+Mismatch Summary: Mismatch: productcatalogservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → emailservice:5000 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy shippingservice -n default --type='json' -p='[{"op": "replace", "path": "/spec/egress", "value": [{"to": [{"podSelector": {"matchLabels": {"app": "currencyservice"}}}], "ports": [{"port": 5000, "protocol": "TCP"}]}, {"to": [{"podSelector": {"matchLabels": {"app": "paymentservice"}}}], "ports": [{"port": 5000, "protocol": "TCP"}]}, {"to": [{"podSelector": {"matchLabels": {"app": "shippingservice"}}}], "ports": [{"port": 5000, "protocol": "TCP"}]}]}]'
+Output: networkpolicy.networking.k8s.io/shippingservice patched
+
+Mismatch Summary: Mismatch: productcatalogservice → emailservice:5000 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy productcatalogservice -n default --type='json' -p='[{"op": "remove", "path": "/spec/egress/-", "value": {"to": [{"podSelector": {"matchLabels": {"app": "emailservice"}}}], "ports": [{"port": 5000, "protocol": "TCP"}]}}]'
+Output: The request is invalid: the server rejected our request due to an error in our request
+
+Mismatch Summary: Mismatch: productcatalogservice → emailservice:5000 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy productcatalogservice -n default --type='json' -p='[{"op": "replace", "path": "/spec/egress", "value": [{"to": [{"podSelector": {"matchLabels": {"app": "recommendationservice"}}}], "ports": [{"port": 5000, "protocol": "TCP"}]}]}]'
+Output: networkpolicy.networking.k8s.io/productcatalogservice patched
+
+Mismatch Summary: No mismatches found.
+

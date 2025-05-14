@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy checkoutservice -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"checkoutservice\",\"namespace\":\"default\"},\"spec\":{\"egress\":[{}],\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}}}],\"ports\":[{\"port\":5050,\"protocol\":\"TCP\"}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"checkoutservice\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n  creationTimestamp: \"2025-04-26T05:21:06Z\"\n  generation: 987\n  name: checkoutservice\n  namespace: default\n  resourceVersion: \"33076\"\n  uid: 5b0b8408-8be0-413b-ac2f-bc9f3f34ed2a\nspec:\n  egress:\n  - {}\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    ports:\n    - port: 5050\n      protocol: TCP\n  podSelector:\n    matchLabels:\n      app: checkoutservice\n  policyTypes:\n  - Ingress\n  - Egress\n",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy emailservice -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"emailservice\",\"namespace\":\"default\"},\"spec\":{\"egress\":[{}],\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"checkoutservice\"}}}],\"ports\":[{\"port\":15122,\"protocol\":\"TCP\"}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"emailservice\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n  creationTimestamp: \"2025-04-26T05:21:06Z\"\n  generation: 195\n  name: emailservice\n  namespace: default\n  resourceVersion: \"33077\"\n  uid: b8a7cd2b-6d5c-4fd7-bd06-14904aacb637\nspec:\n  egress:\n  - {}\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: checkoutservice\n    ports:\n    - port: 15122\n      protocol: TCP\n  podSelector:\n    matchLabels:\n      app: emailservice\n  policyTypes:\n  - Ingress\n  - Egress\n",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy emailservice --type=merge -p $'\nspec:\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: checkoutservice\n    ports:\n    - port: 5000\n      protocol: TCP\n'",
+        "output": "networkpolicy.networking.k8s.io/emailservice patched\n",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy paymentservice -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"paymentservice\",\"namespace\":\"default\"},\"spec\":{\"egress\":[{}],\"ingress\":[],\"podSelector\":{\"matchLabels\":{\"app\":\"paymentservice\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n  creationTimestamp: \"2025-04-26T05:21:07Z\"\n  generation: 178\n  name: paymentservice\n  namespace: default\n  resourceVersion: \"33079\"\n  uid: 8109daa8-0dba-4dc8-91a0-ae3a1b3922c6\nspec:\n  egress:\n  - {}\n  podSelector:\n    matchLabels:\n      app: paymentservice\n  policyTypes:\n  - Ingress\n  - Egress\n",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy paymentservice --type=merge -p $'\nspec:\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: checkoutservice\n    ports:\n    - port: 50051\n      protocol: TCP\n'",
+        "output": "networkpolicy.networking.k8s.io/paymentservice patched\n",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy emailservice -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"emailservice\",\"namespace\":\"default\"},\"spec\":{\"egress\":[{}],\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"checkoutservice\"}}}],\"ports\":[{\"port\":15122,\"protocol\":\"TCP\"}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"emailservice\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n  creationTimestamp: \"2025-04-26T05:21:06Z\"\n  generation: 196\n  name: emailservice\n  namespace: default\n  resourceVersion: \"33093\"\n  uid: b8a7cd2b-6d5c-4fd7-bd06-14904aacb637\nspec:\n  egress:\n  - {}\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: checkoutservice\n    ports:\n    - port: 5000\n      protocol: TCP\n  podSelector:\n    matchLabels:\n      app: emailservice\n  policyTypes:\n  - Ingress\n  - Egress\n",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy checkoutservice --type=merge -p $'\nspec:\n  egress:\n  - to:\n    - podSelector:\n        matchLabels:\n          app: emailservice\n    ports:\n    - port: 5000\n      protocol: TCP\n'",
+        "output": "networkpolicy.networking.k8s.io/checkoutservice patched\n",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy cartservice -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"cartservice\",\"namespace\":\"default\"},\"spec\":{\"egress\":[{}],\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"checkoutservice\"}}}],\"ports\":[{\"port\":7070,\"protocol\":\"TCP\"}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"cartservice\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n  creationTimestamp: \"2025-04-26T05:21:06Z\"\n  generation: 468\n  name: cartservice\n  namespace: default\n  resourceVersion: \"33075\"\n  uid: fa1f8101-29b0-4426-87a2-3d23516b47b1\nspec:\n  egress:\n  - {}\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    - podSelector:\n        matchLabels:\n          app: checkoutservice\n    ports:\n    - port: 7070\n      protocol: TCP\n  podSelector:\n    matchLabels:\n      app: cartservice\n  policyTypes:\n  - Ingress\n  - Egress\n",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)"
+    }
+]

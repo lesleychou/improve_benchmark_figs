@@ -1,0 +1,143 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: cartservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy cartservice-policy -n cartservice --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "redis-cache"}}}}]'
+Output: networkpolicy.networking.k8s.io/cartservice-policy patched
+
+Mismatch Summary: Mismatch: cartservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy cartservice-policy -n cartservice --type='json' -p='[{"op": "add", "path": "/spec/egress/-", "value": {"to": [{"podSelector": {"matchLabels": {"app": "productcatalogservice"}}}], "ports": [{"port": 3550, "protocol": "TCP"}]}}]'
+Output: networkpolicy.networking.k8s.io/cartservice-policy patched
+
+Mismatch Summary: Mismatch: cartservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy cartservice-policy -n cartservice --type='json' -p='[{"op": "remove", "path": "/spec/egress"}]'
+Output: networkpolicy.networking.k8s.io/cartservice-policy patched
+
+Mismatch Summary: Mismatch: cartservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy cartservice-policy -n cartservice --type='json' -p='[{"op": "add", "path": "/spec/egress/-", "value": {"to": [{"podSelector": {"matchLabels": {"app": "redis-cache"}}}], "ports": [{"port": 6379, "protocol": "TCP"}]}}]'
+Output: The request is invalid: the server rejected our request due to an error in our request
+
+Mismatch Summary: Mismatch: cartservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy cartservice-policy -n cartservice --type='json' -p='[{"op": "add", "path": "/spec/egress/-", "value": {"to": [{"podSelector": {"matchLabels": {"app": "redis-cache"}}}], "ports": [{"port": 6379, "protocol": "TCP"}]}}]'
+Output: The request is invalid: the server rejected our request due to an error in our request
+
+Mismatch Summary: Mismatch: cartservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy cartservice-policy -n cartservice -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"cartservice-policy","namespace":"cartservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"redis-cart"}}}],"ports":[{"port":6379,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"cartservice"}}}}
+  creationTimestamp: "2025-04-26T05:31:45Z"
+  generation: 444
+  name: cartservice-policy
+  namespace: cartservice
+  resourceVersion: "89229"
+  uid: 21f73f58-014f-458a-9b75-0af604721328
+spec:
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: redis-cart
+    - podSelector:
+        matchLabels:
+          app: redis-cache
+    ports:
+    - port: 6379
+      protocol: TCP
+  - from:
+    - podSelector:
+        matchLabels:
+          app: productcatalogservice
+    ports:
+    - port: 7070
+      protocol: TCP
+  - from:
+    - podSelector:
+        matchLabels:
+          app: productcatalogservice
+    - podSelector:
+        matchLabels:
+          app: recommendationservice
+    ports:
+    - port: 7070
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: cartservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy frontend-policy -n frontend --type='json' -p='[{"op": "add", "path": "/spec/egress/-", "value": {"to": [{"podSelector": {"matchLabels": {"app": "adservice"}}}], "ports": [{"port": 9555, "protocol": "TCP"}]}}]'
+Output: networkpolicy.networking.k8s.io/frontend-policy patched
+
+Mismatch Summary: Mismatch: cartservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy cartservice-policy -n cartservice --type='json' -p='[{"op": "remove", "path": "/spec/egress/0/to"}]'
+Output: The request is invalid: the server rejected our request due to an error in our request
+
+Mismatch Summary: Mismatch: cartservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+

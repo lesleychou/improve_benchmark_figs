@@ -1,0 +1,198 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy frontend-network-policy -n frontend -p '{"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"cartservice"}}}],"ports":[{"port":7070,"protocol":"TCP"}]}]}}' --type=merge
+Output: networkpolicy.networking.k8s.io/frontend-network-policy patched
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy cartservice-network-policy -n cartservice -p '{"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":7070,"protocol":"TCP"}]}]}}' --type=merge
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "cartservice-network-policy" not found
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl apply -n cartservice -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: cartservice-network-policy
+  namespace: cartservice
+spec:
+  podSelector:
+    matchLabels:
+      app: cartservice
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    ports:
+    - protocol: TCP
+      port: 7070
+EOF
+Output: networkpolicy.networking.k8s.io/cartservice-network-policy created
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy frontend-network-policy -n frontend -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"frontend-network-policy","namespace":"frontend"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"recommendationservice"}}}],"ports":[{"port":8080,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"frontend"}}}}
+  creationTimestamp: "2025-04-27T16:56:50Z"
+  generation: 2
+  name: frontend-network-policy
+  namespace: frontend
+  resourceVersion: "9405"
+  uid: 7b84c8a1-46e4-4101-b1f4-a368a205b05e
+spec:
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: cartservice
+    ports:
+    - port: 7070
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: frontend
+  policyTypes:
+  - Ingress
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy cartservice-network-policy -n cartservice -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"cartservice-network-policy","namespace":"cartservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":7070,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"cartservice"}}}}
+  creationTimestamp: "2025-04-27T17:13:22Z"
+  generation: 1
+  name: cartservice-network-policy
+  namespace: cartservice
+  resourceVersion: "9417"
+  uid: 696128b5-7328-477a-b1ab-89deaf401b37
+spec:
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    ports:
+    - port: 7070
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: cartservice
+  policyTypes:
+  - Ingress
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: bash
+kubectl get networkpolicy frontend-network-policy -n frontend -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"frontend-network-policy","namespace":"frontend"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"recommendationservice"}}}],"ports":[{"port":8080,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"frontend"}}}}
+  creationTimestamp: "2025-04-27T16:56:50Z"
+  generation: 2
+  name: frontend-network-policy
+  namespace: frontend
+  resourceVersion: "9405"
+  uid: 7b84c8a1-46e4-4101-b1f4-a368a205b05e
+spec:
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: cartservice
+    ports:
+    - port: 7070
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: frontend
+  policyTypes:
+  - Ingress
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy frontend-network-policy -n frontend -p '{"spec":{"egress":[{"to":[{"podSelector":{"matchLabels":{"app":"cartservice"}}}],"ports":[{"port":7070,"protocol":"TCP"}]}]}}' --type=merge
+Output: networkpolicy.networking.k8s.io/frontend-network-policy patched
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy frontend-network-policy -n frontend -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"frontend-network-policy","namespace":"frontend"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"recommendationservice"}}}],"ports":[{"port":8080,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"frontend"}}}}
+  creationTimestamp: "2025-04-27T16:56:50Z"
+  generation: 3
+  name: frontend-network-policy
+  namespace: frontend
+  resourceVersion: "9442"
+  uid: 7b84c8a1-46e4-4101-b1f4-a368a205b05e
+spec:
+  egress:
+  - ports:
+    - port: 7070
+      protocol: TCP
+    to:
+    - podSelector:
+        matchLabels:
+          app: cartservice
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: cartservice
+    ports:
+    - port: 7070
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: frontend
+  policyTypes:
+  - Ingress
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+

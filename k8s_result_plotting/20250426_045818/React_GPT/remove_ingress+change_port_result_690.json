@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy -n frontend --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}, \"ingress\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"adservice\"}}}], \"ports\": [{\"port\": 9555, \"protocol\": \"TCP\"}]}, {\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"checkoutservice\"}}}], \"ports\": [{\"port\": 5050, \"protocol\": \"TCP\"}]}]}}]'",
+        "output": "error: resource(s) were provided, but no name was specified\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl apply -n frontend -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: frontend-allow-adservice-checkoutservice\n  namespace: frontend\nspec:\n  podSelector:\n    matchLabels:\n      app: frontend\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: adservice\n    ports:\n    - protocol: TCP\n      port: 9555\n  - from:\n    - podSelector:\n        matchLabels:\n          app: checkoutservice\n    ports:\n    - protocol: TCP\n      port: 5050\nEOF",
+        "output": "error: resource(s) were provided, but no name was specified\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl apply -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: frontend-allow-adservice-checkoutservice\n  namespace: frontend\nspec:\n  podSelector:\n    matchLabels:\n      app: frontend\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: adservice\n    ports:\n    - protocol: TCP\n      port: 9555\n  - from:\n    - podSelector:\n        matchLabels:\n          app: checkoutservice\n    ports:\n    - protocol: TCP\n      port: 5050\nEOF",
+        "output": "error: resource(s) were provided, but no name was specified\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy frontend-allow-adservice-checkoutservice -n frontend --type='merge' -p='{\"spec\": {\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}, \"ingress\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"adservice\"}}}], \"ports\": [{\"port\": 9555, \"protocol\": \"TCP\"}]}, {\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"checkoutservice\"}}}], \"ports\": [{\"port\": 5050, \"protocol\": \"TCP\"}]}]}}'",
+        "output": "Error from server (NotFound): namespaces \"frontend\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\ndefault              Active   9h\nkube-node-lease      Active   9h\nkube-public          Active   9h\nkube-system          Active   9h\nlocal-path-storage   Active   9h\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get pods --all-namespaces -o wide | grep frontend",
+        "output": "default              frontend-7ffbffc6f7-9hb4b                    1/1     Running   0             9h    10.244.0.10   kind-control-plane   <none>           <none>\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl apply -n default -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: frontend-allow-adservice-checkoutservice\n  namespace: default\nspec:\n  podSelector:\n    matchLabels:\n      app: frontend\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: adservice\n    ports:\n    - protocol: TCP\n      port: 9555\n  - from:\n    - podSelector:\n        matchLabels:\n          app: checkoutservice\n    ports:\n    - protocol: TCP\n      port: 5050\nEOF",
+        "output": "default              frontend-7ffbffc6f7-9hb4b                    1/1     Running   0             9h    10.244.0.10   kind-control-plane   <none>           <none>\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl apply -n default -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: frontend-allow-adservice-checkoutservice\n  namespace: default\nspec:\n  podSelector:\n    matchLabels:\n      app: frontend\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: adservice\n    ports:\n    - protocol: TCP\n      port: 9555\n  - from:\n    - podSelector:\n        matchLabels:\n          app: checkoutservice\n    ports:\n    - protocol: TCP\n      port: 5050\nEOF",
+        "output": "default              frontend-7ffbffc6f7-9hb4b                    1/1     Running   0             9h    10.244.0.10   kind-control-plane   <none>           <none>\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)"
+    }
+]

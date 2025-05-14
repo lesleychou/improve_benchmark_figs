@@ -1,0 +1,22 @@
+LLM Command: kubectl get networkpolicy -A
+Output: NAMESPACE   NAME                    POD-SELECTOR                AGE
+default     adservice               app=adservice               173m
+default     cartservice             app=cartservice             173m
+default     checkoutservice         app=checkoutservice         173m
+default     currencyservice         app=currencyservice         173m
+default     emailservice            app=emailservice            173m
+default     frontend                app=frontend                173m
+default     loadgenerator           app=loadgenerator           173m
+default     paymentservice          app=paymentservice          173m
+default     productcatalogservice   app=productcatalogservice   173m
+default     recommendationservice   app=recommendationservice   173m
+default     redis-cart              app=redis-cart              173m
+default     shippingservice         app=shippingservice         173m
+
+Mismatch Summary: Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy recommendationservice -n default --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "frontend"}}}}, {"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 8080, "protocol": "TCP"}}]'
+Output: networkpolicy.networking.k8s.io/recommendationservice patched
+
+Mismatch Summary: No mismatches found.
+

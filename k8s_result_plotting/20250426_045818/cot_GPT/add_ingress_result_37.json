@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy deny-payment-access -n frontend --type='merge' -p '{\"apiVersion\": \"networking.k8s.io/v1\",\"kind\": \"NetworkPolicy\",\"metadata\": {\"name\": \"deny-payment-access\"},\"spec\": {\"podSelector\": {},\"policyTypes\": [\"Ingress\"],\"ingress\": [{\"from\": [{\"namespaceSelector\": {\"matchLabels\": {\"name\": \"paymentservice\"}}}]}]}}",
+        "output": "/bin/bash: -c: line 1: unexpected EOF while looking for matching `''\n/bin/bash: -c: line 2: syntax error: unexpected end of file\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy deny-payment-access -n frontend --type='merge' -p '{\"spec\": {\"ingress\": [{\"from\": [], \"ports\": [{\"port\": 50051, \"protocol\": \"TCP\"}]}]}}'",
+        "output": "Error from server (NotFound): namespaces \"frontend\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\nadservice            Active   14m\ncartservice          Active   5m4s\ncheckoutservice      Active   10m\ndefault              Active   25m\nemailservice         Active   9m57s\nkube-node-lease      Active   25m\nkube-public          Active   25m\nkube-system          Active   25m\nlocal-path-storage   Active   25m\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get services --all-namespaces",
+        "output": "NAMESPACE     NAME                    TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)                  AGE\ndefault       adservice               ClusterIP      10.96.205.178   <none>        9555/TCP                 22m\ndefault       cartservice             ClusterIP      10.96.85.95     <none>        7070/TCP                 22m\ndefault       checkoutservice         ClusterIP      10.96.118.118   <none>        5050/TCP                 22m\ndefault       currencyservice         ClusterIP      10.96.140.252   <none>        7000/TCP                 22m\ndefault       emailservice            ClusterIP      10.96.36.126    <none>        5000/TCP                 22m\ndefault       frontend                ClusterIP      10.96.76.231    <none>        80/TCP                   22m\ndefault       frontend-external       LoadBalancer   10.96.188.159   <pending>     80:30378/TCP             22m\ndefault       kubernetes              ClusterIP      10.96.0.1       <none>        443/TCP                  25m\ndefault       paymentservice          ClusterIP      10.96.5.186     <none>        50051/TCP                22m\ndefault       productcatalogservice   ClusterIP      10.96.85.216    <none>        3550/TCP                 22m\ndefault       recommendationservice   ClusterIP      10.96.45.217    <none>        8080/TCP                 22m\ndefault       redis-cart              ClusterIP      10.96.122.155   <none>        6379/TCP                 22m\ndefault       shippingservice         ClusterIP      10.96.95.128    <none>        50051/TCP                22m\nkube-system   kube-dns                ClusterIP      10.96.0.10      <none>        53/UDP,53/TCP,9153/TCP   25m\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy deny-payment-access -n default --type='merge' -p '{\"apiVersion\": \"networking.k8s.io/v1\",\"kind\": \"NetworkPolicy\",\"metadata\": {\"name\": \"deny-payment-access\"},\"spec\": {\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}},\"policyTypes\": [\"Ingress\"],\"ingress\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"paymentservice\"}}}],\"ports\": [{\"port\": 50051,\"protocol\": \"TCP\"}]}]}}'",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"deny-payment-access\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "bash\nkubectl apply -n default -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: deny-frontend-to-payment\n  namespace: default\nspec:\n  podSelector:\n    matchLabels:\n      app: frontend\n  policyTypes:\n  - Egress\n  egress:\n  - to:\n    - podSelector:\n        matchLabels:\n          app: paymentservice\n    ports:\n    - protocol: TCP\n      port: 50051\nEOF",
+        "output": "networkpolicy.networking.k8s.io/deny-frontend-to-payment created\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    }
+]

@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "kubectl get networkpolicy --all-namespaces",
+        "output": "NAMESPACE   NAME                    POD-SELECTOR                AGE\ndefault     adservice               app=adservice               19h\ndefault     cartservice             app=cartservice             19h\ndefault     checkoutservice         app=checkoutservice         19h\ndefault     currencyservice         app=currencyservice         19h\ndefault     emailservice            app=emailservice            19h\ndefault     frontend                app=frontend                19h\ndefault     loadgenerator           app=loadgenerator           19h\ndefault     paymentservice          app=paymentservice          19h\ndefault     productcatalogservice   app=productcatalogservice   19h\ndefault     recommendationservice   app=recommendationservice   19h\ndefault     redis-cart              app=redis-cart              19h\ndefault     shippingservice         app=shippingservice         19h\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: adservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: emailservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy frontend -n default --type=json -p '[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"shippingservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 50051, \"protocol\": \"TCP\"}}]'",
+        "output": "The request is invalid: the server rejected our request due to an error in our request\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: adservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: emailservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy frontend -n default --type=json -p '[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from\", \"value\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"shippingservice\"}}}]}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports\", \"value\": [{\"port\": 50051, \"protocol\": \"TCP\"}]}]'",
+        "output": "networkpolicy.networking.k8s.io/frontend patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: adservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: emailservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy checkoutservice -n default --type=json -p '[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from\", \"value\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"shippingservice\"}}}]}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports\", \"value\": [{\"port\": 50051, \"protocol\": \"TCP\"}]}]'",
+        "output": "networkpolicy.networking.k8s.io/checkoutservice patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: adservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: emailservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy frontend -n default --type=json -p '[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"checkoutservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 5050, \"protocol\": \"TCP\"}}]'",
+        "output": "networkpolicy.networking.k8s.io/frontend patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: adservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: emailservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy frontend -n default --type=json -p '[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"shippingservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 50051, \"protocol\": \"TCP\"}}]'",
+        "output": "networkpolicy.networking.k8s.io/frontend patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: adservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: emailservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy frontend -n default --type=json -p '[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"checkoutservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 5050, \"protocol\": \"TCP\"}}]'",
+        "output": "networkpolicy.networking.k8s.io/frontend patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: adservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: emailservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy adservice -n default --type=json -p '[{\"op\": \"add\", \"path\": \"/spec/egress/0/to/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"redis-cart\"}}}}, {\"op\": \"add\", \"path\": \"/spec/egress/0/ports/-\", \"value\": {\"port\": 6379, \"protocol\": \"TCP\"}}]'",
+        "output": "The request is invalid: the server rejected our request due to an error in our request\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: adservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: emailservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy frontend -n default --type=json -p '[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"checkoutservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 5050, \"protocol\": \"TCP\"}}]'",
+        "output": "networkpolicy.networking.k8s.io/frontend patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: adservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: emailservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    }
+]

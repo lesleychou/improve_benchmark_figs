@@ -1,0 +1,102 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n frontend -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy -n frontend --type='json' -p='[{"op": "add", "path": "/spec", "value": {"podSelector": {"matchLabels": {"app": "frontend"}}, "policyTypes": ["Ingress"], "ingress": [{"from": [{"podSelector": {"matchLabels": {"app": "productcatalogservice"}}}], "ports": [{"protocol": "TCP", "port": 3550}]}]}}]'
+Output: error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n cartservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n productcatalogservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy -n frontend frontend-policy --type='json' -p='[{"op": "add", "path": "/spec", "value": {"podSelector": {"matchLabels": {"app": "frontend"}}, "policyTypes": ["Ingress"], "ingress": [{"from": [{"podSelector": {"matchLabels": {"app": "productcatalogservice"}}}], "ports": [{"protocol": "TCP", "port": 3550}]}]}}]'
+Output: Error from server (NotFound): namespaces "frontend" not found
+
+Mismatch Summary: Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get namespaces
+Output: NAME                 STATUS   AGE
+default              Active   7h49m
+kube-node-lease      Active   7h49m
+kube-public          Active   7h49m
+kube-system          Active   7h49m
+local-path-storage   Active   7h49m
+
+Mismatch Summary: Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get pods -n default -o wide
+Output: NAME                                     READY   STATUS    RESTARTS        AGE     IP            NODE                 NOMINATED NODE   READINESS GATES
+adservice-597dc59b77-q8dfh               1/1     Running   0               7h46m   10.244.0.6    kind-control-plane   <none>           <none>
+cartservice-577f8d8c75-5lfjl             1/1     Running   0               7h46m   10.244.0.5    kind-control-plane   <none>           <none>
+checkoutservice-55698bfcc5-hrjtk         1/1     Running   0               7h46m   10.244.0.7    kind-control-plane   <none>           <none>
+currencyservice-c5968f8f5-dx7rq          1/1     Running   1 (3h29m ago)   7h46m   10.244.0.8    kind-control-plane   <none>           <none>
+emailservice-6c56b65f6d-fkhwd            1/1     Running   0               7h46m   10.244.0.9    kind-control-plane   <none>           <none>
+frontend-797c8f7758-fkv9r                1/1     Running   0               7h46m   10.244.0.11   kind-control-plane   <none>           <none>
+loadgenerator-6c5b65b44b-wp4z7           1/1     Running   0               7h45m   10.244.0.16   kind-control-plane   <none>           <none>
+paymentservice-76948fc564-dlnrz          1/1     Running   1 (3h14m ago)   7h46m   10.244.0.10   kind-control-plane   <none>           <none>
+productcatalogservice-5f9d5c689b-x9sdp   1/1     Running   0               7h46m   10.244.0.12   kind-control-plane   <none>           <none>
+recommendationservice-67cbb84b7b-c2src   1/1     Running   0               7h46m   10.244.0.14   kind-control-plane   <none>           <none>
+redis-cart-866688457f-zsqdb              1/1     Running   0               7h46m   10.244.0.13   kind-control-plane   <none>           <none>
+shippingservice-9ddf878c7-gr8bc          1/1     Running   0               7h46m   10.244.0.15   kind-control-plane   <none>           <none>
+
+Mismatch Summary: Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: bash
+kubectl patch networkpolicy frontend-policy -n default --type='json' -p='[{"op": "add", "path": "/spec", "value": {"podSelector": {"matchLabels": {"app": "frontend"}}, "policyTypes": ["Ingress"], "ingress": [{"from": [{"podSelector": {"matchLabels": {"app": "productcatalogservice"}}}], "ports": [{"protocol": "TCP", "port": 3550}]}]}}]'
+Output: bash: error reading input file: Bad file descriptor
+Error from server (NotFound): networkpolicies.networking.k8s.io "frontend-policy" not found
+
+Mismatch Summary: Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+

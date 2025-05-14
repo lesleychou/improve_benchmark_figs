@@ -1,0 +1,245 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: cartservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: recommendationservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy cartservice-deny-payment -n cartservice --type='json' -p='[{"op": "add", "path": "/spec/egress", "value": [{"to": [{"podSelector": {"matchLabels": {"app": "paymentservice"}}}], "ports": [{"port": 50051, "protocol": "TCP"}]}]}]'
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "cartservice-deny-payment" not found
+
+Mismatch Summary: Mismatch: cartservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: recommendationservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -n cartservice -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: cartservice-deny-payment
+  namespace: cartservice
+spec:
+  podSelector:
+    matchLabels:
+      app: cartservice
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: paymentservice
+    ports:
+    - port: 50051
+      protocol: TCP
+EOF
+Output: networkpolicy.networking.k8s.io/cartservice-deny-payment created
+
+Mismatch Summary: Mismatch: cartservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: recommendationservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n cartservice
+Output: NAME                       POD-SELECTOR      AGE
+allow-cart-to-redis        <none>            37m
+cartservice-deny-payment   app=cartservice   3s
+cartservice-policy         app=cartservice   24m
+
+Mismatch Summary: Mismatch: cartservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: recommendationservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy cartservice-deny-payment -n cartservice --type='json' -p='[{"op": "replace", "path": "/spec/egress", "value": []}]'
+Output: networkpolicy.networking.k8s.io/cartservice-deny-payment patched
+
+Mismatch Summary: Mismatch: cartservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: recommendationservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy cartservice-policy -n cartservice -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"cartservice-policy","namespace":"cartservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}},{"podSelector":{"matchLabels":{"app":"redis"}}}],"ports":[{"port":7070,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"cartservice"}}}}
+  creationTimestamp: "2025-04-26T05:31:45Z"
+  generation: 39
+  name: cartservice-policy
+  namespace: cartservice
+  resourceVersion: "5447"
+  uid: 21f73f58-014f-458a-9b75-0af604721328
+spec:
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: redis
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    - podSelector:
+        matchLabels:
+          app: redis
+    ports:
+    - port: 7070
+      protocol: TCP
+    - port: 6379
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: cartservice
+  policyTypes:
+  - Ingress
+
+Mismatch Summary: Mismatch: cartservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: recommendationservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -n cartservice -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: cartservice-deny-payment
+  namespace: cartservice
+spec:
+  podSelector:
+    matchLabels:
+      app: cartservice
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: paymentservice
+    ports:
+    - port: 50051
+      protocol: TCP
+EOF
+Output: networkpolicy.networking.k8s.io/cartservice-deny-payment configured
+
+Mismatch Summary: Mismatch: cartservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: recommendationservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n cartservice -o yaml
+Output: apiVersion: v1
+items:
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"allow-cart-to-redis","namespace":"cartservice"},"spec":{"ingress":[{"from":[{"namespaceSelector":{"matchLabels":{}}}],"ports":[{"port":6379,"protocol":"TCP"}]}],"podSelector":{},"policyTypes":["Ingress"]}}
+    creationTimestamp: "2025-04-26T05:19:07Z"
+    generation: 17
+    name: allow-cart-to-redis
+    namespace: cartservice
+    resourceVersion: "5133"
+    uid: 4c9b1f55-8904-49ff-8270-cab94ede49b9
+  spec:
+    egress:
+    - ports:
+      - port: 6379
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: redis
+      - podSelector:
+          matchLabels:
+            app: redis
+    ingress:
+    - {}
+    podSelector: {}
+    policyTypes:
+    - Ingress
+    - Egress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"cartservice-deny-payment","namespace":"cartservice"},"spec":{"egress":[{"ports":[{"port":50051,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"paymentservice"}}}]}],"podSelector":{"matchLabels":{"app":"cartservice"}},"policyTypes":["Egress"]}}
+    creationTimestamp: "2025-04-26T05:56:33Z"
+    generation: 3
+    name: cartservice-deny-payment
+    namespace: cartservice
+    resourceVersion: "5651"
+    uid: e1d42857-79db-4a98-82ba-9e27e5cd3fce
+  spec:
+    egress:
+    - ports:
+      - port: 50051
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: paymentservice
+    podSelector:
+      matchLabels:
+        app: cartservice
+    policyTypes:
+    - Egress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"cartservice-policy","namespace":"cartservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}},{"podSelector":{"matchLabels":{"app":"redis"}}}],"ports":[{"port":7070,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"cartservice"}}}}
+    creationTimestamp: "2025-04-26T05:31:45Z"
+    generation: 39
+    name: cartservice-policy
+    namespace: cartservice
+    resourceVersion: "5447"
+    uid: 21f73f58-014f-458a-9b75-0af604721328
+  spec:
+    egress:
+    - to:
+      - podSelector:
+          matchLabels:
+            app: redis
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: frontend
+      - podSelector:
+          matchLabels:
+            app: redis
+      ports:
+      - port: 7070
+        protocol: TCP
+      - port: 6379
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: cartservice
+    policyTypes:
+    - Ingress
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: cartservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: recommendationservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy cartservice-deny-payment -n cartservice --type='json' -p='[{"op": "remove", "path": "/spec/egress"}]'
+Output: networkpolicy.networking.k8s.io/cartservice-deny-payment patched
+
+Mismatch Summary: Mismatch: cartservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: recommendationservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+

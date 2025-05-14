@@ -1,0 +1,89 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: adservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy recommendationservice -n recommendationservice --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "adservice"}}}}]'
+Output: networkpolicy.networking.k8s.io/recommendationservice patched
+
+Mismatch Summary: Mismatch: adservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy recommendationservice -n recommendationservice --type='json' -p='[{"op": "remove", "path": "/spec/ingress/0/from"}]'
+Output: networkpolicy.networking.k8s.io/recommendationservice patched
+
+Mismatch Summary: Mismatch: adservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy recommendationservice -n recommendationservice --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from", "value": {"podSelector": {"matchLabels": {"app": "adservice"}}, "namespaceSelector": {"matchLabels": {"name": "adservice"}}}}]'
+Output: The request is invalid: patch: Invalid value: "{\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"name\":\"recommendationservice\",\"namespace\":\"recommendationservice\",\"uid\":\"46a0585b-a6b9-4c71-9ddf-a6f63264b340\",\"resourceVersion\":\"8264\",\"generation\":3,\"creationTimestamp\":\"2025-04-26T06:26:36Z\",\"annotations\":{\"kubectl.kubernetes.io/last-applied-configuration\":\"{\\\"apiVersion\\\":\\\"networking.k8s.io/v1\\\",\\\"kind\\\":\\\"NetworkPolicy\\\",\\\"metadata\\\":{\\\"annotations\\\":{},\\\"name\\\":\\\"recommendationservice\\\",\\\"namespace\\\":\\\"recommendationservice\\\"},\\\"spec\\\":{\\\"ingress\\\":[{\\\"from\\\":[{\\\"podSelector\\\":{\\\"matchLabels\\\":{\\\"app\\\":\\\"productcatalogservice\\\"}}}]}],\\\"podSelector\\\":{\\\"matchLabels\\\":{\\\"app\\\":\\\"recommendationservice\\\"}},\\\"policyTypes\\\":[\\\"Ingress\\\"]}}\\n\"},\"managedFields\":[{\"manager\":\"kubectl-client-side-apply\",\"operation\":\"Update\",\"apiVersion\":\"networking.k8s.io/v1\",\"time\":\"2025-04-26T06:26:36Z\",\"fieldsType\":\"FieldsV1\",\"fieldsV1\":{\"f:metadata\":{\"f:annotations\":{\".\":{},\"f:kubectl.kubernetes.io/last-applied-configuration\":{}}},\"f:spec\":{\"f:podSelector\":{},\"f:policyTypes\":{}}}},{\"manager\":\"kubectl-patch\",\"operation\":\"Update\",\"apiVersion\":\"networking.k8s.io/v1\",\"time\":\"2025-04-26T06:28:01Z\",\"fieldsType\":\"FieldsV1\",\"fieldsV1\":{\"f:spec\":{\"f:ingress\":{}}}}]},\"spec\":{\"ingress\":[{\"from\":{\"namespaceSelector\":{\"matchLabels\":{\"name\":\"adservice\"}},\"podSelector\":{\"matchLabels\":{\"app\":\"adservice\"}}}}],\"podSelector\":{\"matchLabels\":{\"app\":\"recommendationservice\"}},\"policyTypes\":[\"Ingress\"]}}": json: cannot unmarshal object into Go struct field NetworkPolicyIngressRule.spec.ingress.from of type []v1.NetworkPolicyPeer
+
+Mismatch Summary: Mismatch: adservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy recommendationservice -n recommendationservice --type='json' -p='[{"op": "remove", "path": "/spec/ingress"}]'
+Output: networkpolicy.networking.k8s.io/recommendationservice patched
+
+Mismatch Summary: Mismatch: adservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy recommendationservice -n recommendationservice --type='json' -p='[{"op": "add", "path": "/spec/ingress", "value": [{"from": [{"podSelector": {"matchLabels": {"app": "productcatalogservice"}}}]}]}]'
+Output: networkpolicy.networking.k8s.io/recommendationservice patched
+
+Mismatch Summary: Mismatch: adservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy recommendationservice -n recommendationservice --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from", "value": {"podSelector": {"matchLabels": {"app": "productcatalogservice"}}}}]'
+Output: The request is invalid: patch: Invalid value: "{\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"name\":\"recommendationservice\",\"namespace\":\"recommendationservice\",\"uid\":\"46a0585b-a6b9-4c71-9ddf-a6f63264b340\",\"resourceVersion\":\"8283\",\"generation\":5,\"creationTimestamp\":\"2025-04-26T06:26:36Z\",\"annotations\":{\"kubectl.kubernetes.io/last-applied-configuration\":\"{\\\"apiVersion\\\":\\\"networking.k8s.io/v1\\\",\\\"kind\\\":\\\"NetworkPolicy\\\",\\\"metadata\\\":{\\\"annotations\\\":{},\\\"name\\\":\\\"recommendationservice\\\",\\\"namespace\\\":\\\"recommendationservice\\\"},\\\"spec\\\":{\\\"ingress\\\":[{\\\"from\\\":[{\\\"podSelector\\\":{\\\"matchLabels\\\":{\\\"app\\\":\\\"productcatalogservice\\\"}}}]}],\\\"podSelector\\\":{\\\"matchLabels\\\":{\\\"app\\\":\\\"recommendationservice\\\"}},\\\"policyTypes\\\":[\\\"Ingress\\\"]}}\\n\"},\"managedFields\":[{\"manager\":\"kubectl-client-side-apply\",\"operation\":\"Update\",\"apiVersion\":\"networking.k8s.io/v1\",\"time\":\"2025-04-26T06:26:36Z\",\"fieldsType\":\"FieldsV1\",\"fieldsV1\":{\"f:metadata\":{\"f:annotations\":{\".\":{},\"f:kubectl.kubernetes.io/last-applied-configuration\":{}}},\"f:spec\":{\"f:podSelector\":{},\"f:policyTypes\":{}}}},{\"manager\":\"kubectl-patch\",\"operation\":\"Update\",\"apiVersion\":\"networking.k8s.io/v1\",\"time\":\"2025-04-26T06:28:14Z\",\"fieldsType\":\"FieldsV1\",\"fieldsV1\":{\"f:spec\":{\"f:ingress\":{}}}}]},\"spec\":{\"ingress\":[{\"from\":{\"podSelector\":{\"matchLabels\":{\"app\":\"productcatalogservice\"}}}}],\"podSelector\":{\"matchLabels\":{\"app\":\"recommendationservice\"}},\"policyTypes\":[\"Ingress\"]}}": json: cannot unmarshal object into Go struct field NetworkPolicyIngressRule.spec.ingress.from of type []v1.NetworkPolicyPeer
+
+Mismatch Summary: Mismatch: adservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy recommendationservice -n recommendationservice --type='json' -p='[{"op": "replace", "path": "/spec/ingress", "value": [{"from": [{"podSelector": {"matchLabels": {"app": "productcatalogservice"}}}]}]}]'
+Output: networkpolicy.networking.k8s.io/recommendationservice patched (no change)
+
+Mismatch Summary: Mismatch: adservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy recommendationservice -n recommendationservice --type='json' -p='[{"op": "replace", "path": "/spec/ingress", "value": [{"from": [{"podSelector": {"matchLabels": {"app": "productcatalogservice"}}}]}]}]'
+Output: networkpolicy.networking.k8s.io/recommendationservice patched (no change)
+
+Mismatch Summary: Mismatch: adservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+

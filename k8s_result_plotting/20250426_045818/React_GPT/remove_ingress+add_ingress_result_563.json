@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "kubectl get networkpolicy --all-namespaces",
+        "output": "NAMESPACE   NAME                    POD-SELECTOR                AGE\ndefault     adservice               app=adservice               8h\ndefault     cartservice             app=cartservice             8h\ndefault     checkoutservice         app=checkoutservice         8h\ndefault     currencyservice         app=currencyservice         8h\ndefault     emailservice            app=emailservice            8h\ndefault     frontend                app=frontend                8h\ndefault     loadgenerator           app=loadgenerator           8h\ndefault     paymentservice          app=paymentservice          8h\ndefault     productcatalogservice   app=productcatalogservice   8h\ndefault     recommendationservice   app=recommendationservice   8h\ndefault     redis-cart              app=redis-cart              8h\ndefault     shippingservice         app=shippingservice         8h\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy cartservice -n default --type=json -p '[{\"op\": \"remove\", \"path\": \"/spec/ingress/0/from/0/podSelector/matchLabels/app\"}]'",
+        "output": "networkpolicy.networking.k8s.io/cartservice patched\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: cartservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)\nMismatch: productcatalogservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: redis-cart \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: loadgenerator \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy cartservice -n default --type=json -p '[{\"op\": \"remove\", \"path\": \"/spec/ingress/0/from/0/podSelector/matchLabels/app\"}]'",
+        "output": "The request is invalid: the server rejected our request due to an error in our request\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: cartservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)\nMismatch: productcatalogservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: redis-cart \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: loadgenerator \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy cartservice -n default --type=json -p '[{\"op\": \"remove\", \"path\": \"/spec/ingress\"}]'",
+        "output": "networkpolicy.networking.k8s.io/cartservice patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy checkoutservice -n default --type=json -p '[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"paymentservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 50051, \"protocol\": \"TCP\"}}]'",
+        "output": "networkpolicy.networking.k8s.io/checkoutservice patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy checkoutservice -n default --type=json -p '[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"paymentservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 50051, \"protocol\": \"TCP\"}}]'",
+        "output": "networkpolicy.networking.k8s.io/checkoutservice patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy checkoutservice -n default --type=json -p '[{\"op\": \"replace\", \"path\": \"/spec/ingress\", \"value\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"paymentservice\"}}}], \"ports\": [{\"port\": 50051, \"protocol\": \"TCP\"}]}]}]'",
+        "output": "networkpolicy.networking.k8s.io/checkoutservice patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy checkoutservice -n default --type=json -p '[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"paymentservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 50051, \"protocol\": \"TCP\"}}]'",
+        "output": "networkpolicy.networking.k8s.io/checkoutservice patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy checkoutservice -n default --type=json -p '[{\"op\": \"replace\", \"path\": \"/spec/ingress\", \"value\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"paymentservice\"}}}], \"ports\": [{\"port\": 50051, \"protocol\": \"TCP\"}]}]}]'",
+        "output": "networkpolicy.networking.k8s.io/checkoutservice patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    }
+]

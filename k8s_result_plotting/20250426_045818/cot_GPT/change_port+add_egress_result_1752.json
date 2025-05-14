@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy recommendationservice-policy -n recommendationservice --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"productcatalogservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 3550, \"protocol\": \"TCP\"}}]'",
+        "output": "networkpolicy.networking.k8s.io/recommendationservice-policy patched\n",
+        "mismatch_summary": "Mismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl describe networkpolicy recommendationservice-policy -n recommendationservice",
+        "output": "Name:         recommendationservice-policy\nNamespace:    recommendationservice\nCreated on:   2025-04-26 20:28:38 +0000 UTC\nLabels:       <none>\nAnnotations:  <none>\nSpec:\n  PodSelector:     app=recommendationservice\n  Allowing ingress traffic:\n    To Port: 3550/TCP\n    To Port: 3550/TCP\n    From:\n      PodSelector: app=productcatalogservice\n    From:\n      PodSelector: app=productcatalogservice\n  Not affecting egress traffic\n  Policy Types: Ingress\n",
+        "mismatch_summary": "Mismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl describe networkpolicy productcatalogservice-policy -n productcatalogservice",
+        "output": "Name:         productcatalogservice-policy\nNamespace:    productcatalogservice\nCreated on:   2025-04-26 06:12:21 +0000 UTC\nLabels:       <none>\nAnnotations:  <none>\nSpec:\n  PodSelector:     app=productcatalogservice\n  Allowing ingress traffic:\n    To Port: 3550/TCP\n    To Port: 3550/TCP\n    From:\n      PodSelector: app=recommendationservice\n    From:\n      PodSelector: app=recommendationservice\n    From:\n      PodSelector: app=recommendationservice\n  Allowing egress traffic:\n    <none> (Selected pods are isolated for egress connectivity)\n  Policy Types: Ingress, Egress\n",
+        "mismatch_summary": "Mismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy recommendationservice-policy -n recommendationservice --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec/egress\", \"value\": [{\"to\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"productcatalogservice\"}}}], \"ports\": [{\"port\": 3550, \"protocol\": \"TCP\"}]}]}, {\"op\": \"add\", \"path\": \"/spec/policyTypes/-\", \"value\": \"Egress\"}]'",
+        "output": "networkpolicy.networking.k8s.io/recommendationservice-policy patched\n",
+        "mismatch_summary": "Mismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl describe networkpolicy recommendationservice-policy -n recommendationservice",
+        "output": "Name:         recommendationservice-policy\nNamespace:    recommendationservice\nCreated on:   2025-04-26 20:28:38 +0000 UTC\nLabels:       <none>\nAnnotations:  <none>\nSpec:\n  PodSelector:     app=recommendationservice\n  Allowing ingress traffic:\n    To Port: 3550/TCP\n    To Port: 3550/TCP\n    From:\n      PodSelector: app=productcatalogservice\n    From:\n      PodSelector: app=productcatalogservice\n  Allowing egress traffic:\n    To Port: 3550/TCP\n    To:\n      PodSelector: app=productcatalogservice\n  Policy Types: Ingress, Egress\n",
+        "mismatch_summary": "Mismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy productcatalogservice-policy -n productcatalogservice --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec/egress\", \"value\": [{\"to\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"recommendationservice\"}}}], \"ports\": [{\"port\": 3550, \"protocol\": \"TCP\"}]}]}, {\"op\": \"add\", \"path\": \"/spec/policyTypes/-\", \"value\": \"Egress\"}]'",
+        "output": "The NetworkPolicy \"productcatalogservice-policy\" is invalid: spec.policyTypes: Invalid value: []networking.PolicyType{\"Ingress\", \"Egress\", \"Egress\"}: may not specify more than two policyTypes\n",
+        "mismatch_summary": "Mismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy productcatalogservice-policy -n productcatalogservice --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec/egress/0/to/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"recommendationservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/egress/0/ports/-\", \"value\": {\"port\": 3550, \"protocol\": \"TCP\"}}]'",
+        "output": "The request is invalid: the server rejected our request due to an error in our request\n",
+        "mismatch_summary": "Mismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy productcatalogservice-policy -n productcatalogservice --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec/egress\", \"value\": [{\"to\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"recommendationservice\"}}}], \"ports\": [{\"port\": 3550, \"protocol\": \"TCP\"}]}]}, {\"op\": \"add\", \"path\": \"/spec/policyTypes\", \"value\": [\"Ingress\", \"Egress\"]}]'",
+        "output": "networkpolicy.networking.k8s.io/productcatalogservice-policy patched\n",
+        "mismatch_summary": "Mismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    }
+]

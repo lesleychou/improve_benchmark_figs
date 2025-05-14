@@ -1,0 +1,88 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n frontend -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n checkoutservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy -n frontend --type='json' -p='[{"op": "add", "path": "/spec", "value": {"podSelector": {}, "ingress": [{"from": [{"namespaceSelector": {"matchLabels": {"name": "adservice"}}}], "ports": [{"protocol": "TCP", "port": 9555}]}, {"from": [{"namespaceSelector": {"matchLabels": {"name": "shippingservice"}}}], "ports": [{"protocol": "TCP", "port": 50051}]}]}}]'
+Output: error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n adservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n shippingservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy allow-adservice -n frontend --type='merge' -p='{"apiVersion": "networking.k8s.io/v1", "kind": "NetworkPolicy", "metadata": {"name": "allow-adservice"}, "spec": {"podSelector": {}, "policyTypes": ["Ingress"], "ingress": [{"from": [{"namespaceSelector": {"matchLabels": {"name": "adservice"}}}], "ports": [{"protocol": "TCP", "port": 9555}]}]}}'
+Output: Error from server (NotFound): namespaces "frontend" not found
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl get namespaces
+Output: NAME                 STATUS   AGE
+default              Active   6h8m
+kube-node-lease      Active   6h8m
+kube-public          Active   6h8m
+kube-system          Active   6h8m
+local-path-storage   Active   6h7m
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl get namespaces --show-labels
+Output: NAME                 STATUS   AGE    LABELS
+default              Active   6h8m   kubernetes.io/metadata.name=default
+kube-node-lease      Active   6h8m   kubernetes.io/metadata.name=kube-node-lease
+kube-public          Active   6h8m   kubernetes.io/metadata.name=kube-public
+kube-system          Active   6h8m   kubernetes.io/metadata.name=kube-system
+local-path-storage   Active   6h8m   kubernetes.io/metadata.name=local-path-storage
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+

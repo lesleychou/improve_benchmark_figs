@@ -1,0 +1,153 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: redis-cart → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: redis-cart → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: loadgenerator → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy allow-recommendation-to-productcatalog -n productcatalogservice --type=json -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "recommendationservice"}}}}]'
+Output: Error from server (NotFound): namespaces "productcatalogservice" not found
+
+Mismatch Summary: Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: redis-cart → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: redis-cart → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: loadgenerator → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get namespaces
+Output: NAME                    STATUS   AGE
+adservice               Active   142m
+cartservice             Active   119m
+default                 Active   146m
+frontend                Active   142m
+kube-node-lease         Active   146m
+kube-public             Active   146m
+kube-system             Active   146m
+local-path-storage      Active   146m
+paymentservice          Active   81m
+recommendationservice   Active   136m
+redis-cart              Active   54m
+shippingservice         Active   138m
+
+Mismatch Summary: Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: redis-cart → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: redis-cart → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: loadgenerator → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy allow-recommendation-to-productcatalog -n default --type=json -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"namespaceSelector": {"matchLabels": {"name": "recommendationservice"}}}}]'
+Output: networkpolicy.networking.k8s.io/allow-recommendation-to-productcatalog patched
+
+Mismatch Summary: Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: redis-cart → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: redis-cart → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: loadgenerator → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy allow-recommendation-to-productcatalog -n productcatalogservice --type=json -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"namespaceSelector": {"matchLabels": {"name": "recommendationservice"}}}}]'
+Output: Error from server (NotFound): namespaces "productcatalogservice" not found
+
+Mismatch Summary: Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: redis-cart → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: redis-cart → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: loadgenerator → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n default
+Output: NAME                                     POD-SELECTOR                AGE
+adservice                                app=adservice               143m
+allow-cart-to-redis                      app=cartservice             140m
+allow-checkout-to-currency               app=currencyservice         78m
+allow-checkout-to-email                  app=checkoutservice         139m
+allow-frontend-to-currencyservice        app=currencyservice         127m
+allow-paymentservice                     <none>                      81m
+allow-recommendation-to-productcatalog   app=productcatalogservice   36m
+cartservice                              app=cartservice             143m
+cartservice-network-policy               app=cartservice             133m
+cartservice-policy                       app=cartservice             122m
+checkout-policy                          app=checkoutservice         134m
+checkoutservice                          app=checkoutservice         142m
+checkoutservice-allow-currency           app=checkoutservice         47s
+checkoutservice-policy                   app=checkoutservice         127m
+currencyservice                          app=currencyservice         142m
+emailservice                             app=emailservice            142m
+frontend                                 app=frontend                142m
+loadgenerator                            app=loadgenerator           142m
+paymentservice                           app=paymentservice          142m
+productcatalogservice                    app=productcatalogservice   142m
+productcatalogservice-policy             app=productcatalogservice   125m
+recommendationservice                    app=recommendationservice   142m
+redis-cart                               app=redis-cart              142m
+redis-cart-policy                        app=redis-cart              125m
+shippingservice                          app=shippingservice         142m
+
+Mismatch Summary: Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: redis-cart → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: redis-cart → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: loadgenerator → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy allow-recommendation-to-productcatalog -n productcatalogservice --type=json -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "recommendationservice"}}}}]'
+Output: Error from server (NotFound): namespaces "productcatalogservice" not found
+
+Mismatch Summary: Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: redis-cart → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: redis-cart → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: loadgenerator → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy allow-recommendation-to-productcatalog -n default --type=json -p='[{"op": "replace", "path": "/spec/ingress/0/from", "value": [{"podSelector": {"matchLabels": {"app": "recommendationservice"}}}]}]'
+Output: networkpolicy.networking.k8s.io/allow-recommendation-to-productcatalog patched
+
+Mismatch Summary: Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: redis-cart → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: redis-cart → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: loadgenerator → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy allow-recommendation-to-productcatalog -n productcatalogservice --type=json -p='[{"op": "replace", "path": "/spec/ingress/0/from", "value": [{"podSelector": {"matchLabels": {"app": "recommendationservice"}}}]}]'
+Output: Error from server (NotFound): namespaces "productcatalogservice" not found
+
+Mismatch Summary: Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: redis-cart → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: redis-cart → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: loadgenerator → checkoutservice:5050 (Expected: False, Actual: True)
+

@@ -1,0 +1,144 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: adservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy paymentservice -n paymentservice --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "adservice"}}}}]'
+Output: Error from server (NotFound): namespaces "paymentservice" not found
+
+Mismatch Summary: Mismatch: adservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get namespaces
+Output: NAME                    STATUS   AGE
+adservice               Active   69m
+cartservice             Active   59m
+checkoutservice         Active   64m
+currencyservice         Active   48m
+default                 Active   80m
+emailservice            Active   64m
+kube-node-lease         Active   80m
+kube-public             Active   80m
+kube-system             Active   80m
+local-path-storage      Active   79m
+productcatalogservice   Active   49m
+recommendationservice   Active   37m
+redis-cart              Active   35m
+shippingservice         Active   24m
+
+Mismatch Summary: Mismatch: adservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy paymentservice -n paymentservice --type='json' -p='[{"op": "remove", "path": "/spec/ingress/0/from"}]'
+Output: Error from server (NotFound): namespaces "paymentservice" not found
+
+Mismatch Summary: Mismatch: adservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods --all-namespaces
+Output: NAMESPACE            NAME                                         READY   STATUS    RESTARTS   AGE
+default              adservice-76f594d56f-2prlg                   1/1     Running   0          77m
+default              cartservice-5958849bb7-49tjm                 1/1     Running   0          77m
+default              checkoutservice-55d99bbf75-z49bp             1/1     Running   0          77m
+default              currencyservice-649964f87f-nxj9q             1/1     Running   0          77m
+default              emailservice-6d85f47b76-rdnmb                1/1     Running   0          77m
+default              frontend-fc4bf5fdb-rmj59                     1/1     Running   0          77m
+default              loadgenerator-6d98cc6686-4m4tn               1/1     Running   0          76m
+default              paymentservice-7dc8859fb8-vnwl8              1/1     Running   0          77m
+default              productcatalogservice-5bd4cb4488-7m8zm       1/1     Running   0          77m
+default              recommendationservice-c64454f56-4k2kx        1/1     Running   0          77m
+default              redis-cart-799f8fc4c-p9wps                   1/1     Running   0          77m
+default              shippingservice-5dd466d969-ppcwn             1/1     Running   0          77m
+kube-system          coredns-668d6bf9bc-7vskf                     1/1     Running   0          79m
+kube-system          coredns-668d6bf9bc-vhtsb                     1/1     Running   0          79m
+kube-system          etcd-kind-control-plane                      1/1     Running   0          80m
+kube-system          kindnet-kf59t                                1/1     Running   0          80m
+kube-system          kube-apiserver-kind-control-plane            1/1     Running   0          80m
+kube-system          kube-controller-manager-kind-control-plane   1/1     Running   0          80m
+kube-system          kube-proxy-t9chz                             1/1     Running   0          80m
+kube-system          kube-scheduler-kind-control-plane            1/1     Running   0          80m
+local-path-storage   local-path-provisioner-58cc7856b6-czqc8      1/1     Running   0          79m
+
+Mismatch Summary: Mismatch: adservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n default
+Output: NAME                               POD-SELECTOR                AGE
+adservice                          app=adservice               76m
+allow-checkout-to-email            app=checkoutservice         65m
+allow-currency-ingress             app=currencyservice         71m
+allow-frontend-checkout            app=shippingservice         73m
+allow-frontend-checkout-to-cart    app=cartservice             68m
+allow-frontend-to-recommendation   app=recommendationservice   61m
+allow-productcatalog-access        app=productcatalogservice   74m
+cartservice                        app=cartservice             76m
+checkoutservice                    app=checkoutservice         76m
+checkoutservice-policy             app=checkoutservice         71m
+currencyservice                    app=currencyservice         76m
+default-deny-egress                app=frontend                15m
+deny-cart-to-payment               app=paymentservice          44m
+deny-frontend-to-emailservice      app=frontend                15m
+deny-frontend-to-payment           app=frontend                54m
+deny-frontend-to-payment-ingress   app=paymentservice          54m
+emailservice                       app=emailservice            76m
+frontend                           app=frontend                76m
+frontend-deny-emailservice         app=frontend                47m
+frontend-network-policy            app=frontend                9m52s
+loadgenerator                      app=loadgenerator           76m
+paymentservice                     app=paymentservice          76m
+paymentservice-ingress             app=paymentservice          64m
+paymentservice-network-policy      app=paymentservice          10m
+productcatalogservice              app=productcatalogservice   76m
+recommendationservice              app=recommendationservice   76m
+redis-cart                         app=redis-cart              76m
+restrict-ingress-checkout          app=checkoutservice         66m
+shippingservice                    app=shippingservice         76m
+
+Mismatch Summary: Mismatch: adservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy paymentservice -n default --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "adservice"}}}}]'
+Output: networkpolicy.networking.k8s.io/paymentservice patched
+
+Mismatch Summary: Mismatch: adservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy paymentservice -n default --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "adservice"}}, "namespaceSelector": {"matchLabels": {"name": "default"}}}}]'
+Output: networkpolicy.networking.k8s.io/paymentservice patched
+
+Mismatch Summary: Mismatch: adservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy paymentservice -n default --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "adservice"}}, "namespaceSelector": {"matchLabels": {"name": "default"}}, "action": "Deny"}}]'
+Output: networkpolicy.networking.k8s.io/paymentservice patched
+
+Mismatch Summary: Mismatch: adservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+

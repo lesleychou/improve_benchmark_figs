@@ -1,0 +1,82 @@
+LLM Command: kubectl get networkpolicy -n frontend -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: adservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy -n frontend --type='json' -p='[{"op": "add", "path": "/spec", "value": {"podSelector": {}, "policyTypes": ["Ingress"], "ingress": [{"from": [{"namespaceSelector": {"matchLabels": {"name": "currencyservice"}}}], "ports": [{"protocol": "TCP", "port": 7000}]}]}}]'
+Output: error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: adservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy -n frontend --type='json' -p='[{"op": "add", "path": "/metadata/name", "value": "frontend-allow-currencyservice"},{"op": "add", "path": "/spec", "value": {"podSelector": {}, "policyTypes": ["Ingress"], "ingress": [{"from": [{"namespaceSelector": {"matchLabels": {"name": "currencyservice"}}}], "ports": [{"protocol": "TCP", "port": 7000}]}]}}]'
+Output: error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: adservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy -n frontend --type='json' -p='[{"op": "add", "path": "/spec", "value": {"podSelector": {}, "policyTypes": ["Ingress"], "ingress": [{"from": [{"namespaceSelector": {"matchLabels": {"name": "currencyservice"}}}], "ports": [{"protocol": "TCP", "port": 7000}]}]}}]' --name="frontend-allow-currencyservice"
+Output: error: unknown flag: --name
+See 'kubectl patch --help' for usage.
+
+Mismatch Summary: Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: adservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy frontend-allow-currencyservice -n frontend --type='json' -p='[{"op": "add", "path": "/spec", "value": {"podSelector": {}, "policyTypes": ["Ingress"], "ingress": [{"from": [{"namespaceSelector": {"matchLabels": {"name": "currencyservice"}}}], "ports": [{"protocol": "TCP", "port": 7000}]}]}}]'
+Output: Error from server (NotFound): namespaces "frontend" not found
+
+Mismatch Summary: Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: adservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy -n frontend --type='json' -p='[{"op": "add", "path": "/spec", "value": {"podSelector": {}, "policyTypes": ["Ingress"], "ingress": [{"from": [{"namespaceSelector": {"matchLabels": {"name": "currencyservice"}}}], "ports": [{"protocol": "TCP", "port": 7000}]}]}}]' --dry-run=client -o yaml
+Output: error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: adservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy frontend-allow-currencyservice -n frontend --type='json' -p='[{"op": "add", "path": "/spec", "value": {"podSelector": {}, "policyTypes": ["Ingress"], "ingress": [{"from": [{"namespaceSelector": {"matchLabels": {"name": "currencyservice"}}}], "ports": [{"protocol": "TCP", "port": 7000}]}]}}]'
+Output: Error from server (NotFound): namespaces "frontend" not found
+
+Mismatch Summary: Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: adservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy frontend-allow-currencyservice -n frontend --type='json' -p='[{"op": "add", "path": "/spec", "value": {"podSelector": {}, "policyTypes": ["Ingress"], "ingress": [{"from": [{"namespaceSelector": {"matchLabels": {"name": "currencyservice"}}}], "ports": [{"protocol": "TCP", "port": 7000}]}]}}]'
+Output: Error from server (NotFound): namespaces "frontend" not found
+
+Mismatch Summary: Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: adservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+
+LLM Command: kubectl get namespaces
+Output: NAME                 STATUS   AGE
+default              Active   19h
+kube-node-lease      Active   19h
+kube-public          Active   19h
+kube-system          Active   19h
+local-path-storage   Active   19h
+
+Mismatch Summary: Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: adservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+

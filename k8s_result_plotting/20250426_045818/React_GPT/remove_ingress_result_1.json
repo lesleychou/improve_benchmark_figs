@@ -1,0 +1,37 @@
+[
+    {
+        "llm_command": "kubectl get networkpolicy --all-namespaces",
+        "output": "NAMESPACE   NAME                    POD-SELECTOR                AGE\ndefault     adservice               app=adservice               60s\ndefault     cartservice             app=cartservice             60s\ndefault     checkoutservice         app=checkoutservice         60s\ndefault     currencyservice         app=currencyservice         59s\ndefault     emailservice            app=emailservice            59s\ndefault     frontend                app=frontend                59s\ndefault     loadgenerator           app=loadgenerator           59s\ndefault     paymentservice          app=paymentservice          59s\ndefault     productcatalogservice   app=productcatalogservice   59s\ndefault     recommendationservice   app=recommendationservice   59s\ndefault     redis-cart              app=redis-cart              59s\ndefault     shippingservice         app=shippingservice         58s\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy frontend -n default --type=json -p '[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"recommendationservice\"}}}}]'",
+        "output": "The request is invalid: the server rejected our request due to an error in our request\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy frontend -n default -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"frontend\",\"namespace\":\"default\"},\"spec\":{\"egress\":[{}],\"ingress\":[{}],\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n  creationTimestamp: \"2025-05-07T16:33:46Z\"\n  generation: 1\n  name: frontend\n  namespace: default\n  resourceVersion: \"1152\"\n  uid: 65f1a6bc-bb5a-471a-b427-281a3d426ea1\nspec:\n  egress:\n  - {}\n  ingress:\n  - {}\n  podSelector:\n    matchLabels:\n      app: frontend\n  policyTypes:\n  - Ingress\n  - Egress\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy frontend -n default --type=json -p '[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from\", \"value\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"recommendationservice\"}}}]}]'",
+        "output": "networkpolicy.networking.k8s.io/frontend patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy frontend -n default -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"frontend\",\"namespace\":\"default\"},\"spec\":{\"egress\":[{}],\"ingress\":[{}],\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n  creationTimestamp: \"2025-05-07T16:33:46Z\"\n  generation: 2\n  name: frontend\n  namespace: default\n  resourceVersion: \"1257\"\n  uid: 65f1a6bc-bb5a-471a-b427-281a3d426ea1\nspec:\n  egress:\n  - {}\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: recommendationservice\n  podSelector:\n    matchLabels:\n      app: frontend\n  policyTypes:\n  - Ingress\n  - Egress\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy recommendationservice -n default -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"recommendationservice\",\"namespace\":\"default\"},\"spec\":{\"egress\":[{}],\"ingress\":[],\"podSelector\":{\"matchLabels\":{\"app\":\"recommendationservice\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n  creationTimestamp: \"2025-05-07T16:33:46Z\"\n  generation: 2\n  name: recommendationservice\n  namespace: default\n  resourceVersion: \"1231\"\n  uid: 430f0c3d-737d-4625-94e1-31ea3f76fa9f\nspec:\n  egress:\n  - {}\n  podSelector:\n    matchLabels:\n      app: recommendationservice\n  policyTypes:\n  - Ingress\n  - Egress\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy recommendationservice -n default --type=json -p '[{\"op\": \"add\", \"path\": \"/spec/ingress\", \"value\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}}]}]}]'",
+        "output": "networkpolicy.networking.k8s.io/recommendationservice patched\n",
+        "mismatch_summary": "No mismatches found."
+    }
+]

@@ -1,0 +1,116 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n cartservice -o yaml
+Output: apiVersion: v1
+items:
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"allow-cart-to-redis","namespace":"cartservice"},"spec":{"ingress":[{"from":[{"namespaceSelector":{"matchLabels":{}}}],"ports":[{"port":6379,"protocol":"TCP"}]}],"podSelector":{},"policyTypes":["Ingress"]}}
+    creationTimestamp: "2025-04-26T05:19:07Z"
+    generation: 16
+    name: allow-cart-to-redis
+    namespace: cartservice
+    resourceVersion: "3441"
+    uid: 4c9b1f55-8904-49ff-8270-cab94ede49b9
+  spec:
+    egress:
+    - ports:
+      - port: 6379
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: redis
+    ingress:
+    - {}
+    podSelector: {}
+    policyTypes:
+    - Ingress
+    - Egress
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy allow-cart-to-redis -n cartservice --type='merge' -p '{"spec":{"egress":[{"to":[{"podSelector":{"matchLabels":{"app":"redis"}}}],"ports":[{"port":6379,"protocol":"TCP"}]}]}}'
+Output: networkpolicy.networking.k8s.io/allow-cart-to-redis patched (no change)
+
+Mismatch Summary: Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n currencyservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy deny-all-ingress -n currencyservice --type='merge' -p '{"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"name":"deny-all-ingress","namespace":"currencyservice"},"spec":{"podSelector":{},"policyTypes":["Ingress"]}}'
+Output: Error from server (NotFound): namespaces "currencyservice" not found
+
+Mismatch Summary: Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+
+LLM Command: kubectl get namespaces
+Output: NAME                    STATUS   AGE
+adservice               Active   20m
+cartservice             Active   11m
+checkoutservice         Active   16m
+default                 Active   31m
+emailservice            Active   16m
+kube-node-lease         Active   31m
+kube-public             Active   31m
+kube-system             Active   31m
+local-path-storage      Active   31m
+productcatalogservice   Active   65s
+
+Mismatch Summary: Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+
+LLM Command: kubectl create namespace currencyservice
+Output: namespace/currencyservice created
+
+Mismatch Summary: Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy deny-all-ingress -n currencyservice --type='merge' -p '{"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"name":"deny-all-ingress","namespace":"currencyservice"},"spec":{"podSelector":{},"policyTypes":["Ingress"]}}'
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "deny-all-ingress" not found
+
+Mismatch Summary: Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy deny-all-ingress -n currencyservice --type='merge' -p '{"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"name":"deny-all-ingress","namespace":"currencyservice"},"spec":{"podSelector":{},"policyTypes":["Ingress"],"ingress":[]}}'
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "deny-all-ingress" not found
+
+Mismatch Summary: Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+

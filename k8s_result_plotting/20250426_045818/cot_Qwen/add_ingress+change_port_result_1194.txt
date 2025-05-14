@@ -1,0 +1,119 @@
+LLM Command: NAME                  POD-SELECTOR   INGRESS   EGRESS   POLICYTYPES
+          frontend-policy       app=frontend   true      false    Ingress
+          checkout-policy       app=checkout   true      false    Ingress
+          recommendation-policy app=recommendation true   false    Ingress
+          cart-policy           app=cart       true      false    Ingress
+          redis-cache-policy    app=redis-cache true     false    Ingress
+Output: /bin/bash: line 1: NAME: command not found
+/bin/bash: line 2: frontend-policy: command not found
+/bin/bash: line 3: checkout-policy: command not found
+/bin/bash: line 4: recommendation-policy: command not found
+/bin/bash: line 5: cart-policy: command not found
+/bin/bash: line 6: redis-cache-policy: command not found
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: productcatalogservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: shippingservice → cartservice:7070 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n default
+Output: NAME                    POD-SELECTOR                AGE
+adservice               app=adservice               2d15h
+cart-policy             app=cart                    33h
+cartservice             app=cartservice             2d15h
+checkoutservice         app=checkoutservice         2d15h
+currencyservice         app=currencyservice         2d15h
+emailservice            app=emailservice            2d15h
+frontend                app=frontend                2d15h
+loadgenerator           app=loadgenerator           2d15h
+paymentservice          app=paymentservice          2d15h
+productcatalogservice   app=productcatalogservice   2d15h
+recommendationservice   app=recommendationservice   2d15h
+redis-cart              app=redis-cart              2d15h
+shippingservice         app=shippingservice         2d15h
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: productcatalogservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: shippingservice → cartservice:7070 (Expected: False, Actual: True)
+
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: productcatalogservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: shippingservice → cartservice:7070 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy cartservice -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"cartservice","namespace":"default"},"spec":{"egress":[{}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}},{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}],"ports":[{"port":7070,"protocol":"TCP"}]},{"from":[{"podSelector":{"matchLabels":{"app":"productcatalogservice"}}}]},{"from":[{"podSelector":{"matchLabels":{"app":"shippingservice"}}}]}],"podSelector":{"matchLabels":{"app":"cartservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-04-28T05:25:41Z"
+  generation: 585
+  name: cartservice
+  namespace: default
+  resourceVersion: "298804"
+  uid: 39184e6f-f6f1-49f6-92fb-899e4150ac6c
+spec:
+  egress:
+  - {}
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+    ports:
+    - port: 7070
+      protocol: TCP
+  - from:
+    - podSelector:
+        matchLabels:
+          app: productcatalogservice
+  - from:
+    - podSelector:
+        matchLabels:
+          app: shippingservice
+  podSelector:
+    matchLabels:
+      app: cartservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: productcatalogservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: shippingservice → cartservice:7070 (Expected: False, Actual: True)
+
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: productcatalogservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: shippingservice → cartservice:7070 (Expected: False, Actual: True)
+
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: productcatalogservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: shippingservice → cartservice:7070 (Expected: False, Actual: True)
+
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: productcatalogservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: shippingservice → cartservice:7070 (Expected: False, Actual: True)
+
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: productcatalogservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: shippingservice → cartservice:7070 (Expected: False, Actual: True)
+
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: productcatalogservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: shippingservice → cartservice:7070 (Expected: False, Actual: True)
+

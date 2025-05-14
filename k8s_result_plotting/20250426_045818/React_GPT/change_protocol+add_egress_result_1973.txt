@@ -1,0 +1,167 @@
+LLM Command: kubectl get networkpolicy --all-namespaces
+Output: NAMESPACE   NAME                    POD-SELECTOR                AGE
+default     adservice               app=adservice               19h
+default     cartservice             app=cartservice             19h
+default     checkoutservice         app=checkoutservice         19h
+default     currencyservice         app=currencyservice         19h
+default     emailservice            app=emailservice            19h
+default     frontend                app=frontend                19h
+default     loadgenerator           app=loadgenerator           19h
+default     paymentservice          app=paymentservice          19h
+default     productcatalogservice   app=productcatalogservice   19h
+default     recommendationservice   app=recommendationservice   19h
+default     redis-cart              app=redis-cart              19h
+default     shippingservice         app=shippingservice         19h
+
+Mismatch Summary: Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy productcatalogservice -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"productcatalogservice","namespace":"default"},"spec":{"egress":[{}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}},{"podSelector":{"matchLabels":{"app":"checkoutservice"}}},{"podSelector":{"matchLabels":{"app":"recommendationservice"}}}],"ports":[{"port":3550,"protocol":"SCTP"}]}],"podSelector":{"matchLabels":{"app":"productcatalogservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-05-09T15:32:22Z"
+  generation: 136
+  name: productcatalogservice
+  namespace: default
+  resourceVersion: "93369"
+  uid: 01f276c5-b9b9-44f4-a6b2-0cd32b518a02
+spec:
+  egress:
+  - {}
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+    - podSelector:
+        matchLabels:
+          app: recommendationservice
+    ports:
+    - port: 3550
+      protocol: SCTP
+  podSelector:
+    matchLabels:
+      app: productcatalogservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy productcatalogservice -n default --type='json' -p='[{"op": "replace", "path": "/spec/ingress/0/ports/0/protocol", "value": "TCP"}]'
+Output: networkpolicy.networking.k8s.io/productcatalogservice patched
+
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get pods -l app=recommendationservice -n default --show-labels
+Output: NAME                                     READY   STATUS    RESTARTS   AGE   LABELS
+recommendationservice-67cbb84b7b-c2src   1/1     Running   0          19h   app=recommendationservice,pod-template-hash=67cbb84b7b,skaffold.dev/run-id=71d8bd08-b5c3-43be-bb43-8f51fb0b19d6
+
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get pods -l app=productcatalogservice -n default --show-labels
+Output: NAME                                     READY   STATUS    RESTARTS   AGE   LABELS
+productcatalogservice-5f9d5c689b-x9sdp   1/1     Running   0          19h   app=productcatalogservice,pod-template-hash=5f9d5c689b,skaffold.dev/run-id=71d8bd08-b5c3-43be-bb43-8f51fb0b19d6
+
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy productcatalogservice -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"productcatalogservice","namespace":"default"},"spec":{"egress":[{}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}},{"podSelector":{"matchLabels":{"app":"checkoutservice"}}},{"podSelector":{"matchLabels":{"app":"recommendationservice"}}}],"ports":[{"port":3550,"protocol":"SCTP"}]}],"podSelector":{"matchLabels":{"app":"productcatalogservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-05-09T15:32:22Z"
+  generation: 137
+  name: productcatalogservice
+  namespace: default
+  resourceVersion: "93402"
+  uid: 01f276c5-b9b9-44f4-a6b2-0cd32b518a02
+spec:
+  egress:
+  - {}
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+    - podSelector:
+        matchLabels:
+          app: recommendationservice
+    ports:
+    - port: 3550
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: productcatalogservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy productcatalogservice -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"productcatalogservice","namespace":"default"},"spec":{"egress":[{}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}},{"podSelector":{"matchLabels":{"app":"checkoutservice"}}},{"podSelector":{"matchLabels":{"app":"recommendationservice"}}}],"ports":[{"port":3550,"protocol":"SCTP"}]}],"podSelector":{"matchLabels":{"app":"productcatalogservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-05-09T15:32:22Z"
+  generation: 137
+  name: productcatalogservice
+  namespace: default
+  resourceVersion: "93402"
+  uid: 01f276c5-b9b9-44f4-a6b2-0cd32b518a02
+spec:
+  egress:
+  - {}
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+    - podSelector:
+        matchLabels:
+          app: recommendationservice
+    ports:
+    - port: 3550
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: productcatalogservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get pods -l app=recommendationservice -n default --show-labels
+Output: NAME                                     READY   STATUS    RESTARTS   AGE   LABELS
+recommendationservice-67cbb84b7b-c2src   1/1     Running   0          19h   app=recommendationservice,pod-template-hash=67cbb84b7b,skaffold.dev/run-id=71d8bd08-b5c3-43be-bb43-8f51fb0b19d6
+
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get pods -l app=recommendationservice -n default --show-labels
+Output: NAME                                     READY   STATUS    RESTARTS   AGE   LABELS
+recommendationservice-67cbb84b7b-c2src   1/1     Running   0          19h   app=recommendationservice,pod-template-hash=67cbb84b7b,skaffold.dev/run-id=71d8bd08-b5c3-43be-bb43-8f51fb0b19d6
+
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+

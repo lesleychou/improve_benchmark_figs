@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend",
+        "output": "",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n cartservice -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy -n cartservice --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"cartservice\"}}, \"policyTypes\": [\"Ingress\"], \"ingress\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"redis-cart\"}}}], \"ports\": [{\"protocol\": \"TCP\", \"port\": 6379}]}]}}]'",
+        "output": "error: resource(s) were provided, but no name was specified\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy cartservice-policy -n cartservice --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"cartservice\"}}, \"policyTypes\": [\"Ingress\"], \"ingress\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"redis-cart\"}}}], \"ports\": [{\"protocol\": \"TCP\", \"port\": 6379}]}]}}]'",
+        "output": "Error from server (NotFound): namespaces \"cartservice\" not found\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\ndefault              Active   161m\nkube-node-lease      Active   161m\nkube-public          Active   161m\nkube-system          Active   161m\nlocal-path-storage   Active   161m\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubernetes cartservice redis-cart namespace",
+        "output": "/bin/bash: line 1: kubernetes: command not found\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get pods --all-namespaces -o wide | grep -E 'cartservice|redis-cart'",
+        "output": "default              cartservice-7c8966d6fd-c8rb4                 1/1     Running   0          158m   10.244.0.6    kind-control-plane   <none>           <none>\ndefault              redis-cart-5b6f47b748-9rgzw                  1/1     Running   0          158m   10.244.0.13   kind-control-plane   <none>           <none>\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy cartservice-policy -n default --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"cartservice\"}}, \"policyTypes\": [\"Ingress\"], \"ingress\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"redis-cart\"}}}], \"ports\": [{\"protocol\": \"TCP\", \"port\": 6379}]}]}}]'",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"cartservice-policy\" not found\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl apply -n default -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: cartservice-policy\n  namespace: default\nspec:\n  podSelector:\n    matchLabels:\n      app: cartservice\n  policyTypes:\n  - Ingress\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: redis-cart\n    ports:\n    - protocol: TCP\n      port: 6379\nEOF",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"cartservice-policy\" not found\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)"
+    }
+]

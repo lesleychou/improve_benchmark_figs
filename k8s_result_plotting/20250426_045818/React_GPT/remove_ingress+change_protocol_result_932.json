@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy allow-frontend-productcatalog -n frontend --type='merge' -p '{\"spec\":{\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}}}],\"ports\":[{\"port\":3550,\"protocol\":\"TCP\"}]}]}}'",
+        "output": "Error from server (NotFound): namespaces \"frontend\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\ndefault              Active   13h\nkube-node-lease      Active   13h\nkube-public          Active   13h\nkube-system          Active   13h\nlocal-path-storage   Active   13h\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n default",
+        "output": "NAME                    POD-SELECTOR                AGE\nadservice               app=adservice               13h\ncartservice             app=cartservice             13h\ncheckoutservice         app=checkoutservice         13h\ncurrencyservice         app=currencyservice         13h\nemailservice            app=emailservice            13h\nfrontend                app=frontend                13h\nloadgenerator           app=loadgenerator           13h\npaymentservice          app=paymentservice          13h\nproductcatalogservice   app=productcatalogservice   13h\nrecommendationservice   app=recommendationservice   13h\nredis-cart              app=redis-cart              13h\nshippingservice         app=shippingservice         13h\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy frontend -n default --type='merge' -p '{\"spec\":{\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"productcatalogservice\"}}}],\"ports\":[{\"port\":3550,\"protocol\":\"TCP\"}]}]}}'",
+        "output": "networkpolicy.networking.k8s.io/frontend patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy cartservice -n default --type='merge' -p '{\"spec\":{\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"redis-cart\"}}}],\"ports\":[{\"port\":6379,\"protocol\":\"TCP\"}]}]}}'",
+        "output": "networkpolicy.networking.k8s.io/cartservice patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: frontend \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy recommendationservice -n default --type='merge' -p '{\"spec\":{\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"productcatalogservice\"}}}],\"ports\":[{\"port\":3550,\"protocol\":\"TCP\"}]}]}}'",
+        "output": "networkpolicy.networking.k8s.io/recommendationservice patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: frontend \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy frontend -n default --type='merge' -p '{\"spec\":{\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"productcatalogservice\"}}}],\"ports\":[{\"port\":3550,\"protocol\":\"TCP\"}]}]}}'",
+        "output": "networkpolicy.networking.k8s.io/frontend patched (no change)\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: frontend \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    }
+]

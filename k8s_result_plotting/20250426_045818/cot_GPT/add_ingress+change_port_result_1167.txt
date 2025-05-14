@@ -1,0 +1,116 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: cartservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: checkoutservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy recommendationservice-policy -n recommendationservice --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "cartservice"}}}}]'
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "recommendationservice-policy" not found
+
+Mismatch Summary: Mismatch: cartservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: checkoutservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -n recommendationservice -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: recommendationservice-policy
+spec:
+  podSelector:
+    matchLabels:
+      app: recommendationservice
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    ports:
+    - protocol: TCP
+      port: 8080
+EOF
+Output: networkpolicy.networking.k8s.io/recommendationservice-policy created
+
+Mismatch Summary: Mismatch: cartservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: checkoutservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy recommendationservice-policy -n recommendationservice --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "cartservice"}}}}]'
+Output: networkpolicy.networking.k8s.io/recommendationservice-policy patched
+
+Mismatch Summary: Mismatch: cartservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: checkoutservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy recommendationservice-policy -n recommendationservice --type='json' -p='[{"op": "replace", "path": "/spec/ingress", "value": [{"from": [{"podSelector": {"matchLabels": {"app": "frontend"}}}, {"podSelector": {"matchLabels": {"app": "productcatalog"}}}], "ports": [{"protocol": "TCP", "port": 8080}]}]}]'
+Output: networkpolicy.networking.k8s.io/recommendationservice-policy patched
+
+Mismatch Summary: Mismatch: cartservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: checkoutservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy recommendationservice-policy -n recommendationservice --type='json' -p='[{"op": "replace", "path": "/spec/ingress", "value": [{"from": [{"podSelector": {"matchLabels": {"app": "frontend"}}}, {"podSelector": {"matchLabels": {"app": "productcatalog"}}}], "ports": [{"protocol": "TCP", "port": 8080}]}]}]'
+Output: networkpolicy.networking.k8s.io/recommendationservice-policy patched (no change)
+
+Mismatch Summary: Mismatch: cartservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: checkoutservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: bash
+kubectl patch networkpolicy recommendationservice-policy -n recommendationservice --type='json' -p='[{"op": "replace", "path": "/spec/ingress", "value": [{"from": [{"podSelector": {"matchLabels": {"app": "frontend"}}}, {"podSelector": {"matchLabels": {"app": "productcatalog"}}}], "ports": [{"protocol": "TCP", "port": 8080}]}]}]'
+Output: networkpolicy.networking.k8s.io/recommendationservice-policy patched (no change)
+
+Mismatch Summary: Mismatch: cartservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: checkoutservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy recommendationservice-policy -n recommendationservice --type='json' -p='[{"op": "replace", "path": "/spec/ingress", "value": [{"from": [{"podSelector": {"matchLabels": {"app": "frontend"}}}, {"podSelector": {"matchLabels": {"app": "productcatalog"}}}], "ports": [{"protocol": "TCP", "port": 8080}]}]}]'
+Output: networkpolicy.networking.k8s.io/recommendationservice-policy patched (no change)
+
+Mismatch Summary: Mismatch: cartservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: checkoutservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy recommendationservice-policy -n recommendationservice --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "frontend"}}}}, {"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "productcatalog"}}}}]'
+Output: networkpolicy.networking.k8s.io/recommendationservice-policy patched
+
+Mismatch Summary: Mismatch: cartservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: checkoutservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+

@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy cartservice-policy -n cartservice --type=json -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"redis-cart\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 6379, \"protocol\": \"TCP\"}}]'",
+        "output": "networkpolicy.networking.k8s.io/cartservice-policy patched\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get pods -A | grep redis-cart",
+        "output": "default              redis-cart-799f8fc4c-p9wps                   1/1     Running   0             21h\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy cartservice-policy -n cartservice -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"cartservice-policy\",\"namespace\":\"cartservice\"},\"spec\":{\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"redis-cart\"}}}],\"ports\":[{\"port\":6379,\"protocol\":\"TCP\"}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"cartservice\"}}}}\n  creationTimestamp: \"2025-04-26T05:31:45Z\"\n  generation: 545\n  name: cartservice-policy\n  namespace: cartservice\n  resourceVersion: \"109105\"\n  uid: 21f73f58-014f-458a-9b75-0af604721328\nspec:\n  egress:\n  - ports:\n    - port: 6379\n      protocol: TCP\n    to:\n    - podSelector:\n        matchLabels:\n          app: redis-cart\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: redis-cart\n    - podSelector:\n        matchLabels:\n          app: redis-cart\n    ports:\n    - port: 6379\n      protocol: TCP\n    - port: 6379\n      protocol: TCP\n  podSelector:\n    matchLabels:\n      app: cartservice\n  policyTypes:\n  - Egress\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy cartservice-policy -n cartservice --type=json -p='[{\"op\": \"add\", \"path\": \"/spec/policyTypes/-\", \"value\": \"Ingress\"}, {\"op\": \"replace\", \"path\": \"/spec/ingress\", \"value\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"redis-cart\"}}}], \"ports\": [{\"port\": 6379, \"protocol\": \"TCP\"}]}]}]'",
+        "output": "networkpolicy.networking.k8s.io/cartservice-policy patched\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get pod redis-cart-799f8fc4c-p9wps -n default --show-labels",
+        "output": "NAME                         READY   STATUS    RESTARTS   AGE   LABELS\nredis-cart-799f8fc4c-p9wps   1/1     Running   0          21h   app=redis-cart,pod-template-hash=799f8fc4c,skaffold.dev/run-id=00adce13-6ae0-4db6-9ff3-9bd0af686efb\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy cartservice-policy -n cartservice --type=json -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"namespaceSelector\": {\"matchLabels\": {\"name\": \"default\"}}, \"podSelector\": {\"matchLabels\": {\"app\": \"redis-cart\"}}}}]'",
+        "output": "networkpolicy.networking.k8s.io/cartservice-policy patched\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get pods -A | grep cartservice",
+        "output": "default              cartservice-5958849bb7-49tjm                 1/1     Running   0             21h\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy cartservice-policy -n cartservice --type=json -p='[{\"op\": \"replace\", \"path\": \"/spec/ingress\", \"value\": [{\"from\": [{\"namespaceSelector\": {\"matchLabels\": {\"name\": \"default\"}}, \"podSelector\": {\"matchLabels\": {\"app\": \"redis-cart\"}}}], \"ports\": [{\"port\": 6379, \"protocol\": \"TCP\"}]}]}]'",
+        "output": "networkpolicy.networking.k8s.io/cartservice-policy patched\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    }
+]

@@ -1,0 +1,22 @@
+[
+    {
+        "llm_command": "kubectl get networkpolicy --all-namespaces",
+        "output": "NAMESPACE   NAME                    POD-SELECTOR                AGE\ndefault     adservice               app=adservice               128m\ndefault     cartservice             app=cartservice             128m\ndefault     checkoutservice         app=checkoutservice         128m\ndefault     currencyservice         app=currencyservice         128m\ndefault     emailservice            app=emailservice            128m\ndefault     frontend                app=frontend                128m\ndefault     loadgenerator           app=loadgenerator           128m\ndefault     paymentservice          app=paymentservice          128m\ndefault     productcatalogservice   app=productcatalogservice   128m\ndefault     recommendationservice   app=recommendationservice   128m\ndefault     redis-cart              app=redis-cart              128m\ndefault     shippingservice         app=shippingservice         128m\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 emailservice:5000 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 emailservice:5000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy emailservice -n default --type=json -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"productcatalogservice\"}}}}]'",
+        "output": "networkpolicy.networking.k8s.io/emailservice patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 emailservice:5000 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 emailservice:5000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy emailservice -n default --type=json -p='[{\"op\": \"remove\", \"path\": \"/spec/ingress/0/from\"}]'",
+        "output": "networkpolicy.networking.k8s.io/emailservice patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 emailservice:5000 (Expected: False, Actual: True)\nMismatch: adservice \u2192 emailservice:5000 (Expected: False, Actual: True)\nMismatch: cartservice \u2192 emailservice:5000 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 emailservice:5000 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 emailservice:5000 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 emailservice:5000 (Expected: False, Actual: True)\nMismatch: redis-cart \u2192 emailservice:5000 (Expected: False, Actual: True)\nMismatch: loadgenerator \u2192 emailservice:5000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy emailservice -n default --type=json -p='[{\"op\": \"replace\", \"path\": \"/spec/ingress\", \"value\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"checkoutservice\"}}}]}]}]'",
+        "output": "networkpolicy.networking.k8s.io/emailservice patched\n",
+        "mismatch_summary": "No mismatches found."
+    }
+]

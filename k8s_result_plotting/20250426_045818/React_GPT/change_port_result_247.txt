@@ -1,0 +1,55 @@
+LLM Command: kubectl get networkpolicy --all-namespaces
+Output: NAMESPACE   NAME                    POD-SELECTOR                AGE
+default     adservice               app=adservice               3h14m
+default     cartservice             app=cartservice             3h14m
+default     checkoutservice         app=checkoutservice         3h14m
+default     currencyservice         app=currencyservice         3h14m
+default     emailservice            app=emailservice            3h14m
+default     frontend                app=frontend                3h14m
+default     loadgenerator           app=loadgenerator           3h14m
+default     paymentservice          app=paymentservice          3h14m
+default     productcatalogservice   app=productcatalogservice   3h14m
+default     recommendationservice   app=recommendationservice   3h14m
+default     redis-cart              app=redis-cart              3h14m
+default     shippingservice         app=shippingservice         3h13m
+
+Mismatch Summary: Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy recommendationservice -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"recommendationservice","namespace":"default"},"spec":{"egress":[{}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":28684,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"recommendationservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-05-07T16:33:46Z"
+  generation: 86
+  name: recommendationservice
+  namespace: default
+  resourceVersion: "16774"
+  uid: 430f0c3d-737d-4625-94e1-31ea3f76fa9f
+spec:
+  egress:
+  - {}
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    ports:
+    - port: 28684
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: recommendationservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy recommendationservice -n default --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 8080, "protocol": "TCP"}}]'
+Output: networkpolicy.networking.k8s.io/recommendationservice patched
+
+Mismatch Summary: No mismatches found.
+

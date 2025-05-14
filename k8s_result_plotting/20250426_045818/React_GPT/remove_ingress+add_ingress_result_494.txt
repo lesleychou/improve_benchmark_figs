@@ -1,0 +1,158 @@
+LLM Command: kubectl get networkpolicy -n frontend
+Output: 
+Mismatch Summary: Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy <networkpolicy-name> -n checkoutservice --type=json -p '[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "paymentservice"}}}}, {"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 50051, "protocol": "TCP"}}]'
+Output: /bin/bash: line 1: networkpolicy-name: No such file or directory
+
+Mismatch Summary: Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n checkoutservice
+Output: 
+Mismatch Summary: Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n checkoutservice -o jsonpath='{.items[*].metadata.name}'
+Output: 
+Mismatch Summary: Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n checkoutservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: checkoutservice-policy
+  namespace: checkoutservice
+spec:
+  podSelector:
+    matchLabels: {}
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: paymentservice
+    ports:
+    - protocol: TCP
+      port: 50051
+  - from:
+    - podSelector:
+        matchLabels:
+          app: shippingservice
+    ports:
+    - protocol: TCP
+      port: 5050
+    action: Deny
+  - from:
+    - podSelector:
+        matchLabels:
+          app: emailservice
+    ports:
+    - protocol: TCP
+      port: 5050
+    action: Deny
+EOF
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: bash
+kubectl apply -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: checkoutservice-policy
+  namespace: checkoutservice
+spec:
+  podSelector:
+    matchLabels: {}
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: paymentservice
+    ports:
+    - protocol: TCP
+      port: 50051
+  - from:
+    - podSelector:
+        matchLabels:
+          app: shippingservice
+    ports:
+    - protocol: TCP
+      port: 5050
+  - from:
+    - podSelector:
+        matchLabels:
+          app: emailservice
+    ports:
+    - protocol: TCP
+      port: 5050
+EOF
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-paymentservice
+  namespace: checkoutservice
+spec:
+  podSelector:
+    matchLabels: {}
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: paymentservice
+    ports:
+    - protocol: TCP
+      port: 50051
+EOF
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy allow-paymentservice -n checkoutservice --type=json -p '[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "paymentservice"}}}}, {"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 50051, "protocol": "TCP"}}]'
+Output: Error from server (NotFound): namespaces "checkoutservice" not found
+
+Mismatch Summary: Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+

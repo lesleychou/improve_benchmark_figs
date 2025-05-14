@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: adservice \u2192 shippingservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 shippingservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy shippingservice-policy -n shippingservice --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"adservice\"}}}}]'",
+        "output": "Error from server (NotFound): namespaces \"shippingservice\" not found\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 shippingservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 shippingservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                    STATUS   AGE\nadservice               Active   29m\ncartservice             Active   20m\ncheckoutservice         Active   25m\ncurrencyservice         Active   9m2s\ndefault                 Active   40m\nemailservice            Active   25m\nkube-node-lease         Active   40m\nkube-public             Active   40m\nkube-system             Active   40m\nlocal-path-storage      Active   40m\nproductcatalogservice   Active   10m\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 shippingservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 shippingservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get namespaces | grep shippingservice",
+        "output": "",
+        "mismatch_summary": "Mismatch: adservice \u2192 shippingservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 shippingservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                    STATUS   AGE\nadservice               Active   30m\ncartservice             Active   20m\ncheckoutservice         Active   25m\ncurrencyservice         Active   9m9s\ndefault                 Active   41m\nemailservice            Active   25m\nkube-node-lease         Active   41m\nkube-public             Active   41m\nkube-system             Active   41m\nlocal-path-storage      Active   40m\nproductcatalogservice   Active   10m\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 shippingservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 shippingservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get namespaces | grep shippingservice",
+        "output": "",
+        "mismatch_summary": "Mismatch: adservice \u2192 shippingservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 shippingservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get all --all-namespaces | grep shippingservice",
+        "output": "default              pod/shippingservice-5dd466d969-ppcwn             1/1     Running   0          38m\ndefault       service/shippingservice         ClusterIP      10.96.95.128    <none>        50051/TCP                38m\ndefault              deployment.apps/shippingservice          1/1     1            1           38m\ndefault              replicaset.apps/shippingservice-5dd466d969          1         1         1       38m\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 shippingservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 shippingservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy shippingservice-policy -n default --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"adservice\"}}}}]'",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"shippingservice-policy\" not found\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 shippingservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 shippingservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n default",
+        "output": "NAME                               POD-SELECTOR                AGE\nadservice                          app=adservice               37m\nallow-checkout-to-email            app=checkoutservice         26m\nallow-currency-ingress             app=currencyservice         32m\nallow-frontend-checkout            app=shippingservice         34m\nallow-frontend-checkout-to-cart    app=cartservice             29m\nallow-frontend-to-recommendation   app=recommendationservice   22m\nallow-productcatalog-access        app=productcatalogservice   35m\ncartservice                        app=cartservice             37m\ncheckoutservice                    app=checkoutservice         37m\ncheckoutservice-policy             app=checkoutservice         32m\ncurrencyservice                    app=currencyservice         37m\ndeny-cart-to-payment               app=paymentservice          5m42s\ndeny-frontend-to-payment           app=frontend                15m\ndeny-frontend-to-payment-ingress   app=paymentservice          15m\nemailservice                       app=emailservice            37m\nfrontend                           app=frontend                37m\nfrontend-deny-emailservice         app=frontend                8m48s\nloadgenerator                      app=loadgenerator           37m\npaymentservice                     app=paymentservice          37m\npaymentservice-ingress             app=paymentservice          25m\nproductcatalogservice              app=productcatalogservice   37m\nrecommendationservice              app=recommendationservice   37m\nredis-cart                         app=redis-cart              37m\nrestrict-ingress-checkout          app=checkoutservice         27m\nshippingservice                    app=shippingservice         37m\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 shippingservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 shippingservice:50051 (Expected: False, Actual: True)"
+    }
+]

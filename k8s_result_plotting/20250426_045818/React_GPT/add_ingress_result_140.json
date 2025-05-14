@@ -1,0 +1,27 @@
+[
+    {
+        "llm_command": "kubectl get networkpolicy --all-namespaces",
+        "output": "NAMESPACE   NAME                    POD-SELECTOR                AGE\ndefault     adservice               app=adservice               112m\ndefault     cartservice             app=cartservice             112m\ndefault     checkoutservice         app=checkoutservice         112m\ndefault     currencyservice         app=currencyservice         112m\ndefault     emailservice            app=emailservice            112m\ndefault     frontend                app=frontend                112m\ndefault     loadgenerator           app=loadgenerator           112m\ndefault     paymentservice          app=paymentservice          112m\ndefault     productcatalogservice   app=productcatalogservice   112m\ndefault     recommendationservice   app=recommendationservice   112m\ndefault     redis-cart              app=redis-cart              112m\ndefault     shippingservice         app=shippingservice         112m\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 productcatalogservice:3550 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 productcatalogservice:3550 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy productcatalogservice -n default -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"productcatalogservice\",\"namespace\":\"default\"},\"spec\":{\"egress\":[{}],\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"checkoutservice\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"recommendationservice\"}}}],\"ports\":[{\"port\":3550,\"protocol\":\"TCP\"}]},{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"shippingservice\"}}}]},{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"emailservice\"}}}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"productcatalogservice\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n  creationTimestamp: \"2025-05-07T16:33:46Z\"\n  generation: 56\n  name: productcatalogservice\n  namespace: default\n  resourceVersion: \"10154\"\n  uid: 0bdf89d8-6944-4a76-ade4-ee674017b98f\nspec:\n  egress:\n  - {}\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    - podSelector:\n        matchLabels:\n          app: checkoutservice\n    - podSelector:\n        matchLabels:\n          app: recommendationservice\n    ports:\n    - port: 3550\n      protocol: TCP\n  - from:\n    - podSelector:\n        matchLabels:\n          app: shippingservice\n  - from:\n    - podSelector:\n        matchLabels:\n          app: emailservice\n  podSelector:\n    matchLabels:\n      app: productcatalogservice\n  policyTypes:\n  - Ingress\n  - Egress\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 productcatalogservice:3550 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 productcatalogservice:3550 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy productcatalogservice -n default --type=json -p '[{\"op\": \"remove\", \"path\": \"/spec/ingress/1\"}, {\"op\": \"remove\", \"path\": \"/spec/ingress/2\"}]'",
+        "output": "The request is invalid: the server rejected our request due to an error in our request\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 productcatalogservice:3550 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 productcatalogservice:3550 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy productcatalogservice -n default --type=json -p '[{\"op\": \"remove\", \"path\": \"/spec/ingress/1/from\"}, {\"op\": \"remove\", \"path\": \"/spec/ingress/2/from\"}]'",
+        "output": "networkpolicy.networking.k8s.io/productcatalogservice patched\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 productcatalogservice:3550 (Expected: False, Actual: True)\nMismatch: cartservice \u2192 productcatalogservice:3550 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 productcatalogservice:3550 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 productcatalogservice:3550 (Expected: False, Actual: True)\nMismatch: redis-cart \u2192 productcatalogservice:3550 (Expected: False, Actual: True)\nMismatch: loadgenerator \u2192 productcatalogservice:3550 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "bash\nkubectl patch networkpolicy productcatalogservice -n default --type=json -p '[{\"op\": \"replace\", \"path\": \"/spec/ingress\", \"value\": [{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"checkoutservice\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"recommendationservice\"}}}],\"ports\":[{\"port\":3550,\"protocol\":\"TCP\"}]}]}]'",
+        "output": "networkpolicy.networking.k8s.io/productcatalogservice patched\n",
+        "mismatch_summary": "No mismatches found."
+    }
+]

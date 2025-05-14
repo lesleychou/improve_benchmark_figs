@@ -1,0 +1,345 @@
+LLM Command: kubectl get networkpolicy -A
+Output: NAMESPACE   NAME                    POD-SELECTOR                AGE
+default     adservice               app=adservice               4h29m
+default     cartservice             app=cartservice             4h29m
+default     checkoutservice         app=checkoutservice         4h29m
+default     currencyservice         app=currencyservice         4h29m
+default     emailservice            app=emailservice            4h29m
+default     frontend                app=frontend                4h29m
+default     loadgenerator           app=loadgenerator           4h29m
+default     paymentservice          app=paymentservice          4h29m
+default     productcatalogservice   app=productcatalogservice   4h29m
+default     recommendationservice   app=recommendationservice   4h29m
+default     redis-cart              app=redis-cart              4h29m
+default     shippingservice         app=shippingservice         4h29m
+
+Mismatch Summary: Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy checkoutservice -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"checkoutservice","namespace":"default"},"spec":{"egress":[{"to":[{"podSelector":{"matchLabels":{"app":"redis-cart"}}}]},{"to":[{"podSelector":{"matchLabels":{"app":"adservice"}}}]}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":5050,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"checkoutservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-05-07T16:33:45Z"
+  generation: 260
+  name: checkoutservice
+  namespace: default
+  resourceVersion: "22809"
+  uid: b1131e44-9a17-4b4e-97bd-fd8c0d884378
+spec:
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: redis-cart
+  - to:
+    - podSelector:
+        matchLabels:
+          app: adservice
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    ports:
+    - port: 5050
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: checkoutservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy checkoutservice -n default --type='json' -p='[{"op": "add", "path": "/spec/egress/-", "value": {"to": [{"podSelector": {"matchLabels": {"app": "cartservice"}}}], "ports": [{"port": 7070, "protocol": "TCP"}]}}, {"op": "add", "path": "/spec/egress/-", "value": {"to": [{"podSelector": {"matchLabels": {"app": "currencyservice"}}}], "ports": [{"port": 7000, "protocol": "TCP"}]}}, {"op": "add", "path": "/spec/egress/-", "value": {"to": [{"podSelector": {"matchLabels": {"app": "productcatalogservice"}}}], "ports": [{"port": 3550, "protocol": "TCP"}]}}, {"op": "add", "path": "/spec/egress/-", "value": {"to": [{"podSelector": {"matchLabels": {"app": "shippingservice"}}}], "ports": [{"port": 50051, "protocol": "TCP"}]}}, {"op": "add", "path": "/spec/egress/-", "value": {"to": [{"podSelector": {"matchLabels": {"app": "emailservice"}}}], "ports": [{"port": 5000, "protocol": "TCP"}]}}, {"op": "add", "path": "/spec/egress/-", "value": {"to": [{"podSelector": {"matchLabels": {"app": "paymentservice"}}}], "ports": [{"port": 50051, "protocol": "TCP"}]}}]'
+Output: networkpolicy.networking.k8s.io/checkoutservice patched
+
+Mismatch Summary: Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy checkoutservice -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"checkoutservice","namespace":"default"},"spec":{"egress":[{"to":[{"podSelector":{"matchLabels":{"app":"redis-cart"}}}]},{"to":[{"podSelector":{"matchLabels":{"app":"adservice"}}}]}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":5050,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"checkoutservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-05-07T16:33:45Z"
+  generation: 261
+  name: checkoutservice
+  namespace: default
+  resourceVersion: "22840"
+  uid: b1131e44-9a17-4b4e-97bd-fd8c0d884378
+spec:
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: redis-cart
+  - to:
+    - podSelector:
+        matchLabels:
+          app: adservice
+  - ports:
+    - port: 7070
+      protocol: TCP
+    to:
+    - podSelector:
+        matchLabels:
+          app: cartservice
+  - ports:
+    - port: 7000
+      protocol: TCP
+    to:
+    - podSelector:
+        matchLabels:
+          app: currencyservice
+  - ports:
+    - port: 3550
+      protocol: TCP
+    to:
+    - podSelector:
+        matchLabels:
+          app: productcatalogservice
+  - ports:
+    - port: 50051
+      protocol: TCP
+    to:
+    - podSelector:
+        matchLabels:
+          app: shippingservice
+  - ports:
+    - port: 5000
+      protocol: TCP
+    to:
+    - podSelector:
+        matchLabels:
+          app: emailservice
+  - ports:
+    - port: 50051
+      protocol: TCP
+    to:
+    - podSelector:
+        matchLabels:
+          app: paymentservice
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    ports:
+    - port: 5050
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: checkoutservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl get pods -n default --show-labels
+Output: NAME                                     READY   STATUS    RESTARTS      AGE     LABELS
+adservice-7c7687ff5b-fbq2s               1/1     Running   0             4h30m   app=adservice,pod-template-hash=7c7687ff5b,skaffold.dev/run-id=d9aabfde-b7ab-4584-b757-8c80f6c37263
+cartservice-7c8966d6fd-c8rb4             1/1     Running   0             4h30m   app=cartservice,pod-template-hash=7c8966d6fd,skaffold.dev/run-id=d9aabfde-b7ab-4584-b757-8c80f6c37263
+checkoutservice-769b8ff7b8-jxzrv         1/1     Running   0             4h30m   app=checkoutservice,pod-template-hash=769b8ff7b8,skaffold.dev/run-id=d9aabfde-b7ab-4584-b757-8c80f6c37263
+currencyservice-578dcb55f6-bdvtr         1/1     Running   1 (18m ago)   4h30m   app=currencyservice,pod-template-hash=578dcb55f6,skaffold.dev/run-id=d9aabfde-b7ab-4584-b757-8c80f6c37263
+emailservice-d5d54d4fc-lksfn             1/1     Running   0             4h30m   app=emailservice,pod-template-hash=d5d54d4fc,skaffold.dev/run-id=d9aabfde-b7ab-4584-b757-8c80f6c37263
+frontend-7ffbffc6f7-9hb4b                1/1     Running   0             4h30m   app=frontend,pod-template-hash=7ffbffc6f7,skaffold.dev/run-id=d9aabfde-b7ab-4584-b757-8c80f6c37263
+loadgenerator-7d9cfb7cb9-9zjhk           1/1     Running   0             4h30m   app=loadgenerator,pod-template-hash=7d9cfb7cb9,skaffold.dev/run-id=d9aabfde-b7ab-4584-b757-8c80f6c37263
+paymentservice-b67c65d9c-ztkqg           1/1     Running   0             4h30m   app=paymentservice,pod-template-hash=b67c65d9c,skaffold.dev/run-id=d9aabfde-b7ab-4584-b757-8c80f6c37263
+productcatalogservice-5f94b6cd47-lk6vh   1/1     Running   0             4h30m   app=productcatalogservice,pod-template-hash=5f94b6cd47,skaffold.dev/run-id=d9aabfde-b7ab-4584-b757-8c80f6c37263
+recommendationservice-c468b6867-pcbbn    1/1     Running   0             4h30m   app=recommendationservice,pod-template-hash=c468b6867,skaffold.dev/run-id=d9aabfde-b7ab-4584-b757-8c80f6c37263
+redis-cart-5b6f47b748-9rgzw              1/1     Running   0             4h30m   app=redis-cart,pod-template-hash=5b6f47b748,skaffold.dev/run-id=d9aabfde-b7ab-4584-b757-8c80f6c37263
+shippingservice-f6bc4cd5d-69r7d          1/1     Running   0             4h30m   app=shippingservice,pod-template-hash=f6bc4cd5d,skaffold.dev/run-id=d9aabfde-b7ab-4584-b757-8c80f6c37263
+
+Mismatch Summary: Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy checkoutservice -n default --type='json' -p='[{"op": "add", "path": "/spec/egress/-", "value": {"to": [{"podSelector": {"matchLabels": {"app": "cartservice"}}}], "ports": [{"port": 7070, "protocol": "TCP"}]}}, {"op": "add", "path": "/spec/egress/-", "value": {"to": [{"podSelector": {"matchLabels": {"app": "currencyservice"}}}], "ports": [{"port": 7000, "protocol": "TCP"}]}}, {"op": "add", "path": "/spec/egress/-", "value": {"to": [{"podSelector": {"matchLabels": {"app": "productcatalogservice"}}}], "ports": [{"port": 3550, "protocol": "TCP"}]}}, {"op": "add", "path": "/spec/egress/-", "value": {"to": [{"podSelector": {"matchLabels": {"app": "shippingservice"}}}], "ports": [{"port": 50051, "protocol": "TCP"}]}}, {"op": "add", "path": "/spec/egress/-", "value": {"to": [{"podSelector": {"matchLabels": {"app": "emailservice"}}}], "ports": [{"port": 5000, "protocol": "TCP"}]}}, {"op": "add", "path": "/spec/egress/-", "value": {"to": [{"podSelector": {"matchLabels": {"app": "paymentservice"}}}], "ports": [{"port": 50051, "protocol": "TCP"}]}}]'
+Output: networkpolicy.networking.k8s.io/checkoutservice patched
+
+Mismatch Summary: Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy checkoutservice -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"checkoutservice","namespace":"default"},"spec":{"egress":[{"to":[{"podSelector":{"matchLabels":{"app":"redis-cart"}}}]},{"to":[{"podSelector":{"matchLabels":{"app":"adservice"}}}]}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":5050,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"checkoutservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-05-07T16:33:45Z"
+  generation: 262
+  name: checkoutservice
+  namespace: default
+  resourceVersion: "22865"
+  uid: b1131e44-9a17-4b4e-97bd-fd8c0d884378
+spec:
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: redis-cart
+  - to:
+    - podSelector:
+        matchLabels:
+          app: adservice
+  - ports:
+    - port: 7070
+      protocol: TCP
+    to:
+    - podSelector:
+        matchLabels:
+          app: cartservice
+  - ports:
+    - port: 7000
+      protocol: TCP
+    to:
+    - podSelector:
+        matchLabels:
+          app: currencyservice
+  - ports:
+    - port: 3550
+      protocol: TCP
+    to:
+    - podSelector:
+        matchLabels:
+          app: productcatalogservice
+  - ports:
+    - port: 50051
+      protocol: TCP
+    to:
+    - podSelector:
+        matchLabels:
+          app: shippingservice
+  - ports:
+    - port: 5000
+      protocol: TCP
+    to:
+    - podSelector:
+        matchLabels:
+          app: emailservice
+  - ports:
+    - port: 50051
+      protocol: TCP
+    to:
+    - podSelector:
+        matchLabels:
+          app: paymentservice
+  - ports:
+    - port: 7070
+      protocol: TCP
+    to:
+    - podSelector:
+        matchLabels:
+          app: cartservice
+  - ports:
+    - port: 7000
+      protocol: TCP
+    to:
+    - podSelector:
+        matchLabels:
+          app: currencyservice
+  - ports:
+    - port: 3550
+      protocol: TCP
+    to:
+    - podSelector:
+        matchLabels:
+          app: productcatalogservice
+  - ports:
+    - port: 50051
+      protocol: TCP
+    to:
+    - podSelector:
+        matchLabels:
+          app: shippingservice
+  - ports:
+    - port: 5000
+      protocol: TCP
+    to:
+    - podSelector:
+        matchLabels:
+          app: emailservice
+  - ports:
+    - port: 50051
+      protocol: TCP
+    to:
+    - podSelector:
+        matchLabels:
+          app: paymentservice
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    ports:
+    - port: 5050
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: checkoutservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy checkoutservice -n default --type='json' -p='[{"op": "remove", "path": "/spec/egress/7"}, {"op": "remove", "path": "/spec/egress/6"}, {"op": "remove", "path": "/spec/egress/5"}, {"op": "remove", "path": "/spec/egress/4"}, {"op": "remove", "path": "/spec/egress/3"}, {"op": "remove", "path": "/spec/egress/2"}]'
+Output: networkpolicy.networking.k8s.io/checkoutservice patched
+
+Mismatch Summary: Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy checkoutservice -n default --type='json' -p='[{"op": "add", "path": "/spec/egress/-", "value": {"to": [{"podSelector": {"matchLabels": {"app": "cartservice"}}}], "ports": [{"port": 7070, "protocol": "TCP"}]}}, {"op": "add", "path": "/spec/egress/-", "value": {"to": [{"podSelector": {"matchLabels": {"app": "currencyservice"}}}], "ports": [{"port": 7000, "protocol": "TCP"}]}}, {"op": "add", "path": "/spec/egress/-", "value": {"to": [{"podSelector": {"matchLabels": {"app": "productcatalogservice"}}}], "ports": [{"port": 3550, "protocol": "TCP"}]}}, {"op": "add", "path": "/spec/egress/-", "value": {"to": [{"podSelector": {"matchLabels": {"app": "shippingservice"}}}], "ports": [{"port": 50051, "protocol": "TCP"}]}}, {"op": "add", "path": "/spec/egress/-", "value": {"to": [{"podSelector": {"matchLabels": {"app": "emailservice"}}}], "ports": [{"port": 5000, "protocol": "TCP"}]}}, {"op": "add", "path": "/spec/egress/-", "value": {"to": [{"podSelector": {"matchLabels": {"app": "paymentservice"}}}], "ports": [{"port": 50051, "protocol": "TCP"}]}}]'
+Output: networkpolicy.networking.k8s.io/checkoutservice patched
+
+Mismatch Summary: Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+

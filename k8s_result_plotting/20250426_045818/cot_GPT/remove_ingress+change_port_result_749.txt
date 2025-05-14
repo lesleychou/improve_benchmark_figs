@@ -1,0 +1,159 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy shippingservice-policy -n shippingservice --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "checkoutservice"}}}}]'
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "shippingservice-policy" not found
+
+Mismatch Summary: Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n emailservice
+Output: NAME                           POD-SELECTOR       AGE
+allow-checkout-to-email        app=emailservice   6h8m
+emailservice                   app=emailservice   8h
+emailservice-deny-all          app=emailservice   70m
+emailservice-deny-frontend     app=emailservice   8h
+emailservice-deny-unexpected   app=emailservice   8h
+emailservice-policy            app=emailservice   6h25m
+
+Mismatch Summary: Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy emailservice-deny-unexpected -n emailservice --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "checkoutservice"}}}}, {"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "paymentservice"}}}}]'
+Output: networkpolicy.networking.k8s.io/emailservice-deny-unexpected patched
+
+Mismatch Summary: Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy emailservice-deny-unexpected -n emailservice -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"emailservice-deny-unexpected","namespace":"emailservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"emailservice"}}}]}],"podSelector":{"matchLabels":{"app":"emailservice"}},"policyTypes":["Ingress"]}}
+  creationTimestamp: "2025-04-26T05:58:34Z"
+  generation: 19
+  name: emailservice-deny-unexpected
+  namespace: emailservice
+  resourceVersion: "49139"
+  uid: e190b3b9-cc26-4949-aeda-dbfb7b973e32
+spec:
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: emailservice
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+    - podSelector:
+        matchLabels:
+          app: paymentservice
+  podSelector:
+    matchLabels:
+      app: emailservice
+  policyTypes:
+  - Ingress
+
+Mismatch Summary: Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy emailservice-policy -n emailservice -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"emailservice-policy","namespace":"emailservice"},"spec":{"egress":[{"ports":[{"port":5050,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}]},{"ports":[{"port":50051,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"paymentservice"}}}]}],"podSelector":{"matchLabels":{"app":"emailservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-04-26T08:12:59Z"
+  generation: 20
+  name: emailservice-policy
+  namespace: emailservice
+  resourceVersion: "49074"
+  uid: 41e37ede-2430-4607-a357-571a4bd97800
+spec:
+  podSelector:
+    matchLabels:
+      app: emailservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy emailservice-deny-unexpected -n emailservice --type='json' -p='[{"op": "replace", "path": "/spec/ingress/0/from", "value": [{"podSelector": {"matchLabels": {"app": "emailservice"}}}]}]'
+Output: networkpolicy.networking.k8s.io/emailservice-deny-unexpected patched
+
+Mismatch Summary: Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n shippingservice
+Output: NAME                                  POD-SELECTOR          AGE
+allow-frontend-to-shippingservice     app=shippingservice   4h4m
+deny-checkout-access                  app=shippingservice   7h42m
+deny-checkout-currency                <none>                8h
+deny-egress-to-checkout-and-payment   app=shippingservice   85m
+deny-payment-access                   app=shippingservice   7h42m
+deny-shippingservice-egress           app=shippingservice   8h
+
+Mismatch Summary: Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy deny-egress-to-checkout-and-payment -n shippingservice -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"deny-egress-to-checkout-and-payment","namespace":"shippingservice"},"spec":{"egress":[{"ports":[{"port":5050,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}]},{"ports":[{"port":50051,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"paymentservice"}}}]}],"podSelector":{"matchLabels":{"app":"shippingservice"}},"policyTypes":["Egress"]}}
+  creationTimestamp: "2025-04-26T13:12:56Z"
+  generation: 33
+  name: deny-egress-to-checkout-and-payment
+  namespace: shippingservice
+  resourceVersion: "49062"
+  uid: 25225e0f-fde9-4853-aa8c-316f9d05d78b
+spec:
+  egress:
+  - ports:
+    - port: 5050
+      protocol: TCP
+    to:
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+  - ports:
+    - port: 50051
+      protocol: TCP
+    to:
+    - podSelector:
+        matchLabels:
+          app: paymentservice
+  podSelector:
+    matchLabels:
+      app: shippingservice
+  policyTypes:
+  - Egress
+
+Mismatch Summary: Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+

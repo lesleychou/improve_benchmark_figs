@@ -1,0 +1,19 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy paymentservice --type=merge -p $'
+spec:
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+  ports:
+    - port: 50051
+      protocol: TCP
+'
+Output: networkpolicy.networking.k8s.io/paymentservice patched
+
+Mismatch Summary: No mismatches found.
+

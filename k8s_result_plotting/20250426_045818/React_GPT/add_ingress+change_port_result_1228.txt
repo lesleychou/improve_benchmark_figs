@@ -1,0 +1,135 @@
+LLM Command: kubectl get networkpolicy -n frontend
+Output: 
+Mismatch Summary: Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: recommendationservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy <networkpolicy-name> -n adservice --type=json -p='[{"op": "remove", "path": "/spec/ingress/0/from/0/podSelector/matchLabels/checkoutservice"}]'
+Output: /bin/bash: line 1: networkpolicy-name: No such file or directory
+
+Mismatch Summary: Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: recommendationservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy <networkpolicy-name> -n adservice --type=json -p='[{"op": "remove", "path": "/spec/ingress/0/from/0/podSelector/matchLabels/checkoutservice"}]'
+Output: /bin/bash: line 1: networkpolicy-name: No such file or directory
+
+Mismatch Summary: Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: recommendationservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n adservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: recommendationservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n cartservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: recommendationservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-checkout-ingress
+  namespace: adservice
+spec:
+  podSelector: {}
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+    ports:
+    - protocol: TCP
+      port: 5050
+EOF
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: recommendationservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-checkout-ingress
+  namespace: adservice
+spec:
+  podSelector: {}
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+    ports:
+    - protocol: TCP
+      port: 5050
+EOF
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: recommendationservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: `
+kubectl apply -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-checkout-ingress
+  namespace: adservice
+spec:
+  podSelector: {}
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+    ports:
+    - protocol: TCP
+      port: 5050
+EOF
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: recommendationservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n recommendationservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: recommendationservice → checkoutservice:5050 (Expected: False, Actual: True)
+

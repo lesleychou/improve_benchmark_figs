@@ -1,0 +1,32 @@
+[
+    {
+        "llm_command": "kubectl get networkpolicy --all-namespaces",
+        "output": "NAMESPACE   NAME                    POD-SELECTOR                AGE\ndefault     adservice               app=adservice               7h10m\ndefault     cartservice             app=cartservice             7h10m\ndefault     checkoutservice         app=checkoutservice         7h10m\ndefault     currencyservice         app=currencyservice         7h10m\ndefault     emailservice            app=emailservice            7h10m\ndefault     frontend                app=frontend                7h10m\ndefault     loadgenerator           app=loadgenerator           7h10m\ndefault     paymentservice          app=paymentservice          7h10m\ndefault     productcatalogservice   app=productcatalogservice   7h10m\ndefault     recommendationservice   app=recommendationservice   7h10m\ndefault     redis-cart              app=redis-cart              7h10m\ndefault     shippingservice         app=shippingservice         7h10m\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy frontend -n default -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"frontend\",\"namespace\":\"default\"},\"spec\":{\"egress\":[{}],\"ingress\":[{}],\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n  creationTimestamp: \"2025-05-09T15:32:22Z\"\n  generation: 231\n  name: frontend\n  namespace: default\n  resourceVersion: \"35267\"\n  uid: 45500330-dcf9-42de-b3a5-10eb1466e51c\nspec:\n  egress:\n  - {}\n  ingress:\n  - {}\n  podSelector:\n    matchLabels:\n      app: frontend\n  policyTypes:\n  - Ingress\n  - Egress\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy checkoutservice -n default -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"checkoutservice\",\"namespace\":\"default\"},\"spec\":{\"egress\":[{}],\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}}}],\"ports\":[{\"port\":30712,\"protocol\":\"TCP\"}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"checkoutservice\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n  creationTimestamp: \"2025-05-09T15:32:22Z\"\n  generation: 205\n  name: checkoutservice\n  namespace: default\n  resourceVersion: \"35265\"\n  uid: 11bd4b2d-4216-4683-9384-215c5ffceb93\nspec:\n  egress:\n  - {}\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    ports:\n    - port: 30712\n      protocol: TCP\n  podSelector:\n    matchLabels:\n      app: checkoutservice\n  policyTypes:\n  - Ingress\n  - Egress\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "bash\nkubectl patch networkpolicy checkoutservice -n default --type='json' -p='[{\"op\": \"replace\", \"path\": \"/spec/ingress/0/ports/0/port\", \"value\": 5050}]'",
+        "output": "networkpolicy.networking.k8s.io/checkoutservice patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy recommendationservice -n default -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"recommendationservice\",\"namespace\":\"default\"},\"spec\":{\"egress\":[{}],\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}}}],\"ports\":[{\"port\":8080,\"protocol\":\"UDP\"}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"recommendationservice\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n  creationTimestamp: \"2025-05-09T15:32:23Z\"\n  generation: 106\n  name: recommendationservice\n  namespace: default\n  resourceVersion: \"35268\"\n  uid: d1e8314f-60d6-4d70-a95a-b7a9a4d220d4\nspec:\n  egress:\n  - {}\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    ports:\n    - port: 8080\n      protocol: UDP\n  podSelector:\n    matchLabels:\n      app: recommendationservice\n  policyTypes:\n  - Ingress\n  - Egress\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy recommendationservice -n default --type='json' -p='[{\"op\": \"replace\", \"path\": \"/spec/ingress/0/ports/0/protocol\", \"value\": \"TCP\"}]'",
+        "output": "networkpolicy.networking.k8s.io/recommendationservice patched\n",
+        "mismatch_summary": "No mismatches found."
+    }
+]

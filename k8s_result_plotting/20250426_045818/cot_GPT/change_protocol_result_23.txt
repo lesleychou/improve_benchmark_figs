@@ -1,0 +1,133 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n checkoutservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy -n checkoutservice --type='json' -p='[{
+  "op": "add",
+  "path": "/spec",
+  "value": {
+    "podSelector": {},
+    "policyTypes": ["Ingress"],
+    "ingress": [
+      {
+        "from": [
+          {
+            "namespaceSelector": {
+              "matchLabels": {
+                "name": "emailservice"
+              }
+            }
+          }
+        ],
+        "ports": [
+          {
+            "protocol": "TCP",
+            "port": 5000
+          }
+        ]
+      }
+    ]
+  }
+}]'
+Output: error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -n checkoutservice -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-emailservice
+  namespace: checkoutservice
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: emailservice
+    ports:
+    - protocol: TCP
+      port: 5000
+EOF
+Output: Error from server (NotFound): error when creating "STDIN": namespaces "checkoutservice" not found
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get namespaces
+Output: NAME                 STATUS   AGE
+adservice            Active   4m14s
+default              Active   15m
+kube-node-lease      Active   15m
+kube-public          Active   15m
+kube-system          Active   15m
+local-path-storage   Active   15m
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl create namespace checkoutservice
+Output: namespace/checkoutservice created
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -n checkoutservice -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-emailservice
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: emailservice
+    ports:
+    - protocol: TCP
+      port: 5000
+EOF
+Output: networkpolicy.networking.k8s.io/allow-emailservice created
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get namespace emailservice --show-labels
+Output: Error from server (NotFound): namespaces "emailservice" not found
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl create namespace emailservice
+Output: namespace/emailservice created
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+

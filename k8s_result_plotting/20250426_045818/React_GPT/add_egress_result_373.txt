@@ -1,0 +1,261 @@
+LLM Command: kubectl get networkpolicy -A
+Output: NAMESPACE   NAME                    POD-SELECTOR                AGE
+default     adservice               app=adservice               5h1m
+default     cartservice             app=cartservice             5h1m
+default     checkoutservice         app=checkoutservice         5h1m
+default     currencyservice         app=currencyservice         5h1m
+default     emailservice            app=emailservice            5h1m
+default     frontend                app=frontend                5h1m
+default     loadgenerator           app=loadgenerator           5h1m
+default     paymentservice          app=paymentservice          5h1m
+default     productcatalogservice   app=productcatalogservice   5h1m
+default     recommendationservice   app=recommendationservice   5h1m
+default     redis-cart              app=redis-cart              5h1m
+default     shippingservice         app=shippingservice         5h1m
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy frontend -n default --type=json -p '[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "adservice"}}}}]'
+Output: The request is invalid: the server rejected our request due to an error in our request
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy frontend -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"frontend","namespace":"default"},"spec":{"egress":[{"to":[{"podSelector":{"matchLabels":{"app":"emailservice"}}}]},{"to":[{"podSelector":{"matchLabels":{"app":"resid-cart"}}}]}],"ingress":[{}],"podSelector":{"matchLabels":{"app":"frontend"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-05-07T16:33:46Z"
+  generation: 159
+  name: frontend
+  namespace: default
+  resourceVersion: "25369"
+  uid: 65f1a6bc-bb5a-471a-b427-281a3d426ea1
+spec:
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: emailservice
+  - to:
+    - podSelector:
+        matchLabels:
+          app: resid-cart
+  ingress:
+  - {}
+  podSelector:
+    matchLabels:
+      app: frontend
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy frontend -n default --type=json -p '[{"op": "add", "path": "/spec/ingress/0/from", "value": [{"podSelector": {"matchLabels": {"app": "adservice"}}}]}]'
+Output: networkpolicy.networking.k8s.io/frontend patched
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy frontend -n default --type=json -p '[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "cartservice"}}}}, {"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "checkoutservice"}}}}, {"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "currencyservice"}}}}, {"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "productcatalogservice"}}}}, {"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "recommendationservice"}}}}, {"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "shippingservice"}}}}]'
+Output: networkpolicy.networking.k8s.io/frontend patched
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy frontend -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"frontend","namespace":"default"},"spec":{"egress":[{"to":[{"podSelector":{"matchLabels":{"app":"emailservice"}}}]},{"to":[{"podSelector":{"matchLabels":{"app":"resid-cart"}}}]}],"ingress":[{}],"podSelector":{"matchLabels":{"app":"frontend"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-05-07T16:33:46Z"
+  generation: 161
+  name: frontend
+  namespace: default
+  resourceVersion: "25413"
+  uid: 65f1a6bc-bb5a-471a-b427-281a3d426ea1
+spec:
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: emailservice
+  - to:
+    - podSelector:
+        matchLabels:
+          app: resid-cart
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: adservice
+    - podSelector:
+        matchLabels:
+          app: cartservice
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+    - podSelector:
+        matchLabels:
+          app: currencyservice
+    - podSelector:
+        matchLabels:
+          app: productcatalogservice
+    - podSelector:
+        matchLabels:
+          app: recommendationservice
+    - podSelector:
+        matchLabels:
+          app: shippingservice
+  podSelector:
+    matchLabels:
+      app: frontend
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy frontend -n default --type=json -p '[{"op": "add", "path": "/spec/egress/0/to/-", "value": {"podSelector": {"matchLabels": {"app": "adservice"}}}}, {"op": "add", "path": "/spec/egress/0/to/-", "value": {"podSelector": {"matchLabels": {"app": "cartservice"}}}}, {"op": "add", "path": "/spec/egress/0/to/-", "value": {"podSelector": {"matchLabels": {"app": "checkoutservice"}}}}, {"op": "add", "path": "/spec/egress/0/to/-", "value": {"podSelector": {"matchLabels": {"app": "currencyservice"}}}}, {"op": "add", "path": "/spec/egress/0/to/-", "value": {"podSelector": {"matchLabels": {"app": "productcatalogservice"}}}}, {"op": "add", "path": "/spec/egress/0/to/-", "value": {"podSelector": {"matchLabels": {"app": "recommendationservice"}}}}, {"op": "add", "path": "/spec/egress/0/to/-", "value": {"podSelector": {"matchLabels": {"app": "shippingservice"}}}}]'
+Output: networkpolicy.networking.k8s.io/frontend patched
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy frontend -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"frontend","namespace":"default"},"spec":{"egress":[{"to":[{"podSelector":{"matchLabels":{"app":"emailservice"}}}]},{"to":[{"podSelector":{"matchLabels":{"app":"resid-cart"}}}]}],"ingress":[{}],"podSelector":{"matchLabels":{"app":"frontend"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-05-07T16:33:46Z"
+  generation: 162
+  name: frontend
+  namespace: default
+  resourceVersion: "25435"
+  uid: 65f1a6bc-bb5a-471a-b427-281a3d426ea1
+spec:
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: emailservice
+    - podSelector:
+        matchLabels:
+          app: adservice
+    - podSelector:
+        matchLabels:
+          app: cartservice
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+    - podSelector:
+        matchLabels:
+          app: currencyservice
+    - podSelector:
+        matchLabels:
+          app: productcatalogservice
+    - podSelector:
+        matchLabels:
+          app: recommendationservice
+    - podSelector:
+        matchLabels:
+          app: shippingservice
+  - to:
+    - podSelector:
+        matchLabels:
+          app: resid-cart
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: adservice
+    - podSelector:
+        matchLabels:
+          app: cartservice
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+    - podSelector:
+        matchLabels:
+          app: currencyservice
+    - podSelector:
+        matchLabels:
+          app: productcatalogservice
+    - podSelector:
+        matchLabels:
+          app: recommendationservice
+    - podSelector:
+        matchLabels:
+          app: shippingservice
+  podSelector:
+    matchLabels:
+      app: frontend
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy frontend -n default --type=json -p '[{"op": "add", "path": "/spec/ingress/0/ports", "value": [{"protocol": "TCP", "port": 9555}, {"protocol": "TCP", "port": 7070}, {"protocol": "TCP", "port": 5050}, {"protocol": "TCP", "port": 7000}, {"protocol": "TCP", "port": 3550}, {"protocol": "TCP", "port": 8080}, {"protocol": "TCP", "port": 50051}]}]'
+Output: networkpolicy.networking.k8s.io/frontend patched
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+

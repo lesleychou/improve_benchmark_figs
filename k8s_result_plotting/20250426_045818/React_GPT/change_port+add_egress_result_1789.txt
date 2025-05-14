@@ -1,0 +1,115 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n frontend -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n recommendationservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy allow-frontend -n recommendationservice --type='json' -p='[{"op": "add", "path": "/spec/ingress/-", "value": {"from": [{"namespaceSelector": {"matchLabels": {"name": "frontend"}}}], "ports": [{"protocol": "TCP", "port": 8080}]}}]'
+Output: Error from server (NotFound): namespaces "recommendationservice" not found
+
+Mismatch Summary: Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get namespaces
+Output: NAME                 STATUS   AGE
+default              Active   11h
+kube-node-lease      Active   11h
+kube-public          Active   11h
+kube-system          Active   11h
+local-path-storage   Active   11h
+
+Mismatch Summary: Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get services -n default
+Output: NAME                    TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+adservice               ClusterIP      10.96.166.202   <none>        9555/TCP       11h
+cartservice             ClusterIP      10.96.253.148   <none>        7070/TCP       11h
+checkoutservice         ClusterIP      10.96.10.29     <none>        5050/TCP       11h
+currencyservice         ClusterIP      10.96.127.218   <none>        7000/TCP       11h
+emailservice            ClusterIP      10.96.221.70    <none>        5000/TCP       11h
+frontend                ClusterIP      10.96.233.109   <none>        80/TCP         11h
+frontend-external       LoadBalancer   10.96.239.12    <pending>     80:30628/TCP   11h
+kubernetes              ClusterIP      10.96.0.1       <none>        443/TCP        11h
+paymentservice          ClusterIP      10.96.48.118    <none>        50051/TCP      11h
+productcatalogservice   ClusterIP      10.96.54.49     <none>        3550/TCP       11h
+recommendationservice   ClusterIP      10.96.245.215   <none>        8080/TCP       11h
+redis-cart              ClusterIP      10.96.115.155   <none>        6379/TCP       11h
+shippingservice         ClusterIP      10.96.220.200   <none>        50051/TCP      11h
+
+Mismatch Summary: Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy allow-frontend-to-recommendation -n default --type='json' -p='[{"op": "add", "path": "/spec", "value": {"podSelector": {"matchLabels": {"app": "recommendationservice"}}, "ingress": [{"from": [{"podSelector": {"matchLabels": {"app": "frontend"}}}], "ports": [{"protocol": "TCP", "port": 8080}]}]}}]'
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "allow-frontend-to-recommendation" not found
+
+Mismatch Summary: Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl apply -n default -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-frontend-to-recommendation
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: recommendationservice
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    ports:
+    - protocol: TCP
+      port: 8080
+EOF
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "allow-frontend-to-recommendation" not found
+
+Mismatch Summary: Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl apply -n default -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-frontend-to-recommendation
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: recommendationservice
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    ports:
+    - protocol: TCP
+      port: 8080
+EOF
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "allow-frontend-to-recommendation" not found
+
+Mismatch Summary: Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+

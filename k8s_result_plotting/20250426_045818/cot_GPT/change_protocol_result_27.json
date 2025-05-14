@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n checkoutservice -o yaml",
+        "output": "apiVersion: v1\nitems:\n- apiVersion: networking.k8s.io/v1\n  kind: NetworkPolicy\n  metadata:\n    annotations:\n      kubectl.kubernetes.io/last-applied-configuration: |\n        {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"allow-emailservice\",\"namespace\":\"checkoutservice\"},\"spec\":{\"ingress\":[{\"from\":[{\"namespaceSelector\":{\"matchLabels\":{\"name\":\"emailservice\"}}}],\"ports\":[{\"port\":5000,\"protocol\":\"TCP\"}]}],\"podSelector\":{},\"policyTypes\":[\"Ingress\"]}}\n    creationTimestamp: \"2025-04-26T05:14:04Z\"\n    generation: 3\n    name: allow-emailservice\n    namespace: checkoutservice\n    resourceVersion: \"2209\"\n    uid: a517010a-d0ba-4f78-9419-d33d2040da63\n  spec:\n    podSelector: {}\n    policyTypes:\n    - Ingress\n- apiVersion: networking.k8s.io/v1\n  kind: NetworkPolicy\n  metadata:\n    annotations:\n      kubectl.kubernetes.io/last-applied-configuration: |\n        {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"checkoutservice\",\"namespace\":\"checkoutservice\"},\"spec\":{\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"paymentservice\"}}}],\"ports\":[{\"port\":50051,\"protocol\":\"TCP\"}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"checkoutservice\"}}}}\n    creationTimestamp: \"2025-04-26T05:14:26Z\"\n    generation: 6\n    name: checkoutservice\n    namespace: checkoutservice\n    resourceVersion: \"2259\"\n    uid: d4e51602-4b97-4a4c-a15d-12b49b9a18aa\n  spec:\n    ingress:\n    - from:\n      - podSelector:\n          matchLabels:\n            app: paymentservice\n      ports:\n      - port: 50051\n        protocol: TCP\n    podSelector:\n      matchLabels:\n        app: checkoutservice\n    policyTypes:\n    - Ingress\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy allow-emailservice -n checkoutservice --type='json' -p='[{\"op\": \"replace\", \"path\": \"/spec/ingress/0/ports/0/port\", \"value\": 5000}]'",
+        "output": "The request is invalid: the server rejected our request due to an error in our request\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "bash\nkubectl patch networkpolicy allow-emailservice -n checkoutservice --type='json' -p='[{\"op\": \"replace\", \"path\": \"/spec/ingress/0/ports/0/port\", \"value\": 5000}]'",
+        "output": "bash: error reading input file: Bad file descriptor\nThe request is invalid: the server rejected our request due to an error in our request\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy allow-emailservice -n checkoutservice --type='json' -p='[{\"op\": \"remove\", \"path\": \"/spec/ingress/0/ports\"}]'",
+        "output": "The request is invalid: the server rejected our request due to an error in our request\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy allow-emailservice -n checkoutservice --type='json' -p='[{\"op\": \"replace\", \"path\": \"/spec/ingress/0/ports\", \"value\": [{\"port\": 5000, \"protocol\": \"TCP\"}]}]'",
+        "output": "The request is invalid: the server rejected our request due to an error in our request\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy allow-emailservice -n checkoutservice --type='json' -p='[{\"op\": \"replace\", \"path\": \"/spec/ingress/0/ports\", \"value\": [{\"port\": 5000, \"protocol\": \"TCP\"}]}]'",
+        "output": "The request is invalid: the server rejected our request due to an error in our request\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy allow-emailservice -n checkoutservice --type='json' -p='[{\"op\": \"remove\", \"path\": \"/spec/ingress/0/ports\"}]'",
+        "output": "The request is invalid: the server rejected our request due to an error in our request\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n shippingservice -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    }
+]

@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy allow-recommendation-to-productcatalog -n recommendationservice --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"productcatalogservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 3550, \"protocol\": \"TCP\"}}]'",
+        "output": "networkpolicy.networking.k8s.io/allow-recommendation-to-productcatalog patched\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy allow-productcatalog-to-recommendation -n productcatalogservice --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"recommendationservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 3550, \"protocol\": \"TCP\"}}]'",
+        "output": "Error from server (NotFound): namespaces \"productcatalogservice\" not found\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                    STATUS   AGE\nadservice               Active   106m\ncartservice             Active   83m\ndefault                 Active   110m\nfrontend                Active   106m\nkube-node-lease         Active   110m\nkube-public             Active   110m\nkube-system             Active   110m\nlocal-path-storage      Active   110m\npaymentservice          Active   45m\nrecommendationservice   Active   100m\nredis-cart              Active   18m\nshippingservice         Active   102m\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get pods --all-namespaces -o wide | grep productcatalogservice",
+        "output": "default              productcatalogservice-697ff888cf-k7x58       1/1     Running   0          108m   10.244.0.12   kind-control-plane   <none>           <none>\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy allow-recommendation-to-productcatalog -n default --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"recommendationservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 3550, \"protocol\": \"TCP\"}}]'",
+        "output": "networkpolicy.networking.k8s.io/allow-recommendation-to-productcatalog patched\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get pods -n recommendationservice --show-labels",
+        "output": "",
+        "mismatch_summary": "Mismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get pods -n recommendationservice --show-labels",
+        "output": "",
+        "mismatch_summary": "Mismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get pods -n recommendationservice --show-labels",
+        "output": "",
+        "mismatch_summary": "Mismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    }
+]

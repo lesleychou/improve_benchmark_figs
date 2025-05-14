@@ -1,0 +1,94 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy cartservice-policy -n cartservice --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "redis-cart"}}}}, {"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 6379, "protocol": "TCP"}}]'
+Output: The request is invalid: the server rejected our request due to an error in our request
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy cartservice-policy -n cartservice --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from", "value": [{"podSelector": {"matchLabels": {"app": "redis-cart"}}}]}, {"op": "add", "path": "/spec/ingress/0/ports", "value": [{"port": 6379, "protocol": "TCP"}]}]'
+Output: The request is invalid: the server rejected our request due to an error in our request
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy cartservice-policy -n cartservice --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from", "value": [{"podSelector": {"matchLabels": {"app": "redis-cart"}}}]}, {"op": "add", "path": "/spec/ingress/0/ports", "value": [{"port": 6379, "protocol": "TCP"}]}]'
+Output: The request is invalid: the server rejected our request due to an error in our request
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy cartservice-policy -n cartservice -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"cartservice-policy","namespace":"cartservice"},"spec":{"egress":[{"ports":[{"port":5050,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}]}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":7070,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"cartservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-04-27T15:59:42Z"
+  generation: 46
+  name: cartservice-policy
+  namespace: cartservice
+  resourceVersion: "9641"
+  uid: d4c475e3-b916-4e7b-9b1d-52c2633ba7d5
+spec:
+  podSelector:
+    matchLabels:
+      app: cartservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl
+kubectl patch networkpolicy cartservice-policy -n cartservice --type='json' -p='[{"op": "add", "path": "/spec/ingress/-", "value": {"from": [{"podSelector": {"matchLabels": {"app": "redis-cart"}}}], "ports": [{"port": 6379, "protocol": "TCP"}]}}]'
+Output: The request is invalid: the server rejected our request due to an error in our request
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: bash
+kubectl patch networkpolicy cartservice-policy -n cartservice --type='json' -p='[{"op": "add", "path": "/spec/ingress/-", "value": {"from": [{"podSelector": {"matchLabels": {"app": "redis-cart"}}}], "ports": [{"port": 6379, "protocol": "TCP"}]}}]'
+Output: bash: error reading input file: Bad file descriptor
+The request is invalid: the server rejected our request due to an error in our request
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: bash
+kubectl patch networkpolicy cartservice-policy -n cartservice --type='json' -p='[{"op": "add", "path": "/spec/ingress/1", "value": {"from": [{"podSelector": {"matchLabels": {"app": "redis-cart"}}}], "ports": [{"port": 6379, "protocol": "TCP"}]}}]'
+Output: bash: error reading input file: Bad file descriptor
+The request is invalid: the server rejected our request due to an error in our request
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy cartservice-policy -n cartservice --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "redis-cart"}}}}, {"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 6379, "protocol": "TCP"}}]'
+Output: The request is invalid: the server rejected our request due to an error in our request
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+

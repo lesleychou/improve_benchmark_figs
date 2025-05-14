@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "kubectl get networkpolicy frontend -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"frontend\",\"namespace\":\"default\"},\"spec\":{\"egress\":[{}],\"ingress\":[{}],\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n  creationTimestamp: \"2025-04-29T16:15:24Z\"\n  generation: 3\n  name: frontend\n  namespace: default\n  resourceVersion: \"5510\"\n  uid: 8d0deebf-c29d-4122-90ea-0561f7a2bb4e\nspec:\n  egress:\n  - {}\n  ingress:\n  - {}\n  podSelector:\n    matchLabels:\n      app: frontend\n  policyTypes:\n  - Ingress\n  - Egress\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 emailservice:5000 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 emailservice:5000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 emailservice:5000 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 emailservice:5000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 emailservice:5000 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 emailservice:5000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 emailservice:5000 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 emailservice:5000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 emailservice:5000 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 emailservice:5000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy emailservice -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"emailservice\",\"namespace\":\"default\"},\"spec\":{\"egress\":[{}],\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"checkoutservice\"}}}],\"ports\":[{\"port\":8080,\"protocol\":\"TCP\"}]},{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"productcatalogservice\"}}}]},{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}}}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"emailservice\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n  creationTimestamp: \"2025-04-29T16:15:24Z\"\n  generation: 21\n  name: emailservice\n  namespace: default\n  resourceVersion: \"20486\"\n  uid: d81e9b66-d6b9-49e3-b652-92025f9f91cd\nspec:\n  egress:\n  - {}\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: checkoutservice\n    ports:\n    - port: 8080\n      protocol: TCP\n  - from:\n    - podSelector:\n        matchLabels:\n          app: productcatalogservice\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n  podSelector:\n    matchLabels:\n      app: emailservice\n  policyTypes:\n  - Ingress\n  - Egress\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 emailservice:5000 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 emailservice:5000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 emailservice:5000 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 emailservice:5000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy emailservice --type=merge -p $'\nspec:\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: checkoutservice\n    ports:\n    - port: 8080\n      protocol: TCP\n  - from:\n    - podSelector:\n        matchLabels:\n          app: productcatalogservice\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    ports:\n    - port: 5000\n      protocol: TCP\n'",
+        "output": "networkpolicy.networking.k8s.io/emailservice patched\n",
+        "mismatch_summary": "Mismatch: productcatalogservice \u2192 emailservice:5000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: productcatalogservice \u2192 emailservice:5000 (Expected: False, Actual: True)"
+    }
+]

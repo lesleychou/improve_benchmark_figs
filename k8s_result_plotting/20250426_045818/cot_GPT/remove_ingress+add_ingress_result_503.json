@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: cartservice \u2192 shippingservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 shippingservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy shippingservice --namespace=shippingservice -p '{\"spec\":{\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"checkoutservice\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"paymentservice\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"emailservice\"}}}],\"ports\":[{\"port\":50051}]}]}}'",
+        "output": "networkpolicy.networking.k8s.io/shippingservice patched\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 shippingservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 shippingservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy cartservice --namespace=cartservice -p '{\"spec\":{\"egress\":[{\"to\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"redis\"}}}],\"ports\":[{\"port\":6379}]}]}}'",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"cartservice\" not found\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 shippingservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 shippingservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl apply -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: cartservice\n  namespace: cartservice\nspec:\n  podSelector:\n    matchLabels:\n      app: cartservice\n  policyTypes:\n  - Egress\n  egress:\n  - to:\n    - podSelector:\n        matchLabels:\n          app: redis\n    ports:\n    - port: 6379\nEOF",
+        "output": "networkpolicy.networking.k8s.io/cartservice created\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 shippingservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 shippingservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy cartservice --namespace=cartservice -p '{\"spec\":{\"egress\":[{\"to\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"redis\"}}}],\"ports\":[{\"port\":6379}]}],\"policyTypes\":[\"Egress\"]}}'",
+        "output": "networkpolicy.networking.k8s.io/cartservice patched (no change)\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 shippingservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 shippingservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy cartservice --namespace=cartservice -p '{\"spec\":{\"egress\":[{\"to\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"redis\"}}}],\"ports\":[{\"port\":6379}]}],\"policyTypes\":[\"Egress\"]}}'",
+        "output": "networkpolicy.networking.k8s.io/cartservice patched (no change)\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 shippingservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 shippingservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy shippingservice --namespace=shippingservice -p '{\"spec\":{\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"checkoutservice\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"paymentservice\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"emailservice\"}}}],\"ports\":[{\"port\":50051}]}],\"policyTypes\":[\"Ingress\"]}}'",
+        "output": "networkpolicy.networking.k8s.io/shippingservice patched\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 shippingservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 shippingservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy cartservice --namespace=cartservice -p '{\"spec\":{\"egress\":[{\"to\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"redis\"}}}],\"ports\":[{\"port\":6379}]}],\"policyTypes\":[\"Egress\"]}}'",
+        "output": "networkpolicy.networking.k8s.io/cartservice patched (no change)\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 shippingservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 shippingservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy cartservice --namespace=cartservice -p '{\"spec\":{\"egress\":[{\"to\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"redis\"}}}],\"ports\":[{\"port\":6379}]}],\"policyTypes\":[\"Egress\"]}}'",
+        "output": "networkpolicy.networking.k8s.io/cartservice patched (no change)\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 shippingservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 shippingservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    }
+]

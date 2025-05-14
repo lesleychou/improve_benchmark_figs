@@ -1,0 +1,163 @@
+LLM Command: kubectl get networkpolicy frontend -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"frontend","namespace":"default"},"spec":{"egress":[{}],"ingress":[{}],"podSelector":{"matchLabels":{"app":"frontend"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-05-01T18:24:50Z"
+  generation: 277
+  name: frontend
+  namespace: default
+  resourceVersion: "87271"
+  uid: 0974a7ff-3d5d-4ffa-8171-0baa60fe9a18
+spec:
+  egress:
+  - {}
+  ingress:
+  - {}
+  podSelector:
+    matchLabels:
+      app: frontend
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: shippingservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: emailservice → recommendationservice:8080 (Expected: False, Actual: True)
+
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: shippingservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: emailservice → recommendationservice:8080 (Expected: False, Actual: True)
+
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: shippingservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: emailservice → recommendationservice:8080 (Expected: False, Actual: True)
+
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: shippingservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: emailservice → recommendationservice:8080 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy currencyservice -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"currencyservice","namespace":"default"},"spec":{"egress":[{}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}},{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}],"ports":[{"port":7000,"protocol":"UDP"}]}],"podSelector":{"matchLabels":{"app":"currencyservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-05-01T18:24:50Z"
+  generation: 129
+  name: currencyservice
+  namespace: default
+  resourceVersion: "87269"
+  uid: f6993603-07c8-4648-94bd-fd30a1bedfd2
+spec:
+  egress:
+  - {}
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+    ports:
+    - port: 7000
+      protocol: UDP
+  podSelector:
+    matchLabels:
+      app: currencyservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: shippingservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: emailservice → recommendationservice:8080 (Expected: False, Actual: True)
+
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: shippingservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: emailservice → recommendationservice:8080 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy currencyservice --type=merge -p $'
+spec:
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+    ports:
+    - port: 7000
+      protocol: TCP
+'
+Output: networkpolicy.networking.k8s.io/currencyservice patched
+
+Mismatch Summary: Mismatch: shippingservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: emailservice → recommendationservice:8080 (Expected: False, Actual: True)
+
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: shippingservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: emailservice → recommendationservice:8080 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy recommendationservice -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"recommendationservice","namespace":"default"},"spec":{"egress":[{}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":8080,"protocol":"TCP"}]},{"from":[{"podSelector":{"matchLabels":{"app":"emailservice"}}}]},{"from":[{"podSelector":{"matchLabels":{"app":"shippingservice"}}}]}],"podSelector":{"matchLabels":{"app":"recommendationservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-05-01T18:24:51Z"
+  generation: 159
+  name: recommendationservice
+  namespace: default
+  resourceVersion: "87272"
+  uid: 41c20c54-a6b4-4e86-baa6-3f5ba55645f6
+spec:
+  egress:
+  - {}
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    ports:
+    - port: 8080
+      protocol: TCP
+  - from:
+    - podSelector:
+        matchLabels:
+          app: emailservice
+  - from:
+    - podSelector:
+        matchLabels:
+          app: shippingservice
+  podSelector:
+    matchLabels:
+      app: recommendationservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: shippingservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: emailservice → recommendationservice:8080 (Expected: False, Actual: True)
+

@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "NAME                  POD-SELECTOR   INGRESS   EGRESS   POLICYTYPES\n          frontend-policy       app=frontend   true      false    Ingress\n          checkout-policy       app=checkout   true      false    Ingress\n          recommendation-policy app=recommendation true   false    Ingress\n          cart-policy           app=cart       true      false    Ingress\n          redis-cache-policy    app=redis-cache true     false    Ingress",
+        "output": "/bin/bash: line 1: NAME: command not found\n/bin/bash: line 2: frontend-policy: command not found\n/bin/bash: line 3: checkout-policy: command not found\n/bin/bash: line 4: recommendation-policy: command not found\n/bin/bash: line 5: cart-policy: command not found\n/bin/bash: line 6: redis-cache-policy: command not found\n",
+        "mismatch_summary": "Mismatch: recommendationservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 adservice:9555 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: recommendationservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 adservice:9555 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n default",
+        "output": "NAME                    POD-SELECTOR                AGE\nadservice               app=adservice               4h54m\ncartservice             app=cartservice             4h54m\ncheckoutservice         app=checkoutservice         4h54m\ncurrencyservice         app=currencyservice         4h54m\nemailservice            app=emailservice            4h54m\nfrontend                app=frontend                4h54m\nloadgenerator           app=loadgenerator           4h54m\npaymentservice          app=paymentservice          4h54m\nproductcatalogservice   app=productcatalogservice   4h54m\nrecommendationservice   app=recommendationservice   4h54m\nredis-cart              app=redis-cart              4h54m\nshippingservice         app=shippingservice         4h54m\n",
+        "mismatch_summary": "Mismatch: recommendationservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 adservice:9555 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl describe networkpolicy recommendationservice -n default",
+        "output": "Name:         recommendationservice\nNamespace:    default\nCreated on:   2025-04-28 05:25:43 +0000 UTC\nLabels:       <none>\nAnnotations:  <none>\nSpec:\n  PodSelector:     app=recommendationservice\n  Allowing ingress traffic:\n    To Port: 8080/TCP\n    From:\n      PodSelector: app=frontend\n  Allowing egress traffic:\n    To Port: <any> (traffic allowed to all ports)\n    To: <any> (traffic not restricted by destination)\n  Policy Types: Ingress, Egress\n",
+        "mismatch_summary": "Mismatch: recommendationservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 adservice:9555 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy recommendationservice -n default -p '{\"spec\":{\"egress\":[{\"ports\":[{\"port\":9555,\"protocol\":\"TCP\"}],\"to\":[{\"podSelector\":{\"app\":\"productcatalogservice\"}}]}]}}'",
+        "output": "networkpolicy.networking.k8s.io/recommendationservice patched\n",
+        "mismatch_summary": "Mismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 adservice:9555 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 adservice:9555 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 adservice:9555 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 adservice:9555 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 adservice:9555 (Expected: False, Actual: True)"
+    }
+]

@@ -1,0 +1,788 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy currencyservice-deny-cart -n currencyservice --type='merge' -p '{"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"cartservice"}}}],"ports":[{"port":7000}]}]}}'
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "currencyservice-deny-cart" not found
+
+Mismatch Summary: Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: currencyservice-deny-cart
+  namespace: currencyservice
+spec:
+  podSelector:
+    matchLabels:
+      app: currencyservice
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: cartservice
+      ports:
+        - port: 7000
+          protocol: TCP
+EOF
+Output: networkpolicy.networking.k8s.io/currencyservice-deny-cart created
+
+Mismatch Summary: Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n currencyservice -o yaml
+Output: apiVersion: v1
+items:
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"allow-checkout-to-currency","namespace":"currencyservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}],"ports":[{"port":7000,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"currencyservice"}}}}
+    creationTimestamp: "2025-04-26T17:21:36Z"
+    generation: 1
+    name: allow-checkout-to-currency
+    namespace: currencyservice
+    resourceVersion: "62205"
+    uid: c89e7e11-d25e-4fa3-9cc3-1bf9e01f4454
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: checkoutservice
+      ports:
+      - port: 7000
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: currencyservice
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"allow-frontend-and-checkout-to-currency","namespace":"currencyservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}},{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}],"ports":[{"port":7000,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"currencyservice"}}}}
+    creationTimestamp: "2025-04-26T12:56:08Z"
+    generation: 2
+    name: allow-frontend-and-checkout-to-currency
+    namespace: currencyservice
+    resourceVersion: "88442"
+    uid: 8ed9a4d5-de9b-43ca-bfcf-341a8cc69c6b
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: frontend
+      ports:
+      - port: 7000
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: currencyservice
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"allow-frontend-to-currencyservice","namespace":"currencyservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":7000,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"currencyservice"}}}}
+    creationTimestamp: "2025-04-26T10:34:15Z"
+    generation: 1
+    name: allow-frontend-to-currencyservice
+    namespace: currencyservice
+    resourceVersion: "28449"
+    uid: 7715e547-7b75-4bc5-827d-028a5bbfa608
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: frontend
+      ports:
+      - port: 7000
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: currencyservice
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"currencyservice","namespace":"currencyservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":7000,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"currencyservice"}}}}
+    creationTimestamp: "2025-04-26T18:35:51Z"
+    generation: 28
+    name: currencyservice
+    namespace: currencyservice
+    resourceVersion: "89390"
+    uid: 13b8b02b-7912-49bf-8ce1-ac1fd70f0512
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: checkoutservice
+      ports:
+      - port: 7000
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: currencyservice
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"currencyservice-deny-cart","namespace":"currencyservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"cartservice"}}}],"ports":[{"port":7000,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"currencyservice"}}}}
+    creationTimestamp: "2025-04-26T22:54:52Z"
+    generation: 1
+    name: currencyservice-deny-cart
+    namespace: currencyservice
+    resourceVersion: "89500"
+    uid: 6be22d7b-42cb-4092-b0ef-eae575b2bc92
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: cartservice
+      ports:
+      - port: 7000
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: currencyservice
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"currencyservice-policy","namespace":"currencyservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"checkout"}}},{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":7000,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"currencyservice"}},"policyTypes":["Ingress"]}}
+    creationTimestamp: "2025-04-26T06:01:30Z"
+    generation: 69
+    name: currencyservice-policy
+    namespace: currencyservice
+    resourceVersion: "87987"
+    uid: 1086a1c6-a81f-494c-8283-2c10e1d1b6e4
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: frontend
+      - podSelector:
+          matchLabels:
+            app: checkout
+      ports:
+      - port: 7000
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: currencyservice
+    policyTypes:
+    - Ingress
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"deny-all-currency","namespace":"currencyservice"},"spec":{"podSelector":{"matchLabels":{"app":"currency"}},"policyTypes":["Ingress"]}}
+    creationTimestamp: "2025-04-26T11:55:31Z"
+    generation: 3
+    name: deny-all-currency
+    namespace: currencyservice
+    resourceVersion: "35314"
+    uid: bbcde838-9294-437b-9f2a-f7ed6a18f2a7
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: checkout
+      ports:
+      - port: 7000
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: currency
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"deny-all-ingress-currency","namespace":"currencyservice"},"spec":{"podSelector":{"matchLabels":{"app":"currency"}},"policyTypes":["Ingress"]}}
+    creationTimestamp: "2025-04-26T11:55:49Z"
+    generation: 5
+    name: deny-all-ingress-currency
+    namespace: currencyservice
+    resourceVersion: "88435"
+    uid: 6e794b27-4152-4a48-8f03-ec9f1ddcfc5d
+  spec:
+    podSelector:
+      matchLabels:
+        app: currency
+    policyTypes:
+    - Ingress
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy currencyservice-deny-cart -n currencyservice --type='merge' -p '{"spec":{"ingress":[]}}'
+Output: networkpolicy.networking.k8s.io/currencyservice-deny-cart patched
+
+Mismatch Summary: Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-cart-to-currency
+  namespace: currencyservice
+spec:
+  podSelector:
+    matchLabels:
+      app: currencyservice
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: cartservice
+      ports:
+        - port: 7000
+          protocol: TCP
+  policyTypes:
+    - Ingress
+EOF
+Output: networkpolicy.networking.k8s.io/deny-cart-to-currency created
+
+Mismatch Summary: Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n currencyservice -o yaml
+Output: apiVersion: v1
+items:
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"allow-checkout-to-currency","namespace":"currencyservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}],"ports":[{"port":7000,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"currencyservice"}}}}
+    creationTimestamp: "2025-04-26T17:21:36Z"
+    generation: 1
+    name: allow-checkout-to-currency
+    namespace: currencyservice
+    resourceVersion: "62205"
+    uid: c89e7e11-d25e-4fa3-9cc3-1bf9e01f4454
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: checkoutservice
+      ports:
+      - port: 7000
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: currencyservice
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"allow-frontend-and-checkout-to-currency","namespace":"currencyservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}},{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}],"ports":[{"port":7000,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"currencyservice"}}}}
+    creationTimestamp: "2025-04-26T12:56:08Z"
+    generation: 2
+    name: allow-frontend-and-checkout-to-currency
+    namespace: currencyservice
+    resourceVersion: "88442"
+    uid: 8ed9a4d5-de9b-43ca-bfcf-341a8cc69c6b
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: frontend
+      ports:
+      - port: 7000
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: currencyservice
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"allow-frontend-to-currencyservice","namespace":"currencyservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":7000,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"currencyservice"}}}}
+    creationTimestamp: "2025-04-26T10:34:15Z"
+    generation: 1
+    name: allow-frontend-to-currencyservice
+    namespace: currencyservice
+    resourceVersion: "28449"
+    uid: 7715e547-7b75-4bc5-827d-028a5bbfa608
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: frontend
+      ports:
+      - port: 7000
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: currencyservice
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"currencyservice","namespace":"currencyservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":7000,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"currencyservice"}}}}
+    creationTimestamp: "2025-04-26T18:35:51Z"
+    generation: 28
+    name: currencyservice
+    namespace: currencyservice
+    resourceVersion: "89390"
+    uid: 13b8b02b-7912-49bf-8ce1-ac1fd70f0512
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: checkoutservice
+      ports:
+      - port: 7000
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: currencyservice
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"currencyservice-deny-cart","namespace":"currencyservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"cartservice"}}}],"ports":[{"port":7000,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"currencyservice"}}}}
+    creationTimestamp: "2025-04-26T22:54:52Z"
+    generation: 2
+    name: currencyservice-deny-cart
+    namespace: currencyservice
+    resourceVersion: "89509"
+    uid: 6be22d7b-42cb-4092-b0ef-eae575b2bc92
+  spec:
+    podSelector:
+      matchLabels:
+        app: currencyservice
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"currencyservice-policy","namespace":"currencyservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"checkout"}}},{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":7000,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"currencyservice"}},"policyTypes":["Ingress"]}}
+    creationTimestamp: "2025-04-26T06:01:30Z"
+    generation: 69
+    name: currencyservice-policy
+    namespace: currencyservice
+    resourceVersion: "87987"
+    uid: 1086a1c6-a81f-494c-8283-2c10e1d1b6e4
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: frontend
+      - podSelector:
+          matchLabels:
+            app: checkout
+      ports:
+      - port: 7000
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: currencyservice
+    policyTypes:
+    - Ingress
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"deny-all-currency","namespace":"currencyservice"},"spec":{"podSelector":{"matchLabels":{"app":"currency"}},"policyTypes":["Ingress"]}}
+    creationTimestamp: "2025-04-26T11:55:31Z"
+    generation: 3
+    name: deny-all-currency
+    namespace: currencyservice
+    resourceVersion: "35314"
+    uid: bbcde838-9294-437b-9f2a-f7ed6a18f2a7
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: checkout
+      ports:
+      - port: 7000
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: currency
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"deny-all-ingress-currency","namespace":"currencyservice"},"spec":{"podSelector":{"matchLabels":{"app":"currency"}},"policyTypes":["Ingress"]}}
+    creationTimestamp: "2025-04-26T11:55:49Z"
+    generation: 5
+    name: deny-all-ingress-currency
+    namespace: currencyservice
+    resourceVersion: "88435"
+    uid: 6e794b27-4152-4a48-8f03-ec9f1ddcfc5d
+  spec:
+    podSelector:
+      matchLabels:
+        app: currency
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"deny-cart-to-currency","namespace":"currencyservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"cartservice"}}}],"ports":[{"port":7000,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"currencyservice"}},"policyTypes":["Ingress"]}}
+    creationTimestamp: "2025-04-26T22:55:06Z"
+    generation: 1
+    name: deny-cart-to-currency
+    namespace: currencyservice
+    resourceVersion: "89519"
+    uid: 57763ed3-9b9b-4af4-950f-fe607abdae7e
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: cartservice
+      ports:
+      - port: 7000
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: currencyservice
+    policyTypes:
+    - Ingress
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n currencyservice -o yaml
+Output: apiVersion: v1
+items:
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"allow-checkout-to-currency","namespace":"currencyservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}],"ports":[{"port":7000,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"currencyservice"}}}}
+    creationTimestamp: "2025-04-26T17:21:36Z"
+    generation: 1
+    name: allow-checkout-to-currency
+    namespace: currencyservice
+    resourceVersion: "62205"
+    uid: c89e7e11-d25e-4fa3-9cc3-1bf9e01f4454
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: checkoutservice
+      ports:
+      - port: 7000
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: currencyservice
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"allow-frontend-and-checkout-to-currency","namespace":"currencyservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}},{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}],"ports":[{"port":7000,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"currencyservice"}}}}
+    creationTimestamp: "2025-04-26T12:56:08Z"
+    generation: 2
+    name: allow-frontend-and-checkout-to-currency
+    namespace: currencyservice
+    resourceVersion: "88442"
+    uid: 8ed9a4d5-de9b-43ca-bfcf-341a8cc69c6b
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: frontend
+      ports:
+      - port: 7000
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: currencyservice
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"allow-frontend-to-currencyservice","namespace":"currencyservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":7000,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"currencyservice"}}}}
+    creationTimestamp: "2025-04-26T10:34:15Z"
+    generation: 1
+    name: allow-frontend-to-currencyservice
+    namespace: currencyservice
+    resourceVersion: "28449"
+    uid: 7715e547-7b75-4bc5-827d-028a5bbfa608
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: frontend
+      ports:
+      - port: 7000
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: currencyservice
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"currencyservice","namespace":"currencyservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":7000,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"currencyservice"}}}}
+    creationTimestamp: "2025-04-26T18:35:51Z"
+    generation: 28
+    name: currencyservice
+    namespace: currencyservice
+    resourceVersion: "89390"
+    uid: 13b8b02b-7912-49bf-8ce1-ac1fd70f0512
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: checkoutservice
+      ports:
+      - port: 7000
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: currencyservice
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"currencyservice-deny-cart","namespace":"currencyservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"cartservice"}}}],"ports":[{"port":7000,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"currencyservice"}}}}
+    creationTimestamp: "2025-04-26T22:54:52Z"
+    generation: 2
+    name: currencyservice-deny-cart
+    namespace: currencyservice
+    resourceVersion: "89509"
+    uid: 6be22d7b-42cb-4092-b0ef-eae575b2bc92
+  spec:
+    podSelector:
+      matchLabels:
+        app: currencyservice
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"currencyservice-policy","namespace":"currencyservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"checkout"}}},{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":7000,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"currencyservice"}},"policyTypes":["Ingress"]}}
+    creationTimestamp: "2025-04-26T06:01:30Z"
+    generation: 69
+    name: currencyservice-policy
+    namespace: currencyservice
+    resourceVersion: "87987"
+    uid: 1086a1c6-a81f-494c-8283-2c10e1d1b6e4
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: frontend
+      - podSelector:
+          matchLabels:
+            app: checkout
+      ports:
+      - port: 7000
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: currencyservice
+    policyTypes:
+    - Ingress
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"deny-all-currency","namespace":"currencyservice"},"spec":{"podSelector":{"matchLabels":{"app":"currency"}},"policyTypes":["Ingress"]}}
+    creationTimestamp: "2025-04-26T11:55:31Z"
+    generation: 3
+    name: deny-all-currency
+    namespace: currencyservice
+    resourceVersion: "35314"
+    uid: bbcde838-9294-437b-9f2a-f7ed6a18f2a7
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: checkout
+      ports:
+      - port: 7000
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: currency
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"deny-all-ingress-currency","namespace":"currencyservice"},"spec":{"podSelector":{"matchLabels":{"app":"currency"}},"policyTypes":["Ingress"]}}
+    creationTimestamp: "2025-04-26T11:55:49Z"
+    generation: 5
+    name: deny-all-ingress-currency
+    namespace: currencyservice
+    resourceVersion: "88435"
+    uid: 6e794b27-4152-4a48-8f03-ec9f1ddcfc5d
+  spec:
+    podSelector:
+      matchLabels:
+        app: currency
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"deny-cart-to-currency","namespace":"currencyservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"cartservice"}}}],"ports":[{"port":7000,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"currencyservice"}},"policyTypes":["Ingress"]}}
+    creationTimestamp: "2025-04-26T22:55:06Z"
+    generation: 1
+    name: deny-cart-to-currency
+    namespace: currencyservice
+    resourceVersion: "89519"
+    uid: 57763ed3-9b9b-4af4-950f-fe607abdae7e
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: cartservice
+      ports:
+      - port: 7000
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: currencyservice
+    policyTypes:
+    - Ingress
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: bash
+kubectl patch networkpolicy currencyservice-policy -n currencyservice --type='merge' -p '{"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}},{"podSelector":{"matchLabels":{"app":"checkout"}}}],"ports":[{"port":7000,"protocol":"TCP"}]}]}}'
+Output: networkpolicy.networking.k8s.io/currencyservice-policy patched (no change)
+
+Mismatch Summary: Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+

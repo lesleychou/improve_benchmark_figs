@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: productcatalogservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n cartservice -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: productcatalogservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy -n cartservice --type='merge' --patch='{\n  \"apiVersion\": \"networking.k8s.io/v1\",\n  \"kind\": \"NetworkPolicy\",\n  \"metadata\": {\n    \"name\": \"cartservice-policy\"\n  },\n  \"spec\": {\n    \"podSelector\": {},\n    \"policyTypes\": [\"Ingress\"],\n    \"ingress\": [\n      {\n        \"from\": [\n          {\n            \"namespaceSelector\": {\n              \"matchLabels\": {\n                \"name\": \"redis-cart\"\n              }\n            }\n          }\n        ],\n        \"ports\": [\n          {\n            \"protocol\": \"TCP\",\n            \"port\": 6379\n          }\n        ]\n      },\n      {\n        \"from\": [\n          {\n            \"namespaceSelector\": {\n              \"matchLabels\": {\n                \"name\": \"productcatalogservice\"\n              }\n            }\n          },\n          {\n            \"namespaceSelector\": {\n              \"matchLabels\": {\n                \"name\": \"shippingservice\"\n              }\n            }\n          }\n        ],\n        \"ports\": [\n          {\n            \"protocol\": \"TCP\",\n            \"port\": 7070\n          }\n        ]\n      }\n    ]\n  }\n}'",
+        "output": "error: resource(s) were provided, but no name was specified\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: productcatalogservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl apply -n cartservice -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: cartservice-policy\nspec:\n  podSelector: {}\n  policyTypes:\n  - Ingress\n  ingress:\n  - from:\n    - namespaceSelector:\n        matchLabels:\n          name: redis-cart\n    ports:\n    - protocol: TCP\n      port: 6379\nEOF",
+        "output": "error: resource(s) were provided, but no name was specified\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: productcatalogservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl apply -n cartservice -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: cartservice-policy\nspec:\n  podSelector: {}\n  policyTypes:\n  - Ingress\n  ingress:\n  - from:\n    - namespaceSelector:\n        matchLabels:\n          name: redis-cart\n    ports:\n    - protocol: TCP\n      port: 6379\nEOF",
+        "output": "error: resource(s) were provided, but no name was specified\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: productcatalogservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy cartservice-policy -n cartservice --type='merge' --patch='{\n  \"spec\": {\n    \"ingress\": [\n      {\n        \"from\": [\n          {\n            \"namespaceSelector\": {\n              \"matchLabels\": {\n                \"name\": \"redis-cart\"\n              }\n            }\n          }\n        ],\n        \"ports\": [\n          {\n            \"protocol\": \"TCP\",\n            \"port\": 6379\n          }\n        ]\n      }\n    ]\n  }\n}'",
+        "output": "Error from server (NotFound): namespaces \"cartservice\" not found\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: productcatalogservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\ndefault              Active   18h\nkube-node-lease      Active   18h\nkube-public          Active   18h\nkube-system          Active   18h\nlocal-path-storage   Active   18h\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: productcatalogservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubernetes microservices architecture cartservice namespace",
+        "output": "/bin/bash: line 1: kubernetes: command not found\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: productcatalogservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubernetes microservices architecture cartservice namespace",
+        "output": "/bin/bash: line 1: kubernetes: command not found\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: productcatalogservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    }
+]

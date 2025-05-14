@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend",
+        "output": "",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n checkoutservice -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy -n checkoutservice --type='json' -p='[{\n  \"op\": \"add\",\n  \"path\": \"/spec\",\n  \"value\": {\n    \"podSelector\": {},\n    \"policyTypes\": [\"Ingress\"],\n    \"ingress\": [\n      {\n        \"from\": [\n          {\n            \"podSelector\": {\n              \"matchLabels\": {\n                \"app\": \"emailservice\"\n              }\n            }\n          }\n        ],\n        \"ports\": [\n          {\n            \"protocol\": \"TCP\",\n            \"port\": 5000\n          }\n        ]\n      },\n      {\n        \"from\": [\n          {\n            \"podSelector\": {\n              \"matchLabels\": {\n                \"app\": \"paymentservice\"\n              }\n            }\n          }\n        ],\n        \"ports\": [\n          {\n            \"protocol\": \"TCP\",\n            \"port\": 50051\n          }\n        ]\n      }\n    ]\n  }\n}]'",
+        "output": "error: resource(s) were provided, but no name was specified\n",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl apply -n checkoutservice -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-checkout-communication\n  namespace: checkoutservice\nspec:\n  podSelector: {}\n  policyTypes:\n  - Ingress\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: emailservice\n    ports:\n    - protocol: TCP\n      port: 5000\n  - from:\n    - podSelector:\n        matchLabels:\n          app: paymentservice\n    ports:\n    - protocol: TCP\n      port: 50051\nEOF",
+        "output": "error: resource(s) were provided, but no name was specified\n",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl create -n checkoutservice -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-checkout-communication\n  namespace: checkoutservice\nspec:\n  podSelector: {}\n  policyTypes:\n  - Ingress\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: emailservice\n    ports:\n    - protocol: TCP\n      port: 5000\n  - from:\n    - podSelector:\n        matchLabels:\n          app: paymentservice\n    ports:\n    - protocol: TCP\n      port: 50051\nEOF",
+        "output": "error: resource(s) were provided, but no name was specified\n",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy allow-checkout-communication -n checkoutservice --type='json' -p='[{\n  \"op\": \"add\",\n  \"path\": \"/spec\",\n  \"value\": {\n    \"podSelector\": {},\n    \"policyTypes\": [\"Ingress\"],\n    \"ingress\": [\n      {\n        \"from\": [\n          {\n            \"podSelector\": {\n              \"matchLabels\": {\n                \"app\": \"emailservice\"\n              }\n            }\n          }\n        ],\n        \"ports\": [\n          {\n            \"protocol\": \"TCP\",\n            \"port\": 5000\n          }\n        ]\n      },\n      {\n        \"from\": [\n          {\n            \"podSelector\": {\n              \"matchLabels\": {\n                \"app\": \"paymentservice\"\n              }\n            }\n          }\n        ],\n        \"ports\": [\n          {\n            \"protocol\": \"TCP\",\n            \"port\": 50051\n          }\n        ]\n      }\n    ]\n  }\n}]'",
+        "output": "Error from server (NotFound): namespaces \"checkoutservice\" not found\n",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\ndefault              Active   10h\nkube-node-lease      Active   10h\nkube-public          Active   10h\nkube-system          Active   10h\nlocal-path-storage   Active   10h\n",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubernetes microservices architecture checkoutservice namespace",
+        "output": "/bin/bash: line 1: kubernetes: command not found\n",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubernetes microservices architecture checkoutservice namespace",
+        "output": "/bin/bash: line 1: kubernetes: command not found\n",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)"
+    }
+]

@@ -1,0 +1,103 @@
+LLM Command: kubectl get networkpolicy -n frontend
+Output: 
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy <network-policy-name> -n frontend --type=json -p '[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "adservice"}}}}]'
+Output: /bin/bash: line 1: network-policy-name: No such file or directory
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n frontend
+Output: 
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n frontend -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy frontend-policy -n frontend --type=json -p '[{"op": "add", "path": "/spec/ingress", "value": [{"from": [{"podSelector": {"matchLabels": {"app": "adservice"}}}], "ports": [{"port": 9555, "protocol": "TCP"}]}]}]'
+Output: Error from server (NotFound): namespaces "frontend" not found
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+
+LLM Command: kubectl get namespaces
+Output: NAME                 STATUS   AGE
+default              Active   12h
+kube-node-lease      Active   12h
+kube-public          Active   12h
+kube-system          Active   12h
+local-path-storage   Active   12h
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+
+LLM Command: kubectl get pods --all-namespaces
+Output: NAMESPACE            NAME                                         READY   STATUS    RESTARTS        AGE
+default              adservice-7c7687ff5b-fbq2s                   1/1     Running   0               12h
+default              cartservice-7c8966d6fd-c8rb4                 1/1     Running   0               12h
+default              checkoutservice-769b8ff7b8-jxzrv             1/1     Running   0               12h
+default              currencyservice-578dcb55f6-bdvtr             1/1     Running   2 (3h47m ago)   12h
+default              emailservice-d5d54d4fc-lksfn                 1/1     Running   0               12h
+default              frontend-7ffbffc6f7-9hb4b                    1/1     Running   0               12h
+default              loadgenerator-7d9cfb7cb9-9zjhk               1/1     Running   0               12h
+default              paymentservice-b67c65d9c-ztkqg               1/1     Running   2 (179m ago)    12h
+default              productcatalogservice-5f94b6cd47-lk6vh       1/1     Running   0               12h
+default              recommendationservice-c468b6867-pcbbn        1/1     Running   0               12h
+default              redis-cart-5b6f47b748-9rgzw                  1/1     Running   0               12h
+default              shippingservice-f6bc4cd5d-69r7d              1/1     Running   0               12h
+kube-system          coredns-668d6bf9bc-g5z8v                     1/1     Running   0               12h
+kube-system          coredns-668d6bf9bc-l2w7d                     1/1     Running   0               12h
+kube-system          etcd-kind-control-plane                      1/1     Running   0               12h
+kube-system          kindnet-g596l                                1/1     Running   0               12h
+kube-system          kube-apiserver-kind-control-plane            1/1     Running   0               12h
+kube-system          kube-controller-manager-kind-control-plane   1/1     Running   0               12h
+kube-system          kube-proxy-48f5g                             1/1     Running   0               12h
+kube-system          kube-scheduler-kind-control-plane            1/1     Running   0               12h
+local-path-storage   local-path-provisioner-58cc7856b6-nfdzv      1/1     Running   0               12h
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy frontend-policy -n default --type=json -p '[{"op": "add", "path": "/spec/ingress", "value": [{"from": [{"podSelector": {"matchLabels": {"app": "adservice"}}}], "ports": [{"port": 9555, "protocol": "TCP"}]}]}]'
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "frontend-policy" not found
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n default
+Output: NAME                    POD-SELECTOR                AGE
+adservice               app=adservice               12h
+cartservice             app=cartservice             12h
+checkoutservice         app=checkoutservice         12h
+currencyservice         app=currencyservice         12h
+emailservice            app=emailservice            12h
+frontend                app=frontend                12h
+loadgenerator           app=loadgenerator           12h
+paymentservice          app=paymentservice          12h
+productcatalogservice   app=productcatalogservice   12h
+recommendationservice   app=recommendationservice   12h
+redis-cart              app=redis-cart              12h
+shippingservice         app=shippingservice         12h
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+

@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "bash\nkubectl patch networkpolicy -n frontend --type='json' -p='[\n  {\n    \"op\": \"add\",\n    \"path\": \"/spec\",\n    \"value\": {\n      \"podSelector\": {},\n      \"ingress\": [\n        {\n          \"from\": [\n            {\n              \"podSelector\": {\n                \"matchLabels\": {\n                  \"app\": \"adservice\"\n                }\n              }\n            }\n          ],\n          \"ports\": [\n            {\n              \"protocol\": \"TCP\",\n              \"port\": 9555\n            }\n          ]\n        },\n        {\n          \"from\": [\n            {\n              \"podSelector\": {\n                \"matchLabels\": {\n                  \"app\": \"cartservice\"\n                }\n              }\n            }\n          ],\n          \"ports\": [\n            {\n              \"protocol\": \"TCP\",\n              \"port\": 7070\n            }\n          ]\n        }\n      ]\n    }\n  }\n]'",
+        "output": "bash: error reading input file: Bad file descriptor\nerror: resource(s) were provided, but no name was specified\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n checkoutservice -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "bash\nkubectl patch networkpolicy -n frontend --type='json' -p='[\n  {\n    \"op\": \"add\",\n    \"path\": \"/spec\",\n    \"value\": {\n      \"podSelector\": {},\n      \"ingress\": [\n        {\n          \"from\": [\n            {\n              \"podSelector\": {\n                \"matchLabels\": {\n                  \"app\": \"adservice\"\n                }\n              }\n            }\n          ],\n          \"ports\": [\n            {\n              \"protocol\": \"TCP\",\n              \"port\": 9555\n            }\n          ]\n        },\n        {\n          \"from\": [\n            {\n              \"podSelector\": {\n                \"matchLabels\": {\n                  \"app\": \"cartservice\"\n                }\n              }\n            }\n          ],\n          \"ports\": [\n            {\n              \"protocol\": \"TCP\",\n              \"port\": 7070\n            }\n          ]\n        }\n      ]\n    }\n  }\n]'",
+        "output": "bash: error reading input file: Bad file descriptor\nerror: resource(s) were provided, but no name was specified\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "bash\nkubectl patch networkpolicy allow-frontend-ingress -n frontend --type='merge' -p='{\n  \"spec\": {\n    \"podSelector\": {},\n    \"ingress\": [\n      {\n        \"from\": [\n          {\n            \"podSelector\": {\n              \"matchLabels\": {\n                \"app\": \"adservice\"\n              }\n            }\n          }\n        ],\n        \"ports\": [\n          {\n            \"protocol\": \"TCP\",\n            \"port\": 9555\n          }\n        ]\n      },\n      {\n        \"from\": [\n          {\n            \"podSelector\": {\n              \"matchLabels\": {\n                \"app\": \"cartservice\"\n              }\n            }\n          }\n        ],\n        \"ports\": [\n          {\n            \"protocol\": \"TCP\",\n            \"port\": 7070\n          }\n        ]\n      }\n    ]\n  }\n}'",
+        "output": "bash: error reading input file: Bad file descriptor\nError from server (NotFound): namespaces \"frontend\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\ndefault              Active   3h28m\nkube-node-lease      Active   3h28m\nkube-public          Active   3h28m\nkube-system          Active   3h28m\nlocal-path-storage   Active   3h28m\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "bash\nkubectl patch networkpolicy allow-frontend-ingress -n default --type='merge' -p='{\n  \"spec\": {\n    \"podSelector\": {},\n    \"ingress\": [\n      {\n        \"from\": [\n          {\n            \"podSelector\": {\n              \"matchLabels\": {\n                \"app\": \"adservice\"\n              }\n            }\n          }\n        ],\n        \"ports\": [\n          {\n            \"protocol\": \"TCP\",\n            \"port\": 9555\n          }\n        ]\n      },\n      {\n        \"from\": [\n          {\n            \"podSelector\": {\n              \"matchLabels\": {\n                \"app\": \"cartservice\"\n              }\n            }\n          }\n        ],\n        \"ports\": [\n          {\n            \"protocol\": \"TCP\",\n            \"port\": 7070\n          }\n        ]\n      }\n    ]\n  }\n}'",
+        "output": "bash: error reading input file: Bad file descriptor\nError from server (NotFound): networkpolicies.networking.k8s.io \"allow-frontend-ingress\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl apply -n default -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-frontend-ingress\n  namespace: default\nspec:\n  podSelector:\n    matchLabels:\n      app: frontend\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: adservice\n    ports:\n    - protocol: TCP\n      port: 9555\n  - from:\n    - podSelector:\n        matchLabels:\n          app: cartservice\n    ports:\n    - protocol: TCP\n      port: 7070\nEOF",
+        "output": "bash: error reading input file: Bad file descriptor\nError from server (NotFound): networkpolicies.networking.k8s.io \"allow-frontend-ingress\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)"
+    }
+]

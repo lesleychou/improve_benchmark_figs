@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend -o yaml",
+        "output": "apiVersion: v1\nitems:\n- apiVersion: networking.k8s.io/v1\n  kind: NetworkPolicy\n  metadata:\n    annotations:\n      kubectl.kubernetes.io/last-applied-configuration: |\n        {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"frontend-allow-adservice\",\"namespace\":\"frontend\"},\"spec\":{\"ingress\":[{\"from\":[{\"namespaceSelector\":{\"matchLabels\":{\"name\":\"adservice\"}}}],\"ports\":[{\"port\":9555,\"protocol\":\"TCP\"}]}],\"podSelector\":{},\"policyTypes\":[\"Ingress\"]}}\n    creationTimestamp: \"2025-04-27T15:36:39Z\"\n    generation: 3\n    name: frontend-allow-adservice\n    namespace: frontend\n    resourceVersion: \"1299\"\n    uid: 7abeb705-11ae-467e-8fe1-f72eabc1710b\n  spec:\n    ingress:\n    - from:\n      - namespaceSelector:\n          matchLabels:\n            kubernetes.io/metadata.name: adservice\n      ports:\n      - port: 9555\n        protocol: TCP\n    podSelector: {}\n    policyTypes:\n    - Ingress\n- apiVersion: networking.k8s.io/v1\n  kind: NetworkPolicy\n  metadata:\n    annotations:\n      kubectl.kubernetes.io/last-applied-configuration: |\n        {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"frontend-policy\",\"namespace\":\"frontend\"},\"spec\":{\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"adservice\"}}}],\"ports\":[{\"port\":9555,\"protocol\":\"TCP\"}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}}}}\n    creationTimestamp: \"2025-04-27T15:37:10Z\"\n    generation: 3\n    name: frontend-policy\n    namespace: frontend\n    resourceVersion: \"1252\"\n    uid: bbdb2b23-ff7c-4637-bff2-4072d54fac16\n  spec:\n    ingress:\n    - from:\n      - podSelector:\n          matchLabels:\n            app: adservice\n      ports:\n      - port: 9555\n        protocol: TCP\n    podSelector:\n      matchLabels:\n        app: frontend\n    policyTypes:\n    - Ingress\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy frontend-policy -n frontend --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"namespaceSelector\": {\"matchLabels\": {\"kubernetes.io/metadata.name\": \"shippingservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 50051, \"protocol\": \"TCP\"}}]'",
+        "output": "networkpolicy.networking.k8s.io/frontend-policy patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n shippingservice -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "bash\nkubectl apply -n shippingservice -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-frontend\n  namespace: shippingservice\nspec:\n  podSelector: {}\n  ingress:\n  - from:\n    - namespaceSelector:\n        matchLabels:\n          kubernetes.io/metadata.name: frontend\n    ports:\n    - protocol: TCP\n      port: 50051\n  policyTypes:\n  - Ingress\nEOF",
+        "output": "bash: error reading input file: Bad file descriptor\nError from server (NotFound): error when creating \"STDIN\": namespaces \"shippingservice\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\nadservice            Active   3m39s\ndefault              Active   8m7s\nfrontend             Active   3m50s\nkube-node-lease      Active   8m7s\nkube-public          Active   8m7s\nkube-system          Active   8m9s\nlocal-path-storage   Active   8m1s\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl create namespace shippingservice",
+        "output": "namespace/shippingservice created\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "bash\nkubectl apply -n shippingservice -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-frontend\n  namespace: shippingservice\nspec:\n  podSelector: {}\n  ingress:\n  - from:\n    - namespaceSelector:\n        matchLabels:\n          kubernetes.io/metadata.name: frontend\n    ports:\n    - protocol: TCP\n      port: 50051\n  policyTypes:\n  - Ingress\nEOF",
+        "output": "networkpolicy.networking.k8s.io/allow-frontend created\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)"
+    }
+]

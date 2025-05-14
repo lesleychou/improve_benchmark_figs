@@ -1,0 +1,70 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: productcatalogservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n productcatalogservice
+Output: NAME             POD-SELECTOR   AGE
+deny-adservice   <none>         6m24s
+
+Mismatch Summary: Mismatch: productcatalogservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy deny-adservice -n productcatalogservice --type='json' -p='[{"op": "add", "path": "/spec/egress", "value": [{"to": [{"namespaceSelector": {"matchLabels": {"name": "emailservice"}}}], "ports": [{"port": 5000, "protocol": "TCP"}]}]}]'
+Output: networkpolicy.networking.k8s.io/deny-adservice patched
+
+Mismatch Summary: Mismatch: productcatalogservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n emailservice
+Output: NAME       POD-SELECTOR   AGE
+deny-all   <none>         16m
+
+Mismatch Summary: Mismatch: productcatalogservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy deny-adservice -n productcatalogservice --type='json' -p='[{"op": "remove", "path": "/spec/egress"}]'
+Output: networkpolicy.networking.k8s.io/deny-adservice patched
+
+Mismatch Summary: Mismatch: productcatalogservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n shippingservice
+Output: 
+Mismatch Summary: Mismatch: productcatalogservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy deny-adservice -n productcatalogservice --type='json' -p='[{"op": "add", "path": "/spec/egress", "value": [{"to": [{"namespaceSelector": {"matchLabels": {"name": "emailservice"}}}], "ports": [{"port": 5000, "protocol": "TCP"}]}]}]'
+Output: networkpolicy.networking.k8s.io/deny-adservice patched
+
+Mismatch Summary: Mismatch: productcatalogservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n shippingservice
+Output: 
+Mismatch Summary: Mismatch: productcatalogservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n shippingservice
+Output: 
+Mismatch Summary: Mismatch: productcatalogservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+

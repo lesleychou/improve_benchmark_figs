@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy recommendation-network-policy -n recommendationservice --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}}}]'",
+        "output": "Error from server (NotFound): namespaces \"recommendationservice\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\ndefault              Active   4m46s\nkube-node-lease      Active   4m46s\nkube-public          Active   4m46s\nkube-system          Active   4m46s\nlocal-path-storage   Active   4m39s\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get pods --all-namespaces",
+        "output": "NAMESPACE            NAME                                         READY   STATUS    RESTARTS   AGE\ndefault              adservice-76f594d56f-2prlg                   1/1     Running   0          113s\ndefault              cartservice-5958849bb7-49tjm                 1/1     Running   0          113s\ndefault              checkoutservice-55d99bbf75-z49bp             1/1     Running   0          113s\ndefault              currencyservice-649964f87f-nxj9q             1/1     Running   0          113s\ndefault              emailservice-6d85f47b76-rdnmb                1/1     Running   0          113s\ndefault              frontend-fc4bf5fdb-rmj59                     1/1     Running   0          113s\ndefault              loadgenerator-6d98cc6686-4m4tn               1/1     Running   0          78s\ndefault              paymentservice-7dc8859fb8-vnwl8              1/1     Running   0          113s\ndefault              productcatalogservice-5bd4cb4488-7m8zm       1/1     Running   0          113s\ndefault              recommendationservice-c64454f56-4k2kx        1/1     Running   0          113s\ndefault              redis-cart-799f8fc4c-p9wps                   1/1     Running   0          112s\ndefault              shippingservice-5dd466d969-ppcwn             1/1     Running   0          112s\nkube-system          coredns-668d6bf9bc-7vskf                     1/1     Running   0          4m37s\nkube-system          coredns-668d6bf9bc-vhtsb                     1/1     Running   0          4m37s\nkube-system          etcd-kind-control-plane                      1/1     Running   0          4m47s\nkube-system          kindnet-kf59t                                1/1     Running   0          4m38s\nkube-system          kube-apiserver-kind-control-plane            1/1     Running   0          4m48s\nkube-system          kube-controller-manager-kind-control-plane   1/1     Running   0          4m46s\nkube-system          kube-proxy-t9chz                             1/1     Running   0          4m38s\nkube-system          kube-scheduler-kind-control-plane            1/1     Running   0          4m44s\nlocal-path-storage   local-path-provisioner-58cc7856b6-czqc8      1/1     Running   0          4m37s\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy recommendation-network-policy -n default --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}}}]'",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"recommendation-network-policy\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n default",
+        "output": "NAME                    POD-SELECTOR                AGE\nadservice               app=adservice               56s\ncartservice             app=cartservice             56s\ncheckoutservice         app=checkoutservice         56s\ncurrencyservice         app=currencyservice         56s\nemailservice            app=emailservice            56s\nfrontend                app=frontend                55s\nloadgenerator           app=loadgenerator           55s\npaymentservice          app=paymentservice          55s\nproductcatalogservice   app=productcatalogservice   55s\nrecommendationservice   app=recommendationservice   55s\nredis-cart              app=redis-cart              55s\nshippingservice         app=shippingservice         55s\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy recommendationservice -n default --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}}}]'",
+        "output": "The request is invalid: the server rejected our request due to an error in our request\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy recommendationservice -n default -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"recommendationservice\",\"namespace\":\"default\"},\"spec\":{\"egress\":[{}],\"ingress\":[],\"podSelector\":{\"matchLabels\":{\"app\":\"recommendationservice\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n  creationTimestamp: \"2025-04-26T05:02:45Z\"\n  generation: 2\n  name: recommendationservice\n  namespace: default\n  resourceVersion: \"1212\"\n  uid: e9244131-557e-491d-ba97-41e3989196b1\nspec:\n  egress:\n  - {}\n  podSelector:\n    matchLabels:\n      app: recommendationservice\n  policyTypes:\n  - Ingress\n  - Egress\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy recommendationservice -n default --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec/ingress\", \"value\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}}]}]}]'",
+        "output": "networkpolicy.networking.k8s.io/recommendationservice patched\n",
+        "mismatch_summary": "No mismatches found."
+    }
+]

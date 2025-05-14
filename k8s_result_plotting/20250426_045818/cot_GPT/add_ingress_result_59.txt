@@ -1,0 +1,119 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: adservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy shippingservice-policy -n shippingservice --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "adservice"}}}}]'
+Output: Error from server (NotFound): namespaces "shippingservice" not found
+
+Mismatch Summary: Mismatch: adservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get namespaces
+Output: NAME                    STATUS   AGE
+adservice               Active   29m
+cartservice             Active   20m
+checkoutservice         Active   25m
+currencyservice         Active   9m2s
+default                 Active   40m
+emailservice            Active   25m
+kube-node-lease         Active   40m
+kube-public             Active   40m
+kube-system             Active   40m
+local-path-storage      Active   40m
+productcatalogservice   Active   10m
+
+Mismatch Summary: Mismatch: adservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get namespaces | grep shippingservice
+Output: 
+Mismatch Summary: Mismatch: adservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get namespaces
+Output: NAME                    STATUS   AGE
+adservice               Active   30m
+cartservice             Active   20m
+checkoutservice         Active   25m
+currencyservice         Active   9m9s
+default                 Active   41m
+emailservice            Active   25m
+kube-node-lease         Active   41m
+kube-public             Active   41m
+kube-system             Active   41m
+local-path-storage      Active   40m
+productcatalogservice   Active   10m
+
+Mismatch Summary: Mismatch: adservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get namespaces | grep shippingservice
+Output: 
+Mismatch Summary: Mismatch: adservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get all --all-namespaces | grep shippingservice
+Output: default              pod/shippingservice-5dd466d969-ppcwn             1/1     Running   0          38m
+default       service/shippingservice         ClusterIP      10.96.95.128    <none>        50051/TCP                38m
+default              deployment.apps/shippingservice          1/1     1            1           38m
+default              replicaset.apps/shippingservice-5dd466d969          1         1         1       38m
+
+Mismatch Summary: Mismatch: adservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy shippingservice-policy -n default --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "adservice"}}}}]'
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "shippingservice-policy" not found
+
+Mismatch Summary: Mismatch: adservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n default
+Output: NAME                               POD-SELECTOR                AGE
+adservice                          app=adservice               37m
+allow-checkout-to-email            app=checkoutservice         26m
+allow-currency-ingress             app=currencyservice         32m
+allow-frontend-checkout            app=shippingservice         34m
+allow-frontend-checkout-to-cart    app=cartservice             29m
+allow-frontend-to-recommendation   app=recommendationservice   22m
+allow-productcatalog-access        app=productcatalogservice   35m
+cartservice                        app=cartservice             37m
+checkoutservice                    app=checkoutservice         37m
+checkoutservice-policy             app=checkoutservice         32m
+currencyservice                    app=currencyservice         37m
+deny-cart-to-payment               app=paymentservice          5m42s
+deny-frontend-to-payment           app=frontend                15m
+deny-frontend-to-payment-ingress   app=paymentservice          15m
+emailservice                       app=emailservice            37m
+frontend                           app=frontend                37m
+frontend-deny-emailservice         app=frontend                8m48s
+loadgenerator                      app=loadgenerator           37m
+paymentservice                     app=paymentservice          37m
+paymentservice-ingress             app=paymentservice          25m
+productcatalogservice              app=productcatalogservice   37m
+recommendationservice              app=recommendationservice   37m
+redis-cart                         app=redis-cart              37m
+restrict-ingress-checkout          app=checkoutservice         27m
+shippingservice                    app=shippingservice         37m
+
+Mismatch Summary: Mismatch: adservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → shippingservice:50051 (Expected: False, Actual: True)
+

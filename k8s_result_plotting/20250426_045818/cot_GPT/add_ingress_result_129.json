@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: productcatalogservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy redis-cart -n redis-cart -p '{\"spec\":{\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"cart\"}}}],\"ports\":[{\"port\":6379,\"protocol\":\"TCP\"}]}]}}'",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"redis-cart\" not found\n",
+        "mismatch_summary": "Mismatch: productcatalogservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl apply -n redis-cart -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: redis-cart\n  namespace: redis-cart\nspec:\n  podSelector:\n    matchLabels:\n      app: redis-cart\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: cart\n    ports:\n    - port: 6379\n      protocol: TCP\nEOF",
+        "output": "networkpolicy.networking.k8s.io/redis-cart created\n",
+        "mismatch_summary": "Mismatch: productcatalogservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy redis-cart -n redis-cart -p '{\"spec\":{\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"cart\"}}}],\"ports\":[{\"port\":6379,\"protocol\":\"TCP\"}]}]}}'",
+        "output": "networkpolicy.networking.k8s.io/redis-cart patched (no change)\n",
+        "mismatch_summary": "Mismatch: productcatalogservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy productcatalogservice -n productcatalog -p '{\"spec\":{\"egress\":[{\"to\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"redis-cart\"}}}],\"ports\":[{\"port\":6379,\"protocol\":\"TCP\"}]}]}}'",
+        "output": "Error from server (NotFound): namespaces \"productcatalog\" not found\n",
+        "mismatch_summary": "Mismatch: productcatalogservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy productcatalogservice -n productcatalog -p '{\"spec\":{\"egress\":[{\"to\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"redis-cart\"}}}],\"ports\":[{\"port\":6379,\"protocol\":\"TCP\"}]}]}}'",
+        "output": "Error from server (NotFound): namespaces \"productcatalog\" not found\n",
+        "mismatch_summary": "Mismatch: productcatalogservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                    STATUS   AGE\nadservice               Active   84m\ncartservice             Active   75m\ncheckoutservice         Active   80m\ncurrencyservice         Active   63m\ndefault                 Active   95m\nemailservice            Active   80m\nkube-node-lease         Active   95m\nkube-public             Active   95m\nkube-system             Active   95m\nlocal-path-storage      Active   95m\nproductcatalogservice   Active   65m\nrecommendationservice   Active   53m\nredis-cart              Active   51m\nshippingservice         Active   40m\n",
+        "mismatch_summary": "Mismatch: productcatalogservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl apply -n productcatalogservice -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: restrict-egress-to-redis-cart\n  namespace: productcatalogservice\nspec:\n  podSelector:\n    matchLabels:\n      app: productcatalogservice\n  egress:\n  - to:\n    - podSelector:\n        matchLabels:\n          app: redis-cart\n    ports:\n    - port: 6379\n      protocol: TCP\nEOF",
+        "output": "networkpolicy.networking.k8s.io/restrict-egress-to-redis-cart created\n",
+        "mismatch_summary": "Mismatch: productcatalogservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy restrict-egress-to-redis-cart -n productcatalogservice -p '{\"spec\":{\"egress\":[{\"to\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"redis-cart\"}}}],\"ports\":[{\"port\":6379,\"protocol\":\"TCP\"}]}],\"policyTypes\":[\"Egress\"]}}'",
+        "output": "networkpolicy.networking.k8s.io/restrict-egress-to-redis-cart patched\n",
+        "mismatch_summary": "Mismatch: productcatalogservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    }
+]

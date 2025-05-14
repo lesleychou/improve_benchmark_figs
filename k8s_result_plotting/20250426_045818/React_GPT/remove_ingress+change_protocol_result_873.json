@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy <policy-name> -n frontend --type=json -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"shippingservice\"}}}}]'",
+        "output": "/bin/bash: line 1: policy-name: No such file or directory\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n checkoutservice -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n shippingservice -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy allow-shippingservice -n frontend --type=json -p='[{\"op\": \"add\", \"path\": \"/spec\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}, \"ingress\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"shippingservice\"}}}], \"ports\": [{\"port\": 50051, \"protocol\": \"TCP\"}}]}}]'",
+        "output": "error: unable to parse \"[{\\\"op\\\": \\\"add\\\", \\\"path\\\": \\\"/spec\\\", \\\"value\\\": {\\\"podSelector\\\": {\\\"matchLabels\\\": {\\\"app\\\": \\\"frontend\\\"}}, \\\"ingress\\\": [{\\\"from\\\": [{\\\"podSelector\\\": {\\\"matchLabels\\\": {\\\"app\\\": \\\"shippingservice\\\"}}}], \\\"ports\\\": [{\\\"port\\\": 50051, \\\"protocol\\\": \\\"TCP\\\"}}]}}]\": yaml: did not find expected ',' or ']'\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "bash\nkubectl patch networkpolicy allow-shippingservice -n frontend --type=json -p='[{\"op\": \"add\", \"path\": \"/spec\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}, \"ingress\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"shippingservice\"}}}], \"ports\": [{\"port\": 50051, \"protocol\": \"TCP\"}]}]}}]'",
+        "output": "bash: error reading input file: Bad file descriptor\nError from server (NotFound): namespaces \"frontend\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\ndefault              Active   12h\nkube-node-lease      Active   12h\nkube-public          Active   12h\nkube-system          Active   12h\nlocal-path-storage   Active   12h\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)"
+    }
+]

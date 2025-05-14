@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 productcatalogservice:3550 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 productcatalogservice:3550 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy allow-frontend-currency -n frontend --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}, \"ingress\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"currencyservice\"}}}], \"ports\": [{\"port\": 7000, \"protocol\": \"TCP\"}]}]}}]'",
+        "output": "Error from server (NotFound): namespaces \"frontend\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 productcatalogservice:3550 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\ndefault              Active   18h\nkube-node-lease      Active   18h\nkube-public          Active   18h\nkube-system          Active   18h\nlocal-path-storage   Active   18h\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 productcatalogservice:3550 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get pods --all-namespaces",
+        "output": "NAMESPACE            NAME                                         READY   STATUS    RESTARTS       AGE\ndefault              adservice-7c7687ff5b-fbq2s                   1/1     Running   0              18h\ndefault              cartservice-7c8966d6fd-c8rb4                 1/1     Running   0              18h\ndefault              checkoutservice-769b8ff7b8-jxzrv             1/1     Running   0              18h\ndefault              currencyservice-578dcb55f6-bdvtr             1/1     Running   4 (127m ago)   18h\ndefault              emailservice-d5d54d4fc-lksfn                 1/1     Running   0              18h\ndefault              frontend-7ffbffc6f7-9hb4b                    1/1     Running   0              18h\ndefault              loadgenerator-7d9cfb7cb9-9zjhk               1/1     Running   0              18h\ndefault              paymentservice-b67c65d9c-ztkqg               1/1     Running   4 (43m ago)    18h\ndefault              productcatalogservice-5f94b6cd47-lk6vh       1/1     Running   0              18h\ndefault              recommendationservice-c468b6867-pcbbn        1/1     Running   0              18h\ndefault              redis-cart-5b6f47b748-9rgzw                  1/1     Running   0              18h\ndefault              shippingservice-f6bc4cd5d-69r7d              1/1     Running   0              18h\nkube-system          coredns-668d6bf9bc-g5z8v                     1/1     Running   0              18h\nkube-system          coredns-668d6bf9bc-l2w7d                     1/1     Running   0              18h\nkube-system          etcd-kind-control-plane                      1/1     Running   0              18h\nkube-system          kindnet-g596l                                1/1     Running   0              18h\nkube-system          kube-apiserver-kind-control-plane            1/1     Running   0              18h\nkube-system          kube-controller-manager-kind-control-plane   1/1     Running   0              18h\nkube-system          kube-proxy-48f5g                             1/1     Running   0              18h\nkube-system          kube-scheduler-kind-control-plane            1/1     Running   0              18h\nlocal-path-storage   local-path-provisioner-58cc7856b6-nfdzv      1/1     Running   0              18h\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 productcatalogservice:3550 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy allow-frontend-currency -n default --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}, \"ingress\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"currencyservice\"}}}], \"ports\": [{\"port\": 7000, \"protocol\": \"TCP\"}]}]}}]'",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"allow-frontend-currency\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 productcatalogservice:3550 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n default",
+        "output": "NAME                    POD-SELECTOR                AGE\nadservice               app=adservice               18h\ncartservice             app=cartservice             18h\ncheckoutservice         app=checkoutservice         18h\ncurrencyservice         app=currencyservice         18h\nemailservice            app=emailservice            18h\nfrontend                app=frontend                18h\nloadgenerator           app=loadgenerator           18h\npaymentservice          app=paymentservice          18h\nproductcatalogservice   app=productcatalogservice   18h\nrecommendationservice   app=recommendationservice   18h\nredis-cart              app=redis-cart              18h\nshippingservice         app=shippingservice         18h\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 productcatalogservice:3550 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy frontend -n default --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/-\", \"value\": {\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"currencyservice\"}}}], \"ports\": [{\"port\": 7000, \"protocol\": \"TCP\"}]}}]'",
+        "output": "networkpolicy.networking.k8s.io/frontend patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 productcatalogservice:3550 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy checkoutservice -n default --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/-\", \"value\": {\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"currencyservice\"}}}], \"ports\": [{\"port\": 7000, \"protocol\": \"TCP\"}]}}]'",
+        "output": "networkpolicy.networking.k8s.io/checkoutservice patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 productcatalogservice:3550 (Expected: False, Actual: True)"
+    }
+]

@@ -1,0 +1,55 @@
+LLM Command: kubectl get networkpolicy -n frontend
+Output: 
+Mismatch Summary: Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n frontend -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy allow-frontend-to-currencyservice -n frontend --type='json' -p='[{"op": "add", "path": "/spec/ingress", "value": [{"from": [{"podSelector": {"matchLabels": {"app": "frontend"}}}], "ports": [{"port": 7000, "protocol": "TCP"}]}]}]'
+Output: Error from server (NotFound): namespaces "frontend" not found
+
+Mismatch Summary: Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+
+LLM Command: kubectl get namespaces
+Output: NAME                 STATUS   AGE
+default              Active   3h24m
+kube-node-lease      Active   3h24m
+kube-public          Active   3h24m
+kube-system          Active   3h24m
+local-path-storage   Active   3h24m
+
+Mismatch Summary: Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n default
+Output: NAME                    POD-SELECTOR                AGE
+adservice               app=adservice               3h20m
+cartservice             app=cartservice             3h20m
+checkoutservice         app=checkoutservice         3h20m
+currencyservice         app=currencyservice         3h20m
+emailservice            app=emailservice            3h20m
+frontend                app=frontend                3h20m
+loadgenerator           app=loadgenerator           3h20m
+paymentservice          app=paymentservice          3h20m
+productcatalogservice   app=productcatalogservice   3h20m
+recommendationservice   app=recommendationservice   3h20m
+redis-cart              app=redis-cart              3h20m
+shippingservice         app=shippingservice         3h20m
+
+Mismatch Summary: Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy currencyservice -n default --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "frontend"}}}}, {"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 7000, "protocol": "TCP"}}]'
+Output: networkpolicy.networking.k8s.io/currencyservice patched
+
+Mismatch Summary: No mismatches found.
+

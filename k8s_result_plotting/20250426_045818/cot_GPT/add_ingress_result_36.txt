@@ -1,0 +1,174 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: adservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: loadgenerator → emailservice:5000 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n adservice -o yaml
+Output: apiVersion: v1
+items:
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"allow-frontend-access","namespace":"adservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":9555,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{}}}}
+    creationTimestamp: "2025-04-26T05:09:46Z"
+    generation: 2
+    name: allow-frontend-access
+    namespace: adservice
+    resourceVersion: "1748"
+    uid: 1b55a872-ca84-4edc-b22f-9b8b613eed60
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: frontend
+      ports:
+      - port: 9555
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: adservice
+    policyTypes:
+    - Ingress
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: adservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: loadgenerator → emailservice:5000 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy allow-frontend-access -n adservice --type='json' -p='[{"op": "add", "path": "/spec/egress", "value": [{"to": [{"podSelector": {"matchLabels": {"app": "emailservice"}}}], "ports": [{"port": 5000, "protocol": "TCP"}]}]}]'
+Output: networkpolicy.networking.k8s.io/allow-frontend-access patched
+
+Mismatch Summary: Mismatch: adservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: loadgenerator → emailservice:5000 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n emailservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: adservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: loadgenerator → emailservice:5000 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -n emailservice -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-all
+  namespace: emailservice
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+EOF
+Output: networkpolicy.networking.k8s.io/deny-all created
+
+Mismatch Summary: Mismatch: adservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: loadgenerator → emailservice:5000 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n emailservice -o yaml
+Output: apiVersion: v1
+items:
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"deny-all","namespace":"emailservice"},"spec":{"podSelector":{},"policyTypes":["Ingress","Egress"]}}
+    creationTimestamp: "2025-04-26T05:23:24Z"
+    generation: 1
+    name: deny-all
+    namespace: emailservice
+    resourceVersion: "2863"
+    uid: 35ab8915-3f0f-4d25-9a8b-0d720efdf01a
+  spec:
+    podSelector: {}
+    policyTypes:
+    - Ingress
+    - Egress
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: adservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: loadgenerator → emailservice:5000 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n adservice -o yaml
+Output: apiVersion: v1
+items:
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"allow-frontend-access","namespace":"adservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":9555,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{}}}}
+    creationTimestamp: "2025-04-26T05:09:46Z"
+    generation: 3
+    name: allow-frontend-access
+    namespace: adservice
+    resourceVersion: "2851"
+    uid: 1b55a872-ca84-4edc-b22f-9b8b613eed60
+  spec:
+    egress:
+    - ports:
+      - port: 5000
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: emailservice
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: frontend
+      ports:
+      - port: 9555
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: adservice
+    policyTypes:
+    - Ingress
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: adservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: loadgenerator → emailservice:5000 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods -n emailservice --show-labels
+Output: 
+Mismatch Summary: Mismatch: adservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: loadgenerator → emailservice:5000 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy allow-frontend-access -n adservice --type='json' -p='[{"op": "remove", "path": "/spec/egress"}]'
+Output: networkpolicy.networking.k8s.io/allow-frontend-access patched
+
+Mismatch Summary: Mismatch: adservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: loadgenerator → emailservice:5000 (Expected: False, Actual: True)
+

@@ -1,0 +1,139 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: productcatalogservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy redis-cart -n redis-cart -p '{"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"cart"}}}],"ports":[{"port":6379,"protocol":"TCP"}]}]}}'
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "redis-cart" not found
+
+Mismatch Summary: Mismatch: productcatalogservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -n redis-cart -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: redis-cart
+  namespace: redis-cart
+spec:
+  podSelector:
+    matchLabels:
+      app: redis-cart
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: cart
+    ports:
+    - port: 6379
+      protocol: TCP
+EOF
+Output: networkpolicy.networking.k8s.io/redis-cart created
+
+Mismatch Summary: Mismatch: productcatalogservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy redis-cart -n redis-cart -p '{"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"cart"}}}],"ports":[{"port":6379,"protocol":"TCP"}]}]}}'
+Output: networkpolicy.networking.k8s.io/redis-cart patched (no change)
+
+Mismatch Summary: Mismatch: productcatalogservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy productcatalogservice -n productcatalog -p '{"spec":{"egress":[{"to":[{"podSelector":{"matchLabels":{"app":"redis-cart"}}}],"ports":[{"port":6379,"protocol":"TCP"}]}]}}'
+Output: Error from server (NotFound): namespaces "productcatalog" not found
+
+Mismatch Summary: Mismatch: productcatalogservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy productcatalogservice -n productcatalog -p '{"spec":{"egress":[{"to":[{"podSelector":{"matchLabels":{"app":"redis-cart"}}}],"ports":[{"port":6379,"protocol":"TCP"}]}]}}'
+Output: Error from server (NotFound): namespaces "productcatalog" not found
+
+Mismatch Summary: Mismatch: productcatalogservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get namespaces
+Output: NAME                    STATUS   AGE
+adservice               Active   84m
+cartservice             Active   75m
+checkoutservice         Active   80m
+currencyservice         Active   63m
+default                 Active   95m
+emailservice            Active   80m
+kube-node-lease         Active   95m
+kube-public             Active   95m
+kube-system             Active   95m
+local-path-storage      Active   95m
+productcatalogservice   Active   65m
+recommendationservice   Active   53m
+redis-cart              Active   51m
+shippingservice         Active   40m
+
+Mismatch Summary: Mismatch: productcatalogservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -n productcatalogservice -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: restrict-egress-to-redis-cart
+  namespace: productcatalogservice
+spec:
+  podSelector:
+    matchLabels:
+      app: productcatalogservice
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: redis-cart
+    ports:
+    - port: 6379
+      protocol: TCP
+EOF
+Output: networkpolicy.networking.k8s.io/restrict-egress-to-redis-cart created
+
+Mismatch Summary: Mismatch: productcatalogservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy restrict-egress-to-redis-cart -n productcatalogservice -p '{"spec":{"egress":[{"to":[{"podSelector":{"matchLabels":{"app":"redis-cart"}}}],"ports":[{"port":6379,"protocol":"TCP"}]}],"policyTypes":["Egress"]}}'
+Output: networkpolicy.networking.k8s.io/restrict-egress-to-redis-cart patched
+
+Mismatch Summary: Mismatch: productcatalogservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+

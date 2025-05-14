@@ -1,0 +1,200 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy adservice-policy -n adservice --type=json -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "frontend"}}}}]'
+Output: networkpolicy.networking.k8s.io/adservice-policy patched
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy frontend-policy -n frontend -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"frontend-policy","namespace":"frontend"},"spec":{"egress":[{"ports":[{"port":9555,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"adservice"}}}]}],"podSelector":{"matchLabels":{"app":"frontend"}},"policyTypes":["Egress"]}}
+  creationTimestamp: "2025-04-26T10:09:27Z"
+  generation: 11
+  name: frontend-policy
+  namespace: frontend
+  resourceVersion: "31185"
+  uid: 5005941e-d7f0-4cff-8dc3-a2aa8b350610
+spec:
+  egress:
+  - ports:
+    - port: 9555
+      protocol: TCP
+    - port: 7070
+      protocol: TCP
+    - port: 9555
+      protocol: TCP
+    to:
+    - podSelector:
+        matchLabels:
+          app: adservice
+    - podSelector:
+        matchLabels:
+          app: cartservice
+    - podSelector:
+        matchLabels:
+          app: adservice
+  - ports:
+    - port: 9555
+      protocol: TCP
+    to:
+    - podSelector:
+        matchLabels:
+          app: adservice
+  - ports:
+    - port: 9555
+      protocol: TCP
+    to:
+    - podSelector:
+        matchLabels:
+          app: adservice
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: adservice
+    - podSelector:
+        matchLabels:
+          app: cartservice
+    - podSelector:
+        matchLabels:
+          app: cartservice
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+    - podSelector:
+        matchLabels:
+          app: adservice
+    - podSelector:
+        matchLabels:
+          app: adservice
+    - podSelector:
+        matchLabels:
+          app: adservice
+    ports:
+    - port: 9555
+      protocol: TCP
+    - port: 7070
+      protocol: TCP
+    - port: 7070
+      protocol: TCP
+    - port: 5050
+      protocol: TCP
+    - port: 9555
+      protocol: TCP
+    - port: 9555
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: frontend
+  policyTypes:
+  - Egress
+  - Ingress
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy adservice-policy -n adservice -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"adservice-policy","namespace":"adservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":9555,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"adservice"}}}}
+  creationTimestamp: "2025-04-26T10:58:41Z"
+  generation: 2
+  name: adservice-policy
+  namespace: adservice
+  resourceVersion: "32963"
+  uid: 2ae5c0ff-79c9-4f01-a345-aadea12bfc68
+spec:
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    - podSelector:
+        matchLabels:
+          app: frontend
+    ports:
+    - port: 9555
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: adservice
+  policyTypes:
+  - Ingress
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy frontend-policy -n frontend --type=json -p='[{"op": "add", "path": "/spec/egress/0/to/-", "value": {"podSelector": {"matchLabels": {"app": "adservice"}}}}]'
+Output: networkpolicy.networking.k8s.io/frontend-policy patched
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy frontend-policy -n frontend --type=json -p='[{"op": "replace", "path": "/spec/egress", "value": [{"ports":[{"port":9555,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"adservice"}}}]}]}]'
+Output: networkpolicy.networking.k8s.io/frontend-policy patched
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods -n frontend --show-labels
+Output: 
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods -n adservice --show-labels
+Output: 
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods -n frontend --show-labels
+Output: 
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+

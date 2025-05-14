@@ -1,0 +1,134 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: frontend → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: recommendationservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy frontend-deny-email -n frontend --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "emailservice"}}}}]'
+Output: Error from server (NotFound): namespaces "frontend" not found
+
+Mismatch Summary: Mismatch: frontend → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: recommendationservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get namespaces
+Output: NAME                    STATUS   AGE
+adservice               Active   76m
+cartservice             Active   66m
+checkoutservice         Active   71m
+currencyservice         Active   55m
+default                 Active   87m
+emailservice            Active   71m
+kube-node-lease         Active   87m
+kube-public             Active   87m
+kube-system             Active   87m
+local-path-storage      Active   86m
+productcatalogservice   Active   56m
+recommendationservice   Active   44m
+redis-cart              Active   42m
+shippingservice         Active   31m
+
+Mismatch Summary: Mismatch: frontend → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: recommendationservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy deny-email-ingress -n frontend --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "emailservice"}}}}]'
+Output: Error from server (NotFound): namespaces "frontend" not found
+
+Mismatch Summary: Mismatch: frontend → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: recommendationservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods --all-namespaces -o wide | grep frontend
+Output: default              frontend-fc4bf5fdb-rmj59                     1/1     Running   0          84m   10.244.0.10   kind-control-plane   <none>           <none>
+
+Mismatch Summary: Mismatch: frontend → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: recommendationservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: bash
+kubectl patch networkpolicy deny-email-ingress -n default --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "emailservice"}}}}]'
+Output: bash: error reading input file: Bad file descriptor
+Error from server (NotFound): networkpolicies.networking.k8s.io "deny-email-ingress" not found
+
+Mismatch Summary: Mismatch: frontend → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: recommendationservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n default
+Output: NAME                               POD-SELECTOR                AGE
+adservice                          app=adservice               83m
+allow-checkout-to-email            app=checkoutservice         72m
+allow-currency-ingress             app=currencyservice         78m
+allow-frontend-checkout            app=shippingservice         81m
+allow-frontend-checkout-to-cart    app=cartservice             75m
+allow-frontend-to-recommendation   app=recommendationservice   68m
+allow-productcatalog-access        app=productcatalogservice   81m
+cartservice                        app=cartservice             83m
+checkoutservice                    app=checkoutservice         83m
+checkoutservice-policy             app=checkoutservice         78m
+currencyservice                    app=currencyservice         83m
+default-deny-egress                app=frontend                22m
+deny-cart-to-payment               app=paymentservice          51m
+deny-frontend-to-emailservice      app=frontend                22m
+deny-frontend-to-payment           app=frontend                61m
+deny-frontend-to-payment-ingress   app=paymentservice          61m
+emailservice                       app=emailservice            83m
+frontend                           app=frontend                83m
+frontend-deny-emailservice         app=frontend                54m
+frontend-network-policy            app=frontend                16m
+loadgenerator                      app=loadgenerator           83m
+paymentservice                     app=paymentservice          83m
+paymentservice-ingress             app=paymentservice          71m
+paymentservice-network-policy      app=paymentservice          17m
+productcatalogservice              app=productcatalogservice   83m
+recommendationservice              app=recommendationservice   83m
+redis-cart                         app=redis-cart              83m
+restrict-ingress-checkout          app=checkoutservice         73m
+shippingservice                    app=shippingservice         83m
+
+Mismatch Summary: Mismatch: frontend → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: recommendationservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy deny-frontend-to-emailservice -n default --type='json' -p='[{"op": "replace", "path": "/spec/ingress/0/from", "value": [{"podSelector": {"matchLabels": {"app": "frontend"}}}]}]'
+Output: The request is invalid: the server rejected our request due to an error in our request
+
+Mismatch Summary: Mismatch: frontend → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: recommendationservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy deny-frontend-to-emailservice -n default --type='json' -p='[{"op": "replace", "path": "/spec/ingress", "value": []}]'
+Output: networkpolicy.networking.k8s.io/deny-frontend-to-emailservice patched
+
+Mismatch Summary: Mismatch: frontend → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: recommendationservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+

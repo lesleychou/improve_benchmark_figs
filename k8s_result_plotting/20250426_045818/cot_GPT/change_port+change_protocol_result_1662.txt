@@ -1,0 +1,1127 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n cartservice -o yaml
+Output: apiVersion: v1
+items:
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"allow-cart-to-redis","namespace":"cartservice"},"spec":{"egress":[{"ports":[{"port":6379,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"redis-cart"}}}]}],"podSelector":{"matchLabels":{"app":"cart"}}}}
+    creationTimestamp: "2025-04-26T19:07:51Z"
+    generation: 13
+    name: allow-cart-to-redis
+    namespace: cartservice
+    resourceVersion: "109229"
+    uid: 75dc7213-dc18-4b58-bb85-4d57c281da40
+  spec:
+    egress:
+    - ports:
+      - port: 6379
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: redis-cart
+    podSelector:
+      matchLabels:
+        app: cart
+    policyTypes:
+    - Egress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"allow-cartservice-to-redis","namespace":"cartservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"cartservice"}}}],"ports":[{"port":6379,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"cartservice"}}}}
+    creationTimestamp: "2025-04-26T19:47:22Z"
+    generation: 1
+    name: allow-cartservice-to-redis
+    namespace: cartservice
+    resourceVersion: "74112"
+    uid: b72fa2da-893e-4717-8375-97020608787d
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: cartservice
+      ports:
+      - port: 6379
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: cartservice
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"allow-cartservice-to-redis-cart","namespace":"cartservice"},"spec":{"egress":[{"ports":[{"port":6379,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"redis-cart"}}}]}],"podSelector":{"matchLabels":{"app":"cartservice"}},"policyTypes":["Egress"]}}
+    creationTimestamp: "2025-04-27T01:08:06Z"
+    generation: 1
+    name: allow-cartservice-to-redis-cart
+    namespace: cartservice
+    resourceVersion: "100449"
+    uid: a814697e-15a9-450e-8fa4-94f997dbaf8e
+  spec:
+    egress:
+    - ports:
+      - port: 6379
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: redis-cart
+    podSelector:
+      matchLabels:
+        app: cartservice
+    policyTypes:
+    - Egress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"allow-checkout-to-cart","namespace":"cartservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}],"ports":[{"port":7070,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"cartservice"}}}}
+    creationTimestamp: "2025-04-26T17:21:43Z"
+    generation: 10
+    name: allow-checkout-to-cart
+    namespace: cartservice
+    resourceVersion: "74747"
+    uid: 8f49ae6f-3018-4665-adb0-af53537e6b07
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: checkoutservice
+      ports:
+      - port: 7070
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: cartservice
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"allow-frontend-to-cartservice","namespace":"cartservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":7070,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"cartservice"}}}}
+    creationTimestamp: "2025-04-26T10:34:02Z"
+    generation: 2
+    name: allow-frontend-to-cartservice
+    namespace: cartservice
+    resourceVersion: "69877"
+    uid: df84f0e6-08c2-45fd-8e27-2c2a63916f29
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: frontend
+      - podSelector:
+          matchLabels:
+            app: frontend
+      ports:
+      - port: 7070
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: cartservice
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"cartservice","namespace":"cartservice"},"spec":{"egress":[{"ports":[{"port":6379}],"to":[{"podSelector":{"matchLabels":{"app":"redis"}}}]}],"podSelector":{"matchLabels":{"app":"cartservice"}},"policyTypes":["Egress"]}}
+    creationTimestamp: "2025-04-26T11:24:08Z"
+    generation: 85
+    name: cartservice
+    namespace: cartservice
+    resourceVersion: "108860"
+    uid: 4b5d4e5f-46e0-4025-a601-9f38696d10e4
+  spec:
+    egress:
+    - ports:
+      - port: 6379
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: redis-cart
+      - podSelector:
+          matchLabels:
+            app: redis-cart
+    - ports:
+      - port: 6379
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: redis-cart
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: redis-cart
+      - podSelector:
+          matchLabels:
+            app: redis-cart
+      ports:
+      - port: 6379
+        protocol: TCP
+      - port: 6379
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: cartservice
+    policyTypes:
+    - Ingress
+    - Egress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"cartservice-allow","namespace":"cartservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":7070,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"cartservice"}}}}
+    creationTimestamp: "2025-04-26T18:37:22Z"
+    generation: 4
+    name: cartservice-allow
+    namespace: cartservice
+    resourceVersion: "105346"
+    uid: 506b0ef4-dc7c-4896-8e8f-0a27cb4ab7ea
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: frontend
+      - podSelector:
+          matchLabels:
+            app: redis-cart
+      - podSelector:
+          matchLabels:
+            app: redis-cart
+      - podSelector:
+          matchLabels:
+            app: redis-cart
+      ports:
+      - port: 7070
+        protocol: TCP
+      - port: 6379
+        protocol: TCP
+      - port: 6379
+        protocol: TCP
+      - port: 6379
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: cartservice
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"cartservice-allow-redis","namespace":"cartservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"redis-cart"}}}],"ports":[{"port":6379,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"cartservice"}}}}
+    creationTimestamp: "2025-04-26T10:18:44Z"
+    generation: 23
+    name: cartservice-allow-redis
+    namespace: cartservice
+    resourceVersion: "108550"
+    uid: f3da69c2-e2df-4705-b1a7-2daa17777f8c
+  spec:
+    egress:
+    - ports:
+      - port: 6379
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: redis-cart
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: redis-cart
+      - podSelector:
+          matchLabels:
+            app: redis-cart
+      - namespaceSelector:
+          matchLabels:
+            name: default
+        podSelector:
+          matchLabels:
+            app: redis-cart
+      - namespaceSelector:
+          matchLabels:
+            name: default
+      ports:
+      - port: 6379
+        protocol: TCP
+      - port: 6379
+        protocol: TCP
+      - port: 6379
+        protocol: TCP
+      - port: 6379
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: cartservice
+    policyTypes:
+    - Ingress
+    - Egress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"cartservice-default-deny-egress","namespace":"cartservice"},"spec":{"podSelector":{"matchLabels":{"app":"cartservice"}},"policyTypes":["Egress"]}}
+    creationTimestamp: "2025-04-27T00:11:10Z"
+    generation: 12
+    name: cartservice-default-deny-egress
+    namespace: cartservice
+    resourceVersion: "109256"
+    uid: 3607c113-fdf4-45da-b820-a3d7510d796a
+  spec:
+    egress:
+    - ports:
+      - port: 6379
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: redis-cart
+    podSelector:
+      matchLabels:
+        app: cartservice
+    policyTypes:
+    - Egress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"cartservice-deny-adservice","namespace":"cartservice"},"spec":{"egress":[{"ports":[{"port":9555,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"adservice"}}}]}],"podSelector":{"matchLabels":{"app":"cartservice"}},"policyTypes":["Egress"]}}
+    creationTimestamp: "2025-04-27T00:11:05Z"
+    generation: 1
+    name: cartservice-deny-adservice
+    namespace: cartservice
+    resourceVersion: "95769"
+    uid: f9d44d5e-dee8-4c99-ab21-37382c2389f0
+  spec:
+    egress:
+    - ports:
+      - port: 9555
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: adservice
+    podSelector:
+      matchLabels:
+        app: cartservice
+    policyTypes:
+    - Egress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"cartservice-deny-checkout","namespace":"cartservice"},"spec":{"egress":[{"ports":[{"port":5050,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}]}],"podSelector":{"matchLabels":{"app":"cartservice"}},"policyTypes":["Egress"]}}
+    creationTimestamp: "2025-04-26T20:17:30Z"
+    generation: 1
+    name: cartservice-deny-checkout
+    namespace: cartservice
+    resourceVersion: "76596"
+    uid: b131fc1c-762d-4d7f-902b-5e43654a27d3
+  spec:
+    egress:
+    - ports:
+      - port: 5050
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: checkoutservice
+    podSelector:
+      matchLabels:
+        app: cartservice
+    policyTypes:
+    - Egress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"cartservice-deny-payment","namespace":"cartservice"},"spec":{"egress":[{"ports":[{"port":50051,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"paymentservice"}}}]}],"podSelector":{"matchLabels":{"app":"cartservice"}},"policyTypes":["Egress"]}}
+    creationTimestamp: "2025-04-26T05:56:33Z"
+    generation: 9
+    name: cartservice-deny-payment
+    namespace: cartservice
+    resourceVersion: "76021"
+    uid: e1d42857-79db-4a98-82ba-9e27e5cd3fce
+  spec:
+    egress:
+    - ports:
+      - port: 50051
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: paymentservice
+    podSelector:
+      matchLabels:
+        app: cartservice
+    policyTypes:
+    - Egress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"cartservice-egress-policy","namespace":"cartservice"},"spec":{"egress":[{"ports":[{"port":9555,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"adservice"}}}]}],"podSelector":{"matchLabels":{"app":"cartservice"}}}}
+    creationTimestamp: "2025-04-26T05:59:43Z"
+    generation: 45
+    name: cartservice-egress-policy
+    namespace: cartservice
+    resourceVersion: "96797"
+    uid: 07f9f353-16dc-4f77-b12a-65f96b9fb066
+  spec:
+    egress:
+    - ports:
+      - port: 6379
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: redis-cart
+    - ports:
+      - port: 6379
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: redis-cart
+    - ports:
+      - port: 6379
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: redis-cart
+    podSelector:
+      matchLabels:
+        app: cartservice
+    policyTypes:
+    - Egress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"cartservice-network-policy","namespace":"cartservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"redis-cart"}}}],"ports":[{"port":6379,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"cartservice"}}}}
+    creationTimestamp: "2025-04-26T10:12:57Z"
+    generation: 23
+    name: cartservice-network-policy
+    namespace: cartservice
+    resourceVersion: "110617"
+    uid: 11a9b164-53f2-4020-97c2-931889ec45ba
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: redis-cart
+      - podSelector:
+          matchLabels:
+            app: redis-cart
+      - podSelector:
+          matchLabels:
+            app: redis-cart
+      - namespaceSelector:
+          matchLabels:
+            name: default
+        podSelector:
+          matchLabels:
+            app: redis-cart
+      ports:
+      - port: 6379
+        protocol: TCP
+      - port: 6379
+        protocol: TCP
+      - port: 6379
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: cartservice
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"cartservice-policy","namespace":"cartservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"redis-cart"}}}],"ports":[{"port":6379,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"cartservice"}}}}
+    creationTimestamp: "2025-04-26T05:31:45Z"
+    generation: 553
+    name: cartservice-policy
+    namespace: cartservice
+    resourceVersion: "110535"
+    uid: 21f73f58-014f-458a-9b75-0af604721328
+  spec:
+    egress:
+    - ports:
+      - port: 6379
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: redis-cart
+    - ports:
+      - port: 6379
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: redis-cart
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: redis-cart
+      ports:
+      - port: 6379
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: cartservice
+    policyTypes:
+    - Egress
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"deny-cartservice-to-productcatalog","namespace":"cartservice"},"spec":{"egress":[{"ports":[{"port":3550,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"productcatalogservice"}}}]}],"podSelector":{"matchLabels":{"app":"cartservice"}},"policyTypes":["Egress"]}}
+    creationTimestamp: "2025-04-26T20:09:53Z"
+    generation: 1
+    name: deny-cartservice-to-productcatalog
+    namespace: cartservice
+    resourceVersion: "75987"
+    uid: 1b4b0701-1642-422d-b490-b92287452ce0
+  spec:
+    egress:
+    - ports:
+      - port: 3550
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: productcatalogservice
+    podSelector:
+      matchLabels:
+        app: cartservice
+    policyTypes:
+    - Egress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"deny-cartservice-to-recommendation","namespace":"cartservice"},"spec":{"egress":[{"ports":[{"port":8080,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"recommendationservice"}}}]}],"podSelector":{"matchLabels":{"app":"cartservice"}},"policyTypes":["Egress"]}}
+    creationTimestamp: "2025-04-26T19:53:51Z"
+    generation: 1
+    name: deny-cartservice-to-recommendation
+    namespace: cartservice
+    resourceVersion: "74651"
+    uid: e8f06a75-2ab6-4bd9-b172-fc8504980595
+  spec:
+    egress:
+    - ports:
+      - port: 8080
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: recommendationservice
+    podSelector:
+      matchLabels:
+        app: cartservice
+    policyTypes:
+    - Egress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"frontend-allow-cartservice","namespace":"cartservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":7070,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"cartservice"}}}}
+    creationTimestamp: "2025-04-27T00:01:37Z"
+    generation: 1
+    name: frontend-allow-cartservice
+    namespace: cartservice
+    resourceVersion: "94978"
+    uid: a48550a4-4371-4d77-9088-0e428ad69a7f
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: frontend
+      ports:
+      - port: 7070
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: cartservice
+    policyTypes:
+    - Ingress
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy allow-cart-to-redis -n cartservice --type='json' -p='[{"op": "replace", "path": "/spec/egress/0/to", "value": [{"podSelector": {"matchLabels": {"app": "redis-cart"}}}]}]'
+Output: networkpolicy.networking.k8s.io/allow-cart-to-redis patched (no change)
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: bash
+kubectl get pods -n cartservice -l app=redis-cart -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n shippingservice -o yaml
+Output: apiVersion: v1
+items:
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"allow-checkout-to-shipping","namespace":"shippingservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}],"ports":[{"port":50051,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"shippingservice"}}}}
+    creationTimestamp: "2025-04-26T17:22:17Z"
+    generation: 1
+    name: allow-checkout-to-shipping
+    namespace: shippingservice
+    resourceVersion: "62255"
+    uid: c1cee698-e4dc-4954-a002-fdf33be982d6
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: checkoutservice
+      ports:
+      - port: 50051
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: shippingservice
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"allow-frontend-to-shipping","namespace":"shippingservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":50051,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"shipping"}}}}
+    creationTimestamp: "2025-04-26T20:27:51Z"
+    generation: 1
+    name: allow-frontend-to-shipping
+    namespace: shippingservice
+    resourceVersion: "77458"
+    uid: 9de9e5e9-7b21-4c82-9554-3b94ddf35000
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: frontend
+      ports:
+      - port: 50051
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: shipping
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"allow-frontend-to-shippingservice","namespace":"shippingservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":50051,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"shippingservice"}}}}
+    creationTimestamp: "2025-04-26T10:34:33Z"
+    generation: 8
+    name: allow-frontend-to-shippingservice
+    namespace: shippingservice
+    resourceVersion: "55762"
+    uid: 3c2456a0-dead-4aef-8eb6-1c74339f8f0f
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: frontend
+      - podSelector:
+          matchLabels:
+            app: frontend
+      ports:
+      - port: 50051
+        protocol: TCP
+      - port: 50051
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: shippingservice
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"deny-egress-to-checkout-and-payment","namespace":"shippingservice"},"spec":{"egress":[{"ports":[{"port":5050,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}]},{"ports":[{"port":50051,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"paymentservice"}}}]}],"podSelector":{"matchLabels":{"app":"shippingservice"}},"policyTypes":["Egress"]}}
+    creationTimestamp: "2025-04-26T13:12:56Z"
+    generation: 193
+    name: deny-egress-to-checkout-and-payment
+    namespace: shippingservice
+    resourceVersion: "110950"
+    uid: 25225e0f-fde9-4853-aa8c-316f9d05d78b
+  spec:
+    egress:
+    - ports:
+      - port: 5050
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: checkoutservice
+    - ports:
+      - port: 50051
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: paymentservice
+    podSelector:
+      matchLabels:
+        app: shippingservice
+    policyTypes:
+    - Egress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"deny-payment-access","namespace":"shippingservice"},"spec":{"egress":[{"ports":[{"port":50051,"protocol":"TCP"}],"to":[{"namespaceSelector":{"matchLabels":{"kubernetes.io/metadata.name":"paymentservice"}}}]}],"podSelector":{},"policyTypes":["Egress"]}}
+    creationTimestamp: "2025-04-26T06:56:13Z"
+    generation: 17
+    name: deny-payment-access
+    namespace: shippingservice
+    resourceVersion: "61613"
+    uid: 80a8ad9a-3017-442a-8ce2-d367875d0d62
+  spec:
+    podSelector:
+      matchLabels:
+        app: shippingservice
+    policyTypes:
+    - Egress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"deny-productcatalog-to-shipping","namespace":"shippingservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"productcatalogservice"}}}],"ports":[{"port":50051,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"shippingservice"}},"policyTypes":["Ingress"]}}
+    creationTimestamp: "2025-04-26T19:22:33Z"
+    generation: 1
+    name: deny-productcatalog-to-shipping
+    namespace: shippingservice
+    resourceVersion: "72095"
+    uid: 02f9b05a-6c18-4994-ab32-152a1f889d50
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: productcatalogservice
+      ports:
+      - port: 50051
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: shippingservice
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"deny-shippingservice-egress","namespace":"shippingservice"},"spec":{"egress":[{"ports":[{"port":5050,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}]},{"ports":[{"port":3550,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"productcatalogservice"}}}]}],"podSelector":{"matchLabels":{"app":"shippingservice"}},"policyTypes":["Egress"]}}
+    creationTimestamp: "2025-04-26T06:08:22Z"
+    generation: 41
+    name: deny-shippingservice-egress
+    namespace: shippingservice
+    resourceVersion: "106594"
+    uid: dabd2dc5-9ebd-43af-af78-9b623ae09d69
+  spec:
+    podSelector:
+      matchLabels:
+        app: shippingservice
+    policyTypes:
+    - Egress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"deny-shippingservice-to-checkoutservice","namespace":"shippingservice"},"spec":{"egress":[{"ports":[{"port":5050,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}]}],"podSelector":{"matchLabels":{"app":"shippingservice"}},"policyTypes":["Egress"]}}
+    creationTimestamp: "2025-04-26T19:54:04Z"
+    generation: 42
+    name: deny-shippingservice-to-checkoutservice
+    namespace: shippingservice
+    resourceVersion: "110919"
+    uid: 3cf7c632-2ece-49f2-81f6-ac41bbbf4c97
+  spec:
+    egress:
+    - ports:
+      - port: 5050
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: checkoutservice
+    podSelector:
+      matchLabels:
+        app: shippingservice
+    policyTypes:
+    - Egress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"shippingservice","namespace":"shippingservice"},"spec":{"egress":[{"to":[{"podSelector":{"matchLabels":{"app":"frontend"}}},{"podSelector":{"matchLabels":{"app":"currencyservice"}}}]}],"podSelector":{"matchLabels":{"app":"shippingservice"}},"policyTypes":["Egress"]}}
+    creationTimestamp: "2025-04-26T17:03:43Z"
+    generation: 30
+    name: shippingservice
+    namespace: shippingservice
+    resourceVersion: "106960"
+    uid: 29926efb-2087-4bd2-bb7f-a21968247478
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: frontend
+    podSelector:
+      matchLabels:
+        app: shippingservice
+    policyTypes:
+    - Egress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"shippingservice-deny-productcatalog","namespace":"shippingservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"productcatalogservice"}}}],"ports":[{"port":50051}]}],"podSelector":{"matchLabels":{"app":"shippingservice"}},"policyTypes":["Ingress"]}}
+    creationTimestamp: "2025-04-26T19:22:16Z"
+    generation: 2
+    name: shippingservice-deny-productcatalog
+    namespace: shippingservice
+    resourceVersion: "72085"
+    uid: 860e0ef5-8751-4f2f-8e96-3e5d4ddef1b9
+  spec:
+    podSelector:
+      matchLabels:
+        app: shippingservice
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"shippingservice-policy","namespace":"shippingservice"},"spec":{"ingress":[{"from":[]}],"podSelector":{},"policyTypes":["Ingress"]}}
+    creationTimestamp: "2025-04-26T19:33:45Z"
+    generation: 137
+    name: shippingservice-policy
+    namespace: shippingservice
+    resourceVersion: "110400"
+    uid: 9c155e6d-6e86-4086-8c37-69ad5c82ac4a
+  spec:
+    ingress:
+    - {}
+    podSelector:
+      matchLabels:
+        app: shippingservice
+    policyTypes:
+    - Egress
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy deny-shippingservice-to-checkoutservice -n shippingservice --type='json' -p='[{"op": "replace", "path": "/spec/egress", "value": [{"ports":[{"port":5050,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}]}]}]'
+Output: networkpolicy.networking.k8s.io/deny-shippingservice-to-checkoutservice patched (no change)
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods --all-namespaces -l app=redis-cart -o yaml
+Output: apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2025-04-26T05:01:41Z"
+    generateName: redis-cart-799f8fc4c-
+    labels:
+      app: redis-cart
+      pod-template-hash: 799f8fc4c
+      skaffold.dev/run-id: 00adce13-6ae0-4db6-9ff3-9bd0af686efb
+    name: redis-cart-799f8fc4c-p9wps
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: redis-cart-799f8fc4c
+      uid: bedbd5a3-3ac0-486f-a78c-63074d3d1c0f
+    resourceVersion: "1139"
+    uid: 16bffa26-72d8-4549-8271-383dd3e8a18b
+  spec:
+    containers:
+    - image: redis:alpine
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        failureThreshold: 3
+        periodSeconds: 5
+        successThreshold: 1
+        tcpSocket:
+          port: 6379
+        timeoutSeconds: 1
+      name: redis
+      ports:
+      - containerPort: 6379
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 3
+        periodSeconds: 5
+        successThreshold: 1
+        tcpSocket:
+          port: 6379
+        timeoutSeconds: 1
+      resources:
+        limits:
+          cpu: 125m
+          memory: 256Mi
+        requests:
+          cpu: 70m
+          memory: 200Mi
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+          - ALL
+        privileged: false
+        readOnlyRootFilesystem: true
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /data
+        name: redis-data
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-xmtmf
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    ephemeralContainers:
+    - command:
+      - sleep
+      - infinity
+      image: busybox
+      imagePullPolicy: Always
+      name: debugger-bfnws
+      resources: {}
+      stdin: true
+      targetContainerName: redis
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      tty: true
+    nodeName: kind-control-plane
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext:
+      fsGroup: 1000
+      runAsGroup: 1000
+      runAsNonRoot: true
+      runAsUser: 1000
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - emptyDir: {}
+      name: redis-data
+    - name: kube-api-access-xmtmf
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2025-04-26T05:01:47Z"
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2025-04-26T05:01:41Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2025-04-26T05:01:48Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2025-04-26T05:01:48Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2025-04-26T05:01:41Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: containerd://819ccbf876daff17ec390cdfefe1d1b9a46f3a86f16b7b587e684d49b3a974ce
+      image: docker.io/library/redis:alpine
+      imageID: docker.io/library/redis@sha256:f773b35a95e170d92dd4214a3ec4859b1b7960bf56896ae687646d695f311187
+      lastState: {}
+      name: redis
+      ready: true
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2025-04-26T05:01:46Z"
+      volumeMounts:
+      - mountPath: /data
+        name: redis-data
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-xmtmf
+        readOnly: true
+        recursiveReadOnly: Disabled
+    ephemeralContainerStatuses:
+    - containerID: containerd://13efd7154ce0fe308c8ad8675cfa8d9b6325fb39248766b8585c87f5dd6e5929
+      image: docker.io/library/busybox:latest
+      imageID: docker.io/library/busybox@sha256:37f7b378a29ceb4c551b1b5582e27747b855bbfaa73fa11914fe0df028dc581f
+      lastState: {}
+      name: debugger-bfnws
+      ready: false
+      restartCount: 0
+      state:
+        running:
+          startedAt: "2025-04-26T05:02:41Z"
+    hostIP: 172.18.0.2
+    hostIPs:
+    - ip: 172.18.0.2
+    phase: Running
+    podIP: 10.244.0.14
+    podIPs:
+    - ip: 10.244.0.14
+    qosClass: Burstable
+    startTime: "2025-04-26T05:01:41Z"
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy allow-cart-to-redis -n cartservice --type='json' -p='[{"op": "replace", "path": "/spec/egress/0/to", "value": [{"namespaceSelector": {"matchLabels": {"name": "default"}}, "podSelector": {"matchLabels": {"app": "redis-cart"}}}]}]'
+Output: networkpolicy.networking.k8s.io/allow-cart-to-redis patched
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pod redis-cart-799f8fc4c-p9wps -o jsonpath='{.metadata.namespace}'
+Output: default
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+

@@ -1,0 +1,97 @@
+LLM Command: kubectl get networkpolicy -n frontend
+Output: 
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy <networkpolicy-name> -n frontend --type=json -p '[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "cartservice"}}}}, {"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 7070, "protocol": "TCP"}}]'
+Output: /bin/bash: line 1: networkpolicy-name: No such file or directory
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n frontend
+Output: 
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n frontend
+Output: 
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n frontend -o json
+Output: {
+    "apiVersion": "v1",
+    "items": [],
+    "kind": "List",
+    "metadata": {
+        "resourceVersion": ""
+    }
+}
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy frontend-policy -n frontend --type=json -p '[{"op": "add", "path": "/spec/ingress", "value": [{"from": [{"podSelector": {"matchLabels": {"app": "cartservice"}}}], "ports": [{"port": 7070, "protocol": "TCP"}]}]}]'
+Output: Error from server (NotFound): namespaces "frontend" not found
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+
+LLM Command: kubectl get namespaces
+Output: NAME                 STATUS   AGE
+default              Active   10h
+kube-node-lease      Active   10h
+kube-public          Active   10h
+kube-system          Active   10h
+local-path-storage   Active   10h
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+
+LLM Command: kubectl get services -n default
+Output: NAME                    TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+adservice               ClusterIP      10.96.182.150   <none>        9555/TCP       10h
+cartservice             ClusterIP      10.96.134.110   <none>        7070/TCP       10h
+checkoutservice         ClusterIP      10.96.50.97     <none>        5050/TCP       10h
+currencyservice         ClusterIP      10.96.113.81    <none>        7000/TCP       10h
+emailservice            ClusterIP      10.96.164.48    <none>        5000/TCP       10h
+frontend                ClusterIP      10.96.210.18    <none>        80/TCP         10h
+frontend-external       LoadBalancer   10.96.205.66    <pending>     80:32110/TCP   10h
+kubernetes              ClusterIP      10.96.0.1       <none>        443/TCP        10h
+paymentservice          ClusterIP      10.96.159.123   <none>        50051/TCP      10h
+productcatalogservice   ClusterIP      10.96.239.23    <none>        3550/TCP       10h
+recommendationservice   ClusterIP      10.96.134.174   <none>        8080/TCP       10h
+redis-cart              ClusterIP      10.96.111.32    <none>        6379/TCP       10h
+shippingservice         ClusterIP      10.96.206.53    <none>        50051/TCP      10h
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n default
+Output: NAME                    POD-SELECTOR                AGE
+adservice               app=adservice               10h
+cartservice             app=cartservice             10h
+checkoutservice         app=checkoutservice         10h
+currencyservice         app=currencyservice         10h
+emailservice            app=emailservice            10h
+frontend                app=frontend                10h
+loadgenerator           app=loadgenerator           10h
+paymentservice          app=paymentservice          10h
+productcatalogservice   app=productcatalogservice   10h
+recommendationservice   app=recommendationservice   10h
+redis-cart              app=redis-cart              10h
+shippingservice         app=shippingservice         10h
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+

@@ -1,0 +1,251 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: productcatalogservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n cartservice -o yaml
+Output: apiVersion: v1
+items:
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"allow-cart-to-redis","namespace":"cartservice"},"spec":{"ingress":[{"from":[{"namespaceSelector":{"matchLabels":{}}}],"ports":[{"port":6379,"protocol":"TCP"}]}],"podSelector":{},"policyTypes":["Ingress"]}}
+    creationTimestamp: "2025-04-26T05:19:07Z"
+    generation: 16
+    name: allow-cart-to-redis
+    namespace: cartservice
+    resourceVersion: "3441"
+    uid: 4c9b1f55-8904-49ff-8270-cab94ede49b9
+  spec:
+    egress:
+    - ports:
+      - port: 6379
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: redis
+    ingress:
+    - {}
+    podSelector: {}
+    policyTypes:
+    - Ingress
+    - Egress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"cartservice-policy","namespace":"cartservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}},{"podSelector":{"matchLabels":{"app":"redis"}}}]}],"podSelector":{"matchLabels":{"app":"cartservice"}}}}
+    creationTimestamp: "2025-04-26T05:31:45Z"
+    generation: 10
+    name: cartservice-policy
+    namespace: cartservice
+    resourceVersion: "3850"
+    uid: 21f73f58-014f-458a-9b75-0af604721328
+  spec:
+    egress:
+    - ports:
+      - port: 50051
+        protocol: TCP
+    - ports:
+      - port: 50051
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: paymentservice
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: frontend
+      - podSelector:
+          matchLabels:
+            app: redis
+      - podSelector:
+          matchLabels:
+            app: adservice
+      - namespaceSelector:
+          matchLabels:
+            name: adservice
+        podSelector:
+          matchLabels:
+            app: adservice
+    - from:
+      - podSelector:
+          matchLabels:
+            app: frontend
+      - podSelector:
+          matchLabels:
+            app: redis
+    - from:
+      - podSelector:
+          matchLabels:
+            app: frontend
+      - podSelector:
+          matchLabels:
+            app: redis
+      ports:
+      - port: 7070
+        protocol: TCP
+    - from:
+      - podSelector:
+          matchLabels:
+            app: frontend
+      - podSelector:
+          matchLabels:
+            app: redis
+      ports:
+      - port: 7070
+        protocol: TCP
+    - from:
+      - podSelector:
+          matchLabels:
+            app: frontend
+      - podSelector:
+          matchLabels:
+            app: redis
+      ports:
+      - port: 7070
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: cartservice
+    policyTypes:
+    - Ingress
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: productcatalogservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy cartservice-policy -n cartservice --type='json' -p='[{"op": "remove", "path": "/spec/ingress/2"}]'
+Output: networkpolicy.networking.k8s.io/cartservice-policy patched
+
+Mismatch Summary: Mismatch: productcatalogservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n productcatalogservice -o yaml
+Output: apiVersion: v1
+items:
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"deny-adservice","namespace":"productcatalogservice"},"spec":{"ingress":[],"podSelector":{},"policyTypes":["Ingress"]}}
+    creationTimestamp: "2025-04-26T05:33:46Z"
+    generation: 2
+    name: deny-adservice
+    namespace: productcatalogservice
+    resourceVersion: "3757"
+    uid: 82ddedb8-e621-42a0-9508-4c0a82601c77
+  spec:
+    podSelector: {}
+    policyTypes:
+    - Ingress
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: productcatalogservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy cartservice-policy -n cartservice --type='json' -p='[{"op": "add", "path": "/spec/ingress/-", "value": {"from": [{"podSelector": {"matchLabels": {"app": "productcatalogservice"}}}], "ports": [{"port": 7070, "protocol": "TCP"}]}}]'
+Output: networkpolicy.networking.k8s.io/cartservice-policy patched
+
+Mismatch Summary: Mismatch: productcatalogservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy cartservice-policy -n cartservice --type='json' -p='[{"op": "remove", "path": "/spec/ingress/3"}]'
+Output: networkpolicy.networking.k8s.io/cartservice-policy patched
+
+Mismatch Summary: Mismatch: productcatalogservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy cartservice-policy -n cartservice --type='json' -p='[{"op": "remove", "path": "/spec/ingress/2"}]'
+Output: networkpolicy.networking.k8s.io/cartservice-policy patched
+
+Mismatch Summary: Mismatch: productcatalogservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n checkoutservice -o yaml
+Output: apiVersion: v1
+items:
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"allow-emailservice","namespace":"checkoutservice"},"spec":{"ingress":[{"from":[{"namespaceSelector":{"matchLabels":{"name":"emailservice"}}}],"ports":[{"port":5000,"protocol":"TCP"}]}],"podSelector":{},"policyTypes":["Ingress"]}}
+    creationTimestamp: "2025-04-26T05:14:04Z"
+    generation: 4
+    name: allow-emailservice
+    namespace: checkoutservice
+    resourceVersion: "2663"
+    uid: a517010a-d0ba-4f78-9419-d33d2040da63
+  spec:
+    ingress:
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            name: emailservice
+      ports:
+      - port: 5000
+        protocol: TCP
+    podSelector: {}
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"checkoutservice","namespace":"checkoutservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"paymentservice"}}}],"ports":[{"port":50051,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"checkoutservice"}}}}
+    creationTimestamp: "2025-04-26T05:14:26Z"
+    generation: 13
+    name: checkoutservice
+    namespace: checkoutservice
+    resourceVersion: "3118"
+    uid: d4e51602-4b97-4a4c-a15d-12b49b9a18aa
+  spec:
+    podSelector:
+      matchLabels:
+        app: checkoutservice
+    policyTypes:
+    - Ingress
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: productcatalogservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy cartservice-policy -n cartservice --type='json' -p='[{"op": "remove", "path": "/spec/ingress"}]'
+Output: networkpolicy.networking.k8s.io/cartservice-policy patched
+
+Mismatch Summary: Mismatch: productcatalogservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+

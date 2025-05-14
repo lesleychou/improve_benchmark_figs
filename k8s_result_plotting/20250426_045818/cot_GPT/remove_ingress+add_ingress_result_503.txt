@@ -1,0 +1,108 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: cartservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy shippingservice --namespace=shippingservice -p '{"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"checkoutservice"}}},{"podSelector":{"matchLabels":{"app":"paymentservice"}}},{"podSelector":{"matchLabels":{"app":"emailservice"}}}],"ports":[{"port":50051}]}]}}'
+Output: networkpolicy.networking.k8s.io/shippingservice patched
+
+Mismatch Summary: Mismatch: cartservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy cartservice --namespace=cartservice -p '{"spec":{"egress":[{"to":[{"podSelector":{"matchLabels":{"app":"redis"}}}],"ports":[{"port":6379}]}]}}'
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "cartservice" not found
+
+Mismatch Summary: Mismatch: cartservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: cartservice
+  namespace: cartservice
+spec:
+  podSelector:
+    matchLabels:
+      app: cartservice
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: redis
+    ports:
+    - port: 6379
+EOF
+Output: networkpolicy.networking.k8s.io/cartservice created
+
+Mismatch Summary: Mismatch: cartservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy cartservice --namespace=cartservice -p '{"spec":{"egress":[{"to":[{"podSelector":{"matchLabels":{"app":"redis"}}}],"ports":[{"port":6379}]}],"policyTypes":["Egress"]}}'
+Output: networkpolicy.networking.k8s.io/cartservice patched (no change)
+
+Mismatch Summary: Mismatch: cartservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy cartservice --namespace=cartservice -p '{"spec":{"egress":[{"to":[{"podSelector":{"matchLabels":{"app":"redis"}}}],"ports":[{"port":6379}]}],"policyTypes":["Egress"]}}'
+Output: networkpolicy.networking.k8s.io/cartservice patched (no change)
+
+Mismatch Summary: Mismatch: cartservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy shippingservice --namespace=shippingservice -p '{"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"checkoutservice"}}},{"podSelector":{"matchLabels":{"app":"paymentservice"}}},{"podSelector":{"matchLabels":{"app":"emailservice"}}}],"ports":[{"port":50051}]}],"policyTypes":["Ingress"]}}'
+Output: networkpolicy.networking.k8s.io/shippingservice patched
+
+Mismatch Summary: Mismatch: cartservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy cartservice --namespace=cartservice -p '{"spec":{"egress":[{"to":[{"podSelector":{"matchLabels":{"app":"redis"}}}],"ports":[{"port":6379}]}],"policyTypes":["Egress"]}}'
+Output: networkpolicy.networking.k8s.io/cartservice patched (no change)
+
+Mismatch Summary: Mismatch: cartservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy cartservice --namespace=cartservice -p '{"spec":{"egress":[{"to":[{"podSelector":{"matchLabels":{"app":"redis"}}}],"ports":[{"port":6379}]}],"policyTypes":["Egress"]}}'
+Output: networkpolicy.networking.k8s.io/cartservice patched (no change)
+
+Mismatch Summary: Mismatch: cartservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+

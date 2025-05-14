@@ -1,0 +1,22 @@
+[
+    {
+        "llm_command": "kubectl get networkpolicy --all-namespaces",
+        "output": "NAMESPACE   NAME                    POD-SELECTOR                AGE\ndefault     adservice               app=adservice               19h\ndefault     cartservice             app=cartservice             19h\ndefault     checkoutservice         app=checkoutservice         19h\ndefault     currencyservice         app=currencyservice         19h\ndefault     emailservice            app=emailservice            19h\ndefault     frontend                app=frontend                19h\ndefault     loadgenerator           app=loadgenerator           19h\ndefault     paymentservice          app=paymentservice          19h\ndefault     productcatalogservice   app=productcatalogservice   19h\ndefault     recommendationservice   app=recommendationservice   19h\ndefault     redis-cart              app=redis-cart              19h\ndefault     shippingservice         app=shippingservice         19h\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: adservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy cartservice -n default -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"cartservice\",\"namespace\":\"default\"},\"spec\":{\"egress\":[{}],\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"checkoutservice\"}}}],\"ports\":[{\"port\":7070,\"protocol\":\"UDP\"}]},{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"shippingservice\"}}}]},{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"adservice\"}}}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"cartservice\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n  creationTimestamp: \"2025-05-07T16:33:45Z\"\n  generation: 866\n  name: cartservice\n  namespace: default\n  resourceVersion: \"98318\"\n  uid: 4d84a894-3a45-4049-9e7b-cc68eaff1fc6\nspec:\n  egress:\n  - {}\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    - podSelector:\n        matchLabels:\n          app: checkoutservice\n    ports:\n    - port: 7070\n      protocol: UDP\n  - from:\n    - podSelector:\n        matchLabels:\n          app: shippingservice\n  - from:\n    - podSelector:\n        matchLabels:\n          app: adservice\n  podSelector:\n    matchLabels:\n      app: cartservice\n  policyTypes:\n  - Ingress\n  - Egress\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: adservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy cartservice -n default --type=json -p '[{\"op\": \"replace\", \"path\": \"/spec/ingress/0/ports/0/protocol\", \"value\": \"TCP\"}]'",
+        "output": "networkpolicy.networking.k8s.io/cartservice patched\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy cartservice -n default --type=json -p '[{\"op\": \"remove\", \"path\": \"/spec/ingress/2\"}, {\"op\": \"remove\", \"path\": \"/spec/ingress/1\"}]'",
+        "output": "networkpolicy.networking.k8s.io/cartservice patched\n",
+        "mismatch_summary": "No mismatches found."
+    }
+]

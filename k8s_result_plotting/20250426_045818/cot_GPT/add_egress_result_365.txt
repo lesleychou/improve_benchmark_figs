@@ -1,0 +1,551 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n cartservice -o yaml
+Output: apiVersion: v1
+items:
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"allow-cart-to-redis","namespace":"cartservice"},"spec":{"ingress":[{"from":[{"namespaceSelector":{"matchLabels":{}}}],"ports":[{"port":6379,"protocol":"TCP"}]}],"podSelector":{},"policyTypes":["Ingress"]}}
+    creationTimestamp: "2025-04-26T05:19:07Z"
+    generation: 17
+    name: allow-cart-to-redis
+    namespace: cartservice
+    resourceVersion: "5133"
+    uid: 4c9b1f55-8904-49ff-8270-cab94ede49b9
+  spec:
+    egress:
+    - ports:
+      - port: 6379
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: redis
+      - podSelector:
+          matchLabels:
+            app: redis
+    ingress:
+    - {}
+    podSelector: {}
+    policyTypes:
+    - Ingress
+    - Egress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"cartservice-allow","namespace":"cartservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"redis-cart"}}}],"ports":[{"port":6379,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"cartservice"}}}}
+    creationTimestamp: "2025-04-26T07:18:17Z"
+    generation: 1
+    name: cartservice-allow
+    namespace: cartservice
+    resourceVersion: "12498"
+    uid: feff016c-2883-45d8-9d70-00231c2d250f
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: redis-cart
+      ports:
+      - port: 6379
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: cartservice
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"cartservice-allow-redis","namespace":"cartservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"redis-cart"}}}],"ports":[{"port":6379,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"cartservice"}}}}
+    creationTimestamp: "2025-04-26T07:55:58Z"
+    generation: 8
+    name: cartservice-allow-redis
+    namespace: cartservice
+    resourceVersion: "23779"
+    uid: 19c0dd5a-af95-4b9c-9518-80117e4e226b
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: redis-cart
+      ports:
+      - port: 6379
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: cartservice
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"cartservice-deny-payment","namespace":"cartservice"},"spec":{"egress":[{"ports":[{"port":50051,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"paymentservice"}}}]}],"podSelector":{"matchLabels":{"app":"cartservice"}},"policyTypes":["Egress"]}}
+    creationTimestamp: "2025-04-26T05:56:33Z"
+    generation: 4
+    name: cartservice-deny-payment
+    namespace: cartservice
+    resourceVersion: "5660"
+    uid: e1d42857-79db-4a98-82ba-9e27e5cd3fce
+  spec:
+    podSelector:
+      matchLabels:
+        app: cartservice
+    policyTypes:
+    - Egress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"cartservice-egress-policy","namespace":"cartservice"},"spec":{"egress":[{"ports":[{"port":9555,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"adservice"}}}]}],"podSelector":{"matchLabels":{"app":"cartservice"}}}}
+    creationTimestamp: "2025-04-26T05:59:43Z"
+    generation: 11
+    name: cartservice-egress-policy
+    namespace: cartservice
+    resourceVersion: "8927"
+    uid: 07f9f353-16dc-4f77-b12a-65f96b9fb066
+  spec:
+    egress:
+    - ports:
+      - port: 6379
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: cartservice
+    policyTypes:
+    - Ingress
+    - Egress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"cartservice-policy","namespace":"cartservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"redis-cart"}}}],"ports":[{"port":6379,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"cartservice"}}}}
+    creationTimestamp: "2025-04-26T05:31:45Z"
+    generation: 147
+    name: cartservice-policy
+    namespace: cartservice
+    resourceVersion: "23714"
+    uid: 21f73f58-014f-458a-9b75-0af604721328
+  spec:
+    egress:
+    - ports:
+      - port: 6379
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: redis-cart
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: redis-cart
+      - podSelector:
+          matchLabels:
+            app: redis-cart
+      ports:
+      - port: 6379
+        protocol: TCP
+      - port: 6379
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: cartservice
+    policyTypes:
+    - Egress
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy cartservice-policy -n cartservice --type='json' -p='[{"op": "replace", "path": "/spec/ingress/0/from", "value": [{"podSelector": {"matchLabels": {"app": "redis-cart"}}}]}]'
+Output: networkpolicy.networking.k8s.io/cartservice-policy patched
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods -n cartservice -l app=redis-cart -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get deployment -n cartservice -l app=redis-cart -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get deployment --all-namespaces -l app=redis-cart -o yaml
+Output: apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"app":"redis-cart","skaffold.dev/run-id":"00adce13-6ae0-4db6-9ff3-9bd0af686efb"},"name":"redis-cart","namespace":"default"},"spec":{"selector":{"matchLabels":{"app":"redis-cart"}},"template":{"metadata":{"labels":{"app":"redis-cart","skaffold.dev/run-id":"00adce13-6ae0-4db6-9ff3-9bd0af686efb"}},"spec":{"containers":[{"image":"redis:alpine","livenessProbe":{"periodSeconds":5,"tcpSocket":{"port":6379}},"name":"redis","ports":[{"containerPort":6379}],"readinessProbe":{"periodSeconds":5,"tcpSocket":{"port":6379}},"resources":{"limits":{"cpu":"125m","memory":"256Mi"},"requests":{"cpu":"70m","memory":"200Mi"}},"securityContext":{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"privileged":false,"readOnlyRootFilesystem":true},"volumeMounts":[{"mountPath":"/data","name":"redis-data"}]}],"securityContext":{"fsGroup":1000,"runAsGroup":1000,"runAsNonRoot":true,"runAsUser":1000},"volumes":[{"emptyDir":{},"name":"redis-data"}]}}}}
+    creationTimestamp: "2025-04-26T05:01:40Z"
+    generation: 1
+    labels:
+      app: redis-cart
+      skaffold.dev/run-id: 00adce13-6ae0-4db6-9ff3-9bd0af686efb
+    name: redis-cart
+    namespace: default
+    resourceVersion: "937"
+    uid: 74415931-1283-41cd-8b27-938c83f06652
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: redis-cart
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: redis-cart
+          skaffold.dev/run-id: 00adce13-6ae0-4db6-9ff3-9bd0af686efb
+      spec:
+        containers:
+        - image: redis:alpine
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            periodSeconds: 5
+            successThreshold: 1
+            tcpSocket:
+              port: 6379
+            timeoutSeconds: 1
+          name: redis
+          ports:
+          - containerPort: 6379
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            periodSeconds: 5
+            successThreshold: 1
+            tcpSocket:
+              port: 6379
+            timeoutSeconds: 1
+          resources:
+            limits:
+              cpu: 125m
+              memory: 256Mi
+            requests:
+              cpu: 70m
+              memory: 200Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            readOnlyRootFilesystem: true
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /data
+            name: redis-data
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext:
+          fsGroup: 1000
+          runAsGroup: 1000
+          runAsNonRoot: true
+          runAsUser: 1000
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - emptyDir: {}
+          name: redis-data
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2025-04-26T05:01:48Z"
+      lastUpdateTime: "2025-04-26T05:01:48Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2025-04-26T05:01:41Z"
+      lastUpdateTime: "2025-04-26T05:01:48Z"
+      message: ReplicaSet "redis-cart-799f8fc4c" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy cartservice-policy -n cartservice --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"namespaceSelector": {"matchLabels": {"name": "default"}}, "podSelector": {"matchLabels": {"app": "redis-cart"}}}}]'
+Output: networkpolicy.networking.k8s.io/cartservice-policy patched
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy cartservice-policy -n cartservice --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "redis-cart"}}, "namespaceSelector": {"matchLabels": {"name": "default"}}}}]'
+Output: networkpolicy.networking.k8s.io/cartservice-policy patched
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods -n default -l app=redis-cart -o yaml
+Output: apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2025-04-26T05:01:41Z"
+    generateName: redis-cart-799f8fc4c-
+    labels:
+      app: redis-cart
+      pod-template-hash: 799f8fc4c
+      skaffold.dev/run-id: 00adce13-6ae0-4db6-9ff3-9bd0af686efb
+    name: redis-cart-799f8fc4c-p9wps
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: redis-cart-799f8fc4c
+      uid: bedbd5a3-3ac0-486f-a78c-63074d3d1c0f
+    resourceVersion: "1139"
+    uid: 16bffa26-72d8-4549-8271-383dd3e8a18b
+  spec:
+    containers:
+    - image: redis:alpine
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        failureThreshold: 3
+        periodSeconds: 5
+        successThreshold: 1
+        tcpSocket:
+          port: 6379
+        timeoutSeconds: 1
+      name: redis
+      ports:
+      - containerPort: 6379
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 3
+        periodSeconds: 5
+        successThreshold: 1
+        tcpSocket:
+          port: 6379
+        timeoutSeconds: 1
+      resources:
+        limits:
+          cpu: 125m
+          memory: 256Mi
+        requests:
+          cpu: 70m
+          memory: 200Mi
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+          - ALL
+        privileged: false
+        readOnlyRootFilesystem: true
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /data
+        name: redis-data
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-xmtmf
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    ephemeralContainers:
+    - command:
+      - sleep
+      - infinity
+      image: busybox
+      imagePullPolicy: Always
+      name: debugger-bfnws
+      resources: {}
+      stdin: true
+      targetContainerName: redis
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      tty: true
+    nodeName: kind-control-plane
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext:
+      fsGroup: 1000
+      runAsGroup: 1000
+      runAsNonRoot: true
+      runAsUser: 1000
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - emptyDir: {}
+      name: redis-data
+    - name: kube-api-access-xmtmf
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2025-04-26T05:01:47Z"
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2025-04-26T05:01:41Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2025-04-26T05:01:48Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2025-04-26T05:01:48Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2025-04-26T05:01:41Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: containerd://819ccbf876daff17ec390cdfefe1d1b9a46f3a86f16b7b587e684d49b3a974ce
+      image: docker.io/library/redis:alpine
+      imageID: docker.io/library/redis@sha256:f773b35a95e170d92dd4214a3ec4859b1b7960bf56896ae687646d695f311187
+      lastState: {}
+      name: redis
+      ready: true
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2025-04-26T05:01:46Z"
+      volumeMounts:
+      - mountPath: /data
+        name: redis-data
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-xmtmf
+        readOnly: true
+        recursiveReadOnly: Disabled
+    ephemeralContainerStatuses:
+    - containerID: containerd://13efd7154ce0fe308c8ad8675cfa8d9b6325fb39248766b8585c87f5dd6e5929
+      image: docker.io/library/busybox:latest
+      imageID: docker.io/library/busybox@sha256:37f7b378a29ceb4c551b1b5582e27747b855bbfaa73fa11914fe0df028dc581f
+      lastState: {}
+      name: debugger-bfnws
+      ready: false
+      restartCount: 0
+      state:
+        running:
+          startedAt: "2025-04-26T05:02:41Z"
+    hostIP: 172.18.0.2
+    hostIPs:
+    - ip: 172.18.0.2
+    phase: Running
+    podIP: 10.244.0.14
+    podIPs:
+    - ip: 10.244.0.14
+    qosClass: Burstable
+    startTime: "2025-04-26T05:01:41Z"
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+

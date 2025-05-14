@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n recommendationservice -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy allow-frontend-to-recommendation -n frontend --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec\", \"value\": {\"podSelector\": {}, \"policyTypes\": [\"Ingress\"], \"ingress\": [{\"from\": [{\"namespaceSelector\": {\"matchLabels\": {\"name\": \"recommendationservice\"}}}], \"ports\": [{\"protocol\": \"TCP\", \"port\": 8080}]}]}}]'",
+        "output": "Error from server (NotFound): namespaces \"frontend\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get pods --all-namespaces | grep frontend",
+        "output": "default              frontend-797c8f7758-fkv9r                    1/1     Running   0               8h\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy allow-frontend-to-recommendation -n default --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec\", \"value\": {\"podSelector\": {}, \"policyTypes\": [\"Ingress\"], \"ingress\": [{\"from\": [{\"namespaceSelector\": {\"matchLabels\": {\"name\": \"recommendationservice\"}}}], \"ports\": [{\"protocol\": \"TCP\", \"port\": 8080}]}]}}]'",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"allow-frontend-to-recommendation\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl apply -n default -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-frontend-to-recommendation\n  namespace: default\nspec:\n  podSelector:\n    matchLabels:\n      app: frontend\n  policyTypes:\n  - Ingress\n  ingress:\n  - from:\n    - namespaceSelector:\n        matchLabels:\n          name: recommendationservice\n    ports:\n    - protocol: TCP\n      port: 8080\nEOF",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"allow-frontend-to-recommendation\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "bash\nkubectl get namespace recommendationservice --show-labels",
+        "output": "bash: error reading input file: Bad file descriptor\nError from server (NotFound): namespaces \"recommendationservice\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get namespaces --show-labels",
+        "output": "NAME                 STATUS   AGE   LABELS\ndefault              Active   9h    kubernetes.io/metadata.name=default\nkube-node-lease      Active   9h    kubernetes.io/metadata.name=kube-node-lease\nkube-public          Active   9h    kubernetes.io/metadata.name=kube-public\nkube-system          Active   9h    kubernetes.io/metadata.name=kube-system\nlocal-path-storage   Active   9h    kubernetes.io/metadata.name=local-path-storage\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    }
+]

@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend",
+        "output": "",
+        "mismatch_summary": "Mismatch: cartservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy <networkpolicy-name> -n paymentservice --type=json -p '[{\"op\": \"remove\", \"path\": \"/spec/ingress/0/from/0/podSelector/matchLabels/cartservice\"}]'",
+        "output": "/bin/bash: line 1: networkpolicy-name: No such file or directory\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n paymentservice",
+        "output": "",
+        "mismatch_summary": "Mismatch: cartservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n paymentservice -o json",
+        "output": "{\n    \"apiVersion\": \"v1\",\n    \"items\": [],\n    \"kind\": \"List\",\n    \"metadata\": {\n        \"resourceVersion\": \"\"\n    }\n}\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n cartservice -o json",
+        "output": "{\n    \"apiVersion\": \"v1\",\n    \"items\": [],\n    \"kind\": \"List\",\n    \"metadata\": {\n        \"resourceVersion\": \"\"\n    }\n}\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n emailservice -o json",
+        "output": "{\n    \"apiVersion\": \"v1\",\n    \"items\": [],\n    \"kind\": \"List\",\n    \"metadata\": {\n        \"resourceVersion\": \"\"\n    }\n}\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend -o json",
+        "output": "{\n    \"apiVersion\": \"v1\",\n    \"items\": [],\n    \"kind\": \"List\",\n    \"metadata\": {\n        \"resourceVersion\": \"\"\n    }\n}\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy default-deny -n paymentservice --type=json -p '[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"cartservice\"}}}}]'",
+        "output": "Error from server (NotFound): namespaces \"paymentservice\" not found\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\ndefault              Active   126m\nkube-node-lease      Active   126m\nkube-public          Active   126m\nkube-system          Active   126m\nlocal-path-storage   Active   126m\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    }
+]

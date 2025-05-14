@@ -1,0 +1,233 @@
+LLM Command: kubectl get networkpolicy -A
+Output: NAMESPACE   NAME                    POD-SELECTOR                AGE
+default     adservice               app=adservice               4h42m
+default     cartservice             app=cartservice             4h42m
+default     checkoutservice         app=checkoutservice         4h42m
+default     currencyservice         app=currencyservice         4h42m
+default     emailservice            app=emailservice            4h42m
+default     frontend                app=frontend                4h42m
+default     loadgenerator           app=loadgenerator           4h42m
+default     paymentservice          app=paymentservice          4h42m
+default     productcatalogservice   app=productcatalogservice   4h42m
+default     recommendationservice   app=recommendationservice   4h42m
+default     redis-cart              app=redis-cart              4h42m
+default     shippingservice         app=shippingservice         4h42m
+
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy recommendationservice -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"recommendationservice","namespace":"default"},"spec":{"egress":[{"to":[{"podSelector":{"matchLabels":{"app":"paymentservice"}}}]},{"to":[{"podSelector":{"matchLabels":{"app":"currencyservice"}}}]}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":8080,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"recommendationservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-05-07T16:33:46Z"
+  generation: 119
+  name: recommendationservice
+  namespace: default
+  resourceVersion: "23891"
+  uid: 430f0c3d-737d-4625-94e1-31ea3f76fa9f
+spec:
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: paymentservice
+  - to:
+    - podSelector:
+        matchLabels:
+          app: currencyservice
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    ports:
+    - port: 8080
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: recommendationservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy recommendationservice -n default --type=json -p '[{"op": "add", "path": "/spec/egress/-", "value": {"to": [{"podSelector": {"matchLabels": {"app": "productcatalogservice"}}}]}}]'
+Output: networkpolicy.networking.k8s.io/recommendationservice patched
+
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy recommendationservice -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"recommendationservice","namespace":"default"},"spec":{"egress":[{"to":[{"podSelector":{"matchLabels":{"app":"paymentservice"}}}]},{"to":[{"podSelector":{"matchLabels":{"app":"currencyservice"}}}]}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":8080,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"recommendationservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-05-07T16:33:46Z"
+  generation: 120
+  name: recommendationservice
+  namespace: default
+  resourceVersion: "23908"
+  uid: 430f0c3d-737d-4625-94e1-31ea3f76fa9f
+spec:
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: paymentservice
+  - to:
+    - podSelector:
+        matchLabels:
+          app: currencyservice
+  - to:
+    - podSelector:
+        matchLabels:
+          app: productcatalogservice
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    ports:
+    - port: 8080
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: recommendationservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy recommendationservice -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"recommendationservice","namespace":"default"},"spec":{"egress":[{"to":[{"podSelector":{"matchLabels":{"app":"paymentservice"}}}]},{"to":[{"podSelector":{"matchLabels":{"app":"currencyservice"}}}]}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":8080,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"recommendationservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-05-07T16:33:46Z"
+  generation: 120
+  name: recommendationservice
+  namespace: default
+  resourceVersion: "23908"
+  uid: 430f0c3d-737d-4625-94e1-31ea3f76fa9f
+spec:
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: paymentservice
+  - to:
+    - podSelector:
+        matchLabels:
+          app: currencyservice
+  - to:
+    - podSelector:
+        matchLabels:
+          app: productcatalogservice
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    ports:
+    - port: 8080
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: recommendationservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl exec -n default -it $(kubectl get pod -n default -l app=recommendationservice -o jsonpath='{.items[0].metadata.name}') -- curl productcatalogservice:3550
+Output: Defaulted container "server" out of: server, debugger-9sztb (ephem)
+Unable to use a TTY - input is not a terminal or the right kind of file
+E0507 21:16:42.302429 3597323 v2.go:104] "Unhandled Error" err="read /dev/stdin: bad file descriptor"
+error: Internal error occurred: Internal error occurred: error executing command in container: failed to exec in container: failed to start exec "69a4c31ce4eab798b9a45a69a1449a8ca14e3316f6586439be400a706804fa00": OCI runtime exec failed: exec failed: unable to start container process: exec: "curl": executable file not found in $PATH: unknown
+
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get svc productcatalogservice -n default -o yaml
+Output: apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app":"productcatalogservice","skaffold.dev/run-id":"d9aabfde-b7ab-4584-b757-8c80f6c37263"},"name":"productcatalogservice","namespace":"default"},"spec":{"ports":[{"name":"grpc","port":3550,"targetPort":3550}],"selector":{"app":"productcatalogservice"},"type":"ClusterIP"}}
+  creationTimestamp: "2025-05-07T16:32:35Z"
+  labels:
+    app: productcatalogservice
+    skaffold.dev/run-id: d9aabfde-b7ab-4584-b757-8c80f6c37263
+  name: productcatalogservice
+  namespace: default
+  resourceVersion: "661"
+  uid: c429db89-4dc5-4612-b130-5e4fa9158cf9
+spec:
+  clusterIP: 10.96.239.23
+  clusterIPs:
+  - 10.96.239.23
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - name: grpc
+    port: 3550
+    protocol: TCP
+    targetPort: 3550
+  selector:
+    app: productcatalogservice
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}
+
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get endpoints productcatalogservice -n default -o yaml
+Output: apiVersion: v1
+kind: Endpoints
+metadata:
+  annotations:
+    endpoints.kubernetes.io/last-change-trigger-time: "2025-05-07T16:32:40Z"
+  creationTimestamp: "2025-05-07T16:32:35Z"
+  labels:
+    app: productcatalogservice
+    skaffold.dev/run-id: d9aabfde-b7ab-4584-b757-8c80f6c37263
+  name: productcatalogservice
+  namespace: default
+  resourceVersion: "892"
+  uid: 9d32953e-3335-4857-9c7f-abf6f67e2e82
+subsets:
+- addresses:
+  - ip: 10.244.0.15
+    nodeName: kind-control-plane
+    targetRef:
+      kind: Pod
+      name: productcatalogservice-5f94b6cd47-lk6vh
+      namespace: default
+      uid: 7f1904db-2bab-4049-ad83-fc99f811e0be
+  ports:
+  - name: grpc
+    port: 3550
+    protocol: TCP
+
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl exec -n default -it $(kubectl get pod -n default -l app=recommendationservice -o jsonpath='{.items[0].metadata.name}') -- nslookup productcatalogservice
+Output: Defaulted container "server" out of: server, debugger-9sztb (ephem)
+Unable to use a TTY - input is not a terminal or the right kind of file
+E0507 21:16:59.535153 3613677 v2.go:104] "Unhandled Error" err="read /dev/stdin: bad file descriptor"
+command terminated with exit code 1
+
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+

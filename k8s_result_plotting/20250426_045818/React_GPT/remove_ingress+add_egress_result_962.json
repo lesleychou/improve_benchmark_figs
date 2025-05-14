@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "kubectl get networkpolicy --all-namespaces",
+        "output": "NAMESPACE   NAME                    POD-SELECTOR                AGE\ndefault     adservice               app=adservice               14h\ndefault     cartservice             app=cartservice             14h\ndefault     checkoutservice         app=checkoutservice         14h\ndefault     currencyservice         app=currencyservice         14h\ndefault     emailservice            app=emailservice            14h\ndefault     frontend                app=frontend                14h\ndefault     loadgenerator           app=loadgenerator           14h\ndefault     paymentservice          app=paymentservice          14h\ndefault     productcatalogservice   app=productcatalogservice   14h\ndefault     recommendationservice   app=recommendationservice   14h\ndefault     redis-cart              app=redis-cart              14h\ndefault     shippingservice         app=shippingservice         14h\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy productcatalogservice -n default -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"productcatalogservice\",\"namespace\":\"default\"},\"spec\":{\"egress\":[{}],\"ingress\":[],\"podSelector\":{\"matchLabels\":{\"app\":\"productcatalogservice\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n  creationTimestamp: \"2025-05-07T16:33:46Z\"\n  generation: 327\n  name: productcatalogservice\n  namespace: default\n  resourceVersion: \"71331\"\n  uid: 0bdf89d8-6944-4a76-ade4-ee674017b98f\nspec:\n  egress:\n  - {}\n  podSelector:\n    matchLabels:\n      app: productcatalogservice\n  policyTypes:\n  - Ingress\n  - Egress\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy productcatalogservice -n default --type='merge' -p '{\"spec\":{\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"checkoutservice\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"recommendationservice\"}}}]}]}}'",
+        "output": "networkpolicy.networking.k8s.io/productcatalogservice patched\n",
+        "mismatch_summary": "Mismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy productcatalogservice -n default --type='merge' -p '{\"spec\":{\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"recommendationservice\"}}}]}]}}'",
+        "output": "networkpolicy.networking.k8s.io/productcatalogservice patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy productcatalogservice -n default --type='merge' -p '{\"spec\":{\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"checkoutservice\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"recommendationservice\"}}}]}]}}'",
+        "output": "networkpolicy.networking.k8s.io/productcatalogservice patched\n",
+        "mismatch_summary": "Mismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy productcatalogservice -n default -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"productcatalogservice\",\"namespace\":\"default\"},\"spec\":{\"egress\":[{}],\"ingress\":[],\"podSelector\":{\"matchLabels\":{\"app\":\"productcatalogservice\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n  creationTimestamp: \"2025-05-07T16:33:46Z\"\n  generation: 330\n  name: productcatalogservice\n  namespace: default\n  resourceVersion: \"71374\"\n  uid: 0bdf89d8-6944-4a76-ade4-ee674017b98f\nspec:\n  egress:\n  - {}\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    - podSelector:\n        matchLabels:\n          app: checkoutservice\n    - podSelector:\n        matchLabels:\n          app: recommendationservice\n  podSelector:\n    matchLabels:\n      app: productcatalogservice\n  policyTypes:\n  - Ingress\n  - Egress\n",
+        "mismatch_summary": "Mismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy recommendationservice -n default -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"recommendationservice\",\"namespace\":\"default\"},\"spec\":{\"egress\":[{\"to\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"cartservice\"}}}]},{\"to\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"emailservice\"}}}]}],\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}}}],\"ports\":[{\"port\":8080,\"protocol\":\"TCP\"}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"recommendationservice\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n  creationTimestamp: \"2025-05-07T16:33:46Z\"\n  generation: 487\n  name: recommendationservice\n  namespace: default\n  resourceVersion: \"71332\"\n  uid: 430f0c3d-737d-4625-94e1-31ea3f76fa9f\nspec:\n  egress:\n  - to:\n    - podSelector:\n        matchLabels:\n          app: cartservice\n  - to:\n    - podSelector:\n        matchLabels:\n          app: emailservice\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    ports:\n    - port: 8080\n      protocol: TCP\n  podSelector:\n    matchLabels:\n      app: recommendationservice\n  policyTypes:\n  - Ingress\n  - Egress\n",
+        "mismatch_summary": "Mismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy recommendationservice -n default --type='merge' -p '{\"spec\":{\"egress\":[{\"to\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"productcatalogservice\"}}}],\"ports\":[{\"port\":3550,\"protocol\":\"TCP\"}]}]}}'",
+        "output": "networkpolicy.networking.k8s.io/recommendationservice patched\n",
+        "mismatch_summary": "Mismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy recommendationservice -n default -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"recommendationservice\",\"namespace\":\"default\"},\"spec\":{\"egress\":[{\"to\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"cartservice\"}}}]},{\"to\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"emailservice\"}}}]}],\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}}}],\"ports\":[{\"port\":8080,\"protocol\":\"TCP\"}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"recommendationservice\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n  creationTimestamp: \"2025-05-07T16:33:46Z\"\n  generation: 488\n  name: recommendationservice\n  namespace: default\n  resourceVersion: \"71399\"\n  uid: 430f0c3d-737d-4625-94e1-31ea3f76fa9f\nspec:\n  egress:\n  - ports:\n    - port: 3550\n      protocol: TCP\n    to:\n    - podSelector:\n        matchLabels:\n          app: productcatalogservice\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    ports:\n    - port: 8080\n      protocol: TCP\n  podSelector:\n    matchLabels:\n      app: recommendationservice\n  policyTypes:\n  - Ingress\n  - Egress\n",
+        "mismatch_summary": "Mismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    }
+]

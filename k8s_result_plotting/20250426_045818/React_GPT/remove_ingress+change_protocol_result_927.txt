@@ -1,0 +1,120 @@
+LLM Command: kubectl get networkpolicy -A
+Output: NAMESPACE   NAME                    POD-SELECTOR                AGE
+default     adservice               app=adservice               13h
+default     cartservice             app=cartservice             13h
+default     checkoutservice         app=checkoutservice         13h
+default     currencyservice         app=currencyservice         13h
+default     emailservice            app=emailservice            13h
+default     frontend                app=frontend                13h
+default     loadgenerator           app=loadgenerator           13h
+default     paymentservice          app=paymentservice          13h
+default     productcatalogservice   app=productcatalogservice   13h
+default     recommendationservice   app=recommendationservice   13h
+default     redis-cart              app=redis-cart              13h
+default     shippingservice         app=shippingservice         13h
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy frontend -n default --type=json -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "adservice"}}}}, {"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 9555, "protocol": "TCP"}}, {"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "checkoutservice"}}}}, {"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 5050, "protocol": "TCP"}}]'
+Output: The request is invalid: the server rejected our request due to an error in our request
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy frontend -n default --type=json -p='[{"op": "add", "path": "/spec/ingress/0/from", "value": [{"podSelector": {"matchLabels": {"app": "adservice"}}}, {"podSelector": {"matchLabels": {"app": "checkoutservice"}}}]}, {"op": "add", "path": "/spec/ingress/0/ports", "value": [{"port": 9555, "protocol": "TCP"}, {"port": 5050, "protocol": "TCP"}]}]'
+Output: networkpolicy.networking.k8s.io/frontend patched
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy frontend -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"frontend","namespace":"default"},"spec":{"egress":[{}],"ingress":[{}],"podSelector":{"matchLabels":{"app":"frontend"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-05-07T16:33:46Z"
+  generation: 1107
+  name: frontend
+  namespace: default
+  resourceVersion: "68139"
+  uid: 65f1a6bc-bb5a-471a-b427-281a3d426ea1
+spec:
+  egress:
+  - {}
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: adservice
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+    ports:
+    - port: 9555
+      protocol: TCP
+    - port: 5050
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: frontend
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+
+LLM Command: kubectl describe networkpolicy frontend -n default
+Output: Name:         frontend
+Namespace:    default
+Created on:   2025-05-07 16:33:46 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=frontend
+  Allowing ingress traffic:
+    To Port: 9555/TCP
+    To Port: 5050/TCP
+    From:
+      PodSelector: app=adservice
+    From:
+      PodSelector: app=checkoutservice
+  Allowing egress traffic:
+    To Port: <any> (traffic allowed to all ports)
+    To: <any> (traffic not restricted by destination)
+  Policy Types: Ingress, Egress
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+
+LLM Command: kubectl get pods -n default -l app=adservice --show-labels
+Output: NAME                         READY   STATUS    RESTARTS   AGE   LABELS
+adservice-7c7687ff5b-fbq2s   1/1     Running   0          13h   app=adservice,pod-template-hash=7c7687ff5b,skaffold.dev/run-id=d9aabfde-b7ab-4584-b757-8c80f6c37263
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+
+LLM Command: kubectl get pods -n default -l app=checkoutservice --show-labels
+Output: NAME                               READY   STATUS    RESTARTS   AGE   LABELS
+checkoutservice-769b8ff7b8-jxzrv   1/1     Running   0          13h   app=checkoutservice,pod-template-hash=769b8ff7b8,skaffold.dev/run-id=d9aabfde-b7ab-4584-b757-8c80f6c37263
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+
+LLM Command: kubectl get pods -n default -l app=frontend --show-labels
+Output: NAME                        READY   STATUS    RESTARTS   AGE   LABELS
+frontend-7ffbffc6f7-9hb4b   1/1     Running   0          13h   app=frontend,pod-template-hash=7ffbffc6f7,skaffold.dev/run-id=d9aabfde-b7ab-4584-b757-8c80f6c37263
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+
+LLM Command: kubectl get svc -n default -l app=adservice
+Output: NAME        TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
+adservice   ClusterIP   10.96.182.150   <none>        9555/TCP   13h
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+

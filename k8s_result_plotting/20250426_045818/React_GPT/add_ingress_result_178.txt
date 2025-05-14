@@ -1,0 +1,70 @@
+LLM Command: kubectl get networkpolicy --all-namespaces
+Output: NAMESPACE   NAME                    POD-SELECTOR                AGE
+default     adservice               app=adservice               140m
+default     cartservice             app=cartservice             140m
+default     checkoutservice         app=checkoutservice         140m
+default     currencyservice         app=currencyservice         140m
+default     emailservice            app=emailservice            140m
+default     frontend                app=frontend                140m
+default     loadgenerator           app=loadgenerator           140m
+default     paymentservice          app=paymentservice          140m
+default     productcatalogservice   app=productcatalogservice   140m
+default     recommendationservice   app=recommendationservice   140m
+default     redis-cart              app=redis-cart              140m
+default     shippingservice         app=shippingservice         140m
+
+Mismatch Summary: Mismatch: adservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: emailservice → cartservice:7070 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy cartservice -n default --type=json -p '[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "adservice"}}}}, {"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "emailservice"}}}}]'
+Output: networkpolicy.networking.k8s.io/cartservice patched
+
+Mismatch Summary: Mismatch: adservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: emailservice → cartservice:7070 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy cartservice -n default --type=json -p '[{"op": "remove", "path": "/spec/ingress/0/from"}]'
+Output: networkpolicy.networking.k8s.io/cartservice patched
+
+Mismatch Summary: Mismatch: adservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: recommendationservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: shippingservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: emailservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: redis-cart → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: loadgenerator → cartservice:7070 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy cartservice -n default --type=json -p '[{"op": "add", "path": "/spec/ingress", "value": [{"from": [{"podSelector": {"matchLabels": {"app": "redis-cart"}}}]}]}]'
+Output: networkpolicy.networking.k8s.io/cartservice patched
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: redis-cart → cartservice:7070 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy cartservice -n default --type=json -p '[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "frontend"}}}}, {"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "checkoutservice"}}}}]'
+Output: networkpolicy.networking.k8s.io/cartservice patched
+
+Mismatch Summary: Mismatch: redis-cart → cartservice:7070 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy cartservice -n default --type=json -p '[{"op": "remove", "path": "/spec/ingress/0/from"}]'
+Output: networkpolicy.networking.k8s.io/cartservice patched
+
+Mismatch Summary: Mismatch: adservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: recommendationservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: shippingservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: emailservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: redis-cart → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: loadgenerator → cartservice:7070 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy cartservice -n default --type=json -p '[{"op": "replace", "path": "/spec/ingress", "value": [{"from": [{"podSelector": {"matchLabels": {"app": "redis-cart"}}}]}]}]'
+Output: networkpolicy.networking.k8s.io/cartservice patched
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: redis-cart → cartservice:7070 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy cartservice -n default --type=json -p '[{"op": "replace", "path": "/spec/ingress", "value": [{"from": [{"podSelector": {"matchLabels": {"app": "frontend"}}}, {"podSelector": {"matchLabels": {"app": "checkoutservice"}}}]}]}]'
+Output: networkpolicy.networking.k8s.io/cartservice patched
+
+Mismatch Summary: No mismatches found.
+

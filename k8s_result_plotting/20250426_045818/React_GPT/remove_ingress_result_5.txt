@@ -1,0 +1,49 @@
+LLM Command: kubectl get networkpolicy -A
+Output: NAMESPACE   NAME                    POD-SELECTOR                AGE
+default     adservice               app=adservice               4m1s
+default     cartservice             app=cartservice             4m1s
+default     checkoutservice         app=checkoutservice         4m1s
+default     currencyservice         app=currencyservice         4m
+default     emailservice            app=emailservice            4m
+default     frontend                app=frontend                4m
+default     loadgenerator           app=loadgenerator           4m
+default     paymentservice          app=paymentservice          4m
+default     productcatalogservice   app=productcatalogservice   4m
+default     recommendationservice   app=recommendationservice   4m
+default     redis-cart              app=redis-cart              4m
+default     shippingservice         app=shippingservice         3m59s
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy cartservice -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"cartservice","namespace":"default"},"spec":{"egress":[{}],"ingress":[],"podSelector":{"matchLabels":{"app":"cartservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-05-07T16:33:45Z"
+  generation: 2
+  name: cartservice
+  namespace: default
+  resourceVersion: "1469"
+  uid: 4d84a894-3a45-4049-9e7b-cc68eaff1fc6
+spec:
+  egress:
+  - {}
+  podSelector:
+    matchLabels:
+      app: cartservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy cartservice -n default --type='merge' -p '{"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}},{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}],"ports":[{"port":7070,"protocol":"TCP"}]}]}}'
+Output: networkpolicy.networking.k8s.io/cartservice patched
+
+Mismatch Summary: No mismatches found.
+

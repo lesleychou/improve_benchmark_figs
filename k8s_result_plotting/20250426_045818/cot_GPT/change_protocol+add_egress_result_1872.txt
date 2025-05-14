@@ -1,0 +1,158 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: redis-cart → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: loadgenerator → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy allow-recommendation-to-productcatalog -n recommendationservice --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "productcatalogservice"}}}}]'
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "allow-recommendation-to-productcatalog" not found
+
+Mismatch Summary: Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: redis-cart → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: loadgenerator → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy allow-recommendation-to-productcatalog -n recommendationservice --type='merge' -p='{
+  "apiVersion": "networking.k8s.io/v1",
+  "kind": "NetworkPolicy",
+  "metadata": {
+    "name": "allow-recommendation-to-productcatalog"
+  },
+  "spec": {
+    "podSelector": {
+      "matchLabels": {
+        "app": "recommendationservice"
+      }
+    },
+    "policyTypes": ["Ingress"],
+    "ingress": [
+      {
+        "from": [
+          {
+            "podSelector": {
+              "matchLabels": {
+                "app": "productcatalogservice"
+              }
+            }
+          }
+        ],
+        "ports": [
+          {
+            "protocol": "TCP",
+            "port": 3550
+          }
+        ]
+      }
+    ]
+  }
+}'
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "allow-recommendation-to-productcatalog" not found
+
+Mismatch Summary: Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: redis-cart → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: loadgenerator → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -n recommendationservice -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-recommendation-to-productcatalog
+spec:
+  podSelector:
+    matchLabels:
+      app: recommendationservice
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: productcatalogservice
+    ports:
+    - protocol: TCP
+      port: 3550
+EOF
+Output: networkpolicy.networking.k8s.io/allow-recommendation-to-productcatalog created
+
+Mismatch Summary: Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: redis-cart → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: loadgenerator → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: `
+kubectl get networkpolicy -n recommendationservice
+Output: /bin/bash: -c: line 1: unexpected EOF while looking for matching ``'
+/bin/bash: -c: line 3: syntax error: unexpected end of file
+
+Mismatch Summary: Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: redis-cart → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: loadgenerator → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods -n recommendationservice --show-labels
+Output: 
+Mismatch Summary: Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: redis-cart → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: loadgenerator → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: bash
+kubectl get pods -n recommendationservice --show-labels
+Output: 
+Mismatch Summary: Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: redis-cart → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: loadgenerator → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods -n recommendationservice --show-labels
+Output: 
+Mismatch Summary: Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: redis-cart → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: loadgenerator → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods -n recommendationservice --show-labels
+Output: 
+Mismatch Summary: Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: redis-cart → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: loadgenerator → checkoutservice:5050 (Expected: False, Actual: True)
+

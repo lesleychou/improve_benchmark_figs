@@ -1,0 +1,45 @@
+LLM Command: kubectl get networkpolicy --all-namespaces
+Output: NAMESPACE   NAME                    POD-SELECTOR                AGE
+default     adservice               app=adservice               47m
+default     cartservice             app=cartservice             47m
+default     checkoutservice         app=checkoutservice         47m
+default     currencyservice         app=currencyservice         47m
+default     emailservice            app=emailservice            47m
+default     frontend                app=frontend                47m
+default     loadgenerator           app=loadgenerator           47m
+default     paymentservice          app=paymentservice          47m
+default     productcatalogservice   app=productcatalogservice   47m
+default     recommendationservice   app=recommendationservice   47m
+default     redis-cart              app=redis-cart              47m
+default     shippingservice         app=shippingservice         47m
+
+Mismatch Summary: Mismatch: adservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy shippingservice -n default --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "adservice"}}}}, {"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "emailservice"}}}}]'
+Output: networkpolicy.networking.k8s.io/shippingservice patched
+
+Mismatch Summary: Mismatch: adservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy shippingservice -n default --type='json' -p='[{"op": "remove", "path": "/spec/ingress/0/from"}]'
+Output: networkpolicy.networking.k8s.io/shippingservice patched
+
+Mismatch Summary: Mismatch: adservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: cartservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: recommendationservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: redis-cart → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: loadgenerator → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy shippingservice -n default --type='json' -p='[{"op": "add", "path": "/spec/ingress", "value": [{"from": [{"podSelector": {"matchLabels": {"app": "checkoutservice"}}}]}]}]'
+Output: networkpolicy.networking.k8s.io/shippingservice patched
+
+Mismatch Summary: Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy shippingservice -n default --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "frontend"}}}}]'
+Output: networkpolicy.networking.k8s.io/shippingservice patched
+
+Mismatch Summary: No mismatches found.
+

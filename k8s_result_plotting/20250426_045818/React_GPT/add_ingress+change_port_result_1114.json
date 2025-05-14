@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "kubectl get networkpolicy -A",
+        "output": "NAMESPACE   NAME                    POD-SELECTOR                AGE\ndefault     adservice               app=adservice               17h\ndefault     cartservice             app=cartservice             17h\ndefault     checkoutservice         app=checkoutservice         17h\ndefault     currencyservice         app=currencyservice         17h\ndefault     emailservice            app=emailservice            17h\ndefault     frontend                app=frontend                17h\ndefault     loadgenerator           app=loadgenerator           17h\ndefault     paymentservice          app=paymentservice          17h\ndefault     productcatalogservice   app=productcatalogservice   17h\ndefault     recommendationservice   app=recommendationservice   17h\ndefault     redis-cart              app=redis-cart              17h\ndefault     shippingservice         app=shippingservice         17h\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: adservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy frontend -n default --type=json -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"currencyservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 7000, \"protocol\": \"TCP\"}}]'",
+        "output": "The request is invalid: the server rejected our request due to an error in our request\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: adservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy frontend -n default --type=json -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from\", \"value\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"currencyservice\"}}}]}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports\", \"value\": [{\"port\": 7000, \"protocol\": \"TCP\"}]}]'",
+        "output": "networkpolicy.networking.k8s.io/frontend patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: adservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy checkoutservice -n default --type=json -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from\", \"value\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"currencyservice\"}}}]}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports\", \"value\": [{\"port\": 7000, \"protocol\": \"TCP\"}]}]'",
+        "output": "networkpolicy.networking.k8s.io/checkoutservice patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: adservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy frontend -n default --type=json -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"currencyservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 7000, \"protocol\": \"TCP\"}}]'",
+        "output": "networkpolicy.networking.k8s.io/frontend patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: adservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy frontend -n default --type=json -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"currencyservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 7000, \"protocol\": \"TCP\"}}]'",
+        "output": "networkpolicy.networking.k8s.io/frontend patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: adservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy frontend -n default --type=json -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"checkoutservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 5050, \"protocol\": \"TCP\"}}]'",
+        "output": "networkpolicy.networking.k8s.io/frontend patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: adservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy checkoutservice -n default --type=json -p='[{\"op\": \"remove\", \"path\": \"/spec/ingress/0/from/0\"}]'",
+        "output": "networkpolicy.networking.k8s.io/checkoutservice patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: adservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy frontend -n default --type=json -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"checkoutservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 5050, \"protocol\": \"TCP\"}}]'",
+        "output": "networkpolicy.networking.k8s.io/frontend patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: adservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)"
+    }
+]

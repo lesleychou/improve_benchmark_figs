@@ -1,0 +1,107 @@
+LLM Command: kubectl get networkpolicy -n frontend
+Output: 
+Mismatch Summary: Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n cartservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy deny-currency-access -n cartservice --type='merge' -p '{"spec":{"podSelector":{},"policyTypes":["Egress"],"egress":[{"to":[{"namespaceSelector":{"matchLabels":{"name":"currencyservice"}}}],"ports":[{"port":7000,"protocol":"TCP"}]}]}}'
+Output: Error from server (NotFound): namespaces "cartservice" not found
+
+Mismatch Summary: Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+
+LLM Command: kubectl get namespaces
+Output: NAME                 STATUS   AGE
+default              Active   41m
+kube-node-lease      Active   41m
+kube-public          Active   41m
+kube-system          Active   41m
+local-path-storage   Active   41m
+
+Mismatch Summary: Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods --all-namespaces | grep -E 'cartservice|emailservice'
+Output: default              cartservice-7c8966d6fd-c8rb4                 1/1     Running   0          38m
+default              emailservice-d5d54d4fc-lksfn                 1/1     Running   0          38m
+
+Mismatch Summary: Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n default
+Output: NAME                    POD-SELECTOR                AGE
+adservice               app=adservice               37m
+cartservice             app=cartservice             37m
+checkoutservice         app=checkoutservice         37m
+currencyservice         app=currencyservice         37m
+emailservice            app=emailservice            37m
+frontend                app=frontend                37m
+loadgenerator           app=loadgenerator           37m
+paymentservice          app=paymentservice          37m
+productcatalogservice   app=productcatalogservice   37m
+recommendationservice   app=recommendationservice   37m
+redis-cart              app=redis-cart              37m
+shippingservice         app=shippingservice         37m
+
+Mismatch Summary: Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy cartservice -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"cartservice","namespace":"default"},"spec":{"egress":[{}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}},{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}],"ports":[{"port":7070,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"cartservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-05-07T16:33:45Z"
+  generation: 20
+  name: cartservice
+  namespace: default
+  resourceVersion: "4103"
+  uid: 4d84a894-3a45-4049-9e7b-cc68eaff1fc6
+spec:
+  egress:
+  - {}
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+    ports:
+    - port: 7070
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: cartservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy cartservice -n default --type='merge' -p '{"spec":{"egress":[{"to":[{"podSelector":{"matchLabels":{"app":"currencyservice"}}}],"ports":[{"port":7000,"protocol":"TCP"}]}]}}'
+Output: networkpolicy.networking.k8s.io/cartservice patched
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy cartservice -n default --type='merge' -p '{"spec":{"egress":[{"to":[{"podSelector":{"matchLabels":{"app":"redis-cart"}}}],"ports":[{"port":6379,"protocol":"TCP"}]}]}}
+Output: /bin/bash: -c: line 1: unexpected EOF while looking for matching `''
+/bin/bash: -c: line 2: syntax error: unexpected end of file
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+

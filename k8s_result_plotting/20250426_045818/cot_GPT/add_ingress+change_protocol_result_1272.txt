@@ -1,0 +1,315 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy checkoutservice --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "emailservice"}}}}, {"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 5000, "protocol": "TCP"}}]'
+Output: networkpolicy.networking.k8s.io/checkoutservice patched
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy checkoutservice --type='json' -p='[{"op": "replace", "path": "/spec/ingress/0/from", "value": [{"podSelector": {"matchLabels": {"app": "emailservice"}}}]}, {"op": "replace", "path": "/spec/ingress/0/ports", "value": [{"port": 5000, "protocol": "TCP"}]}]'
+Output: networkpolicy.networking.k8s.io/checkoutservice patched
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy checkoutservice -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"checkoutservice","namespace":"default"},"spec":{"egress":[{}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":5050,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"checkoutservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-04-26T05:02:44Z"
+  generation: 505
+  name: checkoutservice
+  namespace: default
+  resourceVersion: "84764"
+  uid: 35564efc-1c59-43fc-a67f-7c18db8116a1
+spec:
+  egress:
+  - {}
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: emailservice
+    ports:
+    - port: 5000
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: checkoutservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy checkoutservice --type='json' -p='[{"op": "add", "path": "/spec/ingress/-", "value": {"from": [{"podSelector": {"matchLabels": {"app": "emailservice"}}}], "ports": [{"port": 5000, "protocol": "TCP"}]}}]'
+Output: networkpolicy.networking.k8s.io/checkoutservice patched
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy checkoutservice --type='json' -p='[{"op": "replace", "path": "/spec/ingress", "value": [{"from": [{"podSelector": {"matchLabels": {"app": "emailservice"}}}], "ports": [{"port": 5000, "protocol": "TCP"}]}]}]'
+Output: networkpolicy.networking.k8s.io/checkoutservice patched
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods -l app=emailservice -o yaml
+Output: apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2025-04-26T05:01:40Z"
+    generateName: emailservice-6d85f47b76-
+    labels:
+      app: emailservice
+      pod-template-hash: 6d85f47b76
+      skaffold.dev/run-id: 00adce13-6ae0-4db6-9ff3-9bd0af686efb
+    name: emailservice-6d85f47b76-rdnmb
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: emailservice-6d85f47b76
+      uid: 96899f8c-8896-4ee4-a30b-f416feb45b3d
+    resourceVersion: "1081"
+    uid: f58381be-05d7-4946-a4be-0e3afb59c6cb
+  spec:
+    containers:
+    - env:
+      - name: PORT
+        value: "8080"
+      - name: DISABLE_PROFILER
+        value: "1"
+      image: emailservice:6883364a4eec3419c5c40ff873008aef30409407004d9fd5b386d126bb4212ff
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        failureThreshold: 3
+        grpc:
+          port: 8080
+          service: ""
+        periodSeconds: 5
+        successThreshold: 1
+        timeoutSeconds: 1
+      name: server
+      ports:
+      - containerPort: 8080
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 3
+        grpc:
+          port: 8080
+          service: ""
+        periodSeconds: 5
+        successThreshold: 1
+        timeoutSeconds: 1
+      resources:
+        limits:
+          cpu: 200m
+          memory: 128Mi
+        requests:
+          cpu: 100m
+          memory: 64Mi
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+          - ALL
+        privileged: false
+        readOnlyRootFilesystem: true
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-cstxf
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    ephemeralContainers:
+    - command:
+      - sleep
+      - infinity
+      image: busybox
+      imagePullPolicy: Always
+      name: debugger-jhlqf
+      resources: {}
+      stdin: true
+      targetContainerName: server
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      tty: true
+    nodeName: kind-control-plane
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext:
+      fsGroup: 1000
+      runAsGroup: 1000
+      runAsNonRoot: true
+      runAsUser: 1000
+    serviceAccount: emailservice
+    serviceAccountName: emailservice
+    terminationGracePeriodSeconds: 5
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-cstxf
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2025-04-26T05:01:44Z"
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2025-04-26T05:01:40Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2025-04-26T05:01:50Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2025-04-26T05:01:50Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2025-04-26T05:01:40Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: containerd://c4e8ca1716ec56096449450a6385454a79c2e3089ea9ce854b0438044c3ab2b6
+      image: docker.io/library/emailservice:6883364a4eec3419c5c40ff873008aef30409407004d9fd5b386d126bb4212ff
+      imageID: docker.io/library/import-2025-04-26@sha256:f93de56a35c0c96c1d50c3f0525da5314ffdbdd8a93b087c95e664782759454f
+      lastState: {}
+      name: server
+      ready: true
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2025-04-26T05:01:43Z"
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-cstxf
+        readOnly: true
+        recursiveReadOnly: Disabled
+    ephemeralContainerStatuses:
+    - containerID: containerd://d8eda6616dfbdab93bad36919f031b7bc4900d4ca367de1c55ea99c61451ad75
+      image: docker.io/library/busybox:latest
+      imageID: docker.io/library/busybox@sha256:37f7b378a29ceb4c551b1b5582e27747b855bbfaa73fa11914fe0df028dc581f
+      lastState: {}
+      name: debugger-jhlqf
+      ready: false
+      restartCount: 0
+      state:
+        running:
+          startedAt: "2025-04-26T05:02:30Z"
+    hostIP: 172.18.0.2
+    hostIPs:
+    - ip: 172.18.0.2
+    phase: Running
+    podIP: 10.244.0.9
+    podIPs:
+    - ip: 10.244.0.9
+    qosClass: Burstable
+    startTime: "2025-04-26T05:01:40Z"
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -l app=emailservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: bash
+kubectl patch networkpolicy checkoutservice --type='json' -p='[{"op": "add", "path": "/spec/egress", "value": [{"to": [{"podSelector": {"matchLabels": {"app": "emailservice"}}}], "ports": [{"port": 5000, "protocol": "TCP"}]}]}]'
+Output: networkpolicy.networking.k8s.io/checkoutservice patched
+
+Mismatch Summary: Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → redis-cart:6379 (Expected: False, Actual: True)
+

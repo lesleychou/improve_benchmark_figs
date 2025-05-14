@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend",
+        "output": "",
+        "mismatch_summary": "Mismatch: cartservice \u2192 emailservice:5000 (Expected: False, Actual: True)\nMismatch: loadgenerator \u2192 emailservice:5000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy <networkpolicy-name> -n emailservice --type=json -p '[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"cartservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"loadgenerator\"}}}}]'",
+        "output": "/bin/bash: line 1: networkpolicy-name: No such file or directory\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 emailservice:5000 (Expected: False, Actual: True)\nMismatch: loadgenerator \u2192 emailservice:5000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n emailservice",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: frontend \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)\nMismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy <networkpolicy-name> -n frontend --type=json -p '[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"adservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"cartservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"checkoutservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"currencyservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"productcatalogservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"recommendationservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"shippingservice\"}}}}]'",
+        "output": "/bin/bash: line 1: networkpolicy-name: No such file or directory\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 emailservice:5000 (Expected: False, Actual: True)\nMismatch: loadgenerator \u2192 emailservice:5000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n emailservice",
+        "output": "",
+        "mismatch_summary": "Mismatch: cartservice \u2192 emailservice:5000 (Expected: False, Actual: True)\nMismatch: loadgenerator \u2192 emailservice:5000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n emailservice",
+        "output": "",
+        "mismatch_summary": "Mismatch: cartservice \u2192 emailservice:5000 (Expected: False, Actual: True)\nMismatch: loadgenerator \u2192 emailservice:5000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n emailservice -o jsonpath='{.items[*].metadata.name}'",
+        "output": "",
+        "mismatch_summary": "Mismatch: cartservice \u2192 emailservice:5000 (Expected: False, Actual: True)\nMismatch: loadgenerator \u2192 emailservice:5000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n emailservice -o json",
+        "output": "{\n    \"apiVersion\": \"v1\",\n    \"items\": [],\n    \"kind\": \"List\",\n    \"metadata\": {\n        \"resourceVersion\": \"\"\n    }\n}\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 emailservice:5000 (Expected: False, Actual: True)\nMismatch: loadgenerator \u2192 emailservice:5000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl apply -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: deny-cartservice-loadgenerator\n  namespace: emailservice\nspec:\n  podSelector:\n    matchLabels:\n      app: emailservice\n  ingress:\n    - from:\n        - podSelector:\n            matchLabels:\n              app: cartservice\n        - podSelector:\n            matchLabels:\n              app: loadgenerator\n      ports:\n        - protocol: TCP\n          port: 5000\nEOF",
+        "output": "{\n    \"apiVersion\": \"v1\",\n    \"items\": [],\n    \"kind\": \"List\",\n    \"metadata\": {\n        \"resourceVersion\": \"\"\n    }\n}\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 emailservice:5000 (Expected: False, Actual: True)\nMismatch: loadgenerator \u2192 emailservice:5000 (Expected: False, Actual: True)"
+    }
+]

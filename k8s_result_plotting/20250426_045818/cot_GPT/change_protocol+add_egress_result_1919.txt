@@ -1,0 +1,89 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy allow-recommendation-to-productcatalog -n recommendationservice --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "productcatalogservice"}}}}, {"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 3550, "protocol": "TCP"}}]'
+Output: networkpolicy.networking.k8s.io/allow-recommendation-to-productcatalog patched
+
+Mismatch Summary: Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy allow-productcatalog-to-recommendation -n productcatalogservice --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "recommendationservice"}}}}, {"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 3550, "protocol": "TCP"}}]'
+Output: Error from server (NotFound): namespaces "productcatalogservice" not found
+
+Mismatch Summary: Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get namespaces
+Output: NAME                    STATUS   AGE
+adservice               Active   106m
+cartservice             Active   83m
+default                 Active   110m
+frontend                Active   106m
+kube-node-lease         Active   110m
+kube-public             Active   110m
+kube-system             Active   110m
+local-path-storage      Active   110m
+paymentservice          Active   45m
+recommendationservice   Active   100m
+redis-cart              Active   18m
+shippingservice         Active   102m
+
+Mismatch Summary: Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods --all-namespaces -o wide | grep productcatalogservice
+Output: default              productcatalogservice-697ff888cf-k7x58       1/1     Running   0          108m   10.244.0.12   kind-control-plane   <none>           <none>
+
+Mismatch Summary: Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy allow-recommendation-to-productcatalog -n default --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "recommendationservice"}}}}, {"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 3550, "protocol": "TCP"}}]'
+Output: networkpolicy.networking.k8s.io/allow-recommendation-to-productcatalog patched
+
+Mismatch Summary: Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods -n recommendationservice --show-labels
+Output: 
+Mismatch Summary: Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods -n recommendationservice --show-labels
+Output: 
+Mismatch Summary: Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods -n recommendationservice --show-labels
+Output: 
+Mismatch Summary: Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+

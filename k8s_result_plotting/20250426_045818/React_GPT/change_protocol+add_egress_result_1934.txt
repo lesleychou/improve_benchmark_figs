@@ -1,0 +1,121 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n checkoutservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy allow-payment-access -n checkoutservice --type='merge' -p '{"spec":{"podSelector":{},"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"paymentservice"}}}],"ports":[{"protocol":"TCP","port":50051}]}]}}'
+Output: Error from server (NotFound): namespaces "checkoutservice" not found
+
+Mismatch Summary: Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get namespaces
+Output: NAME                 STATUS   AGE
+default              Active   17h
+kube-node-lease      Active   17h
+kube-public          Active   17h
+kube-system          Active   17h
+local-path-storage   Active   17h
+
+Mismatch Summary: Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get pods --all-namespaces -o wide | grep checkoutservice
+Output: default              checkoutservice-55698bfcc5-hrjtk             1/1     Running   0              17h   10.244.0.7    kind-control-plane   <none>           <none>
+
+Mismatch Summary: Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: bash
+kubectl patch networkpolicy allow-payment-access -n default --type='merge' -p '{"spec":{"podSelector":{"matchLabels":{"app":"checkoutservice"}},"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"paymentservice"}}}],"ports":[{"protocol":"TCP","port":50051}]}]}}'
+Output: bash: error reading input file: Bad file descriptor
+Error from server (NotFound): networkpolicies.networking.k8s.io "allow-payment-access" not found
+
+Mismatch Summary: Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl apply -n default -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-payment-access
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: checkoutservice
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: paymentservice
+    ports:
+    - protocol: TCP
+      port: 50051
+EOF
+Output: bash: error reading input file: Bad file descriptor
+Error from server (NotFound): networkpolicies.networking.k8s.io "allow-payment-access" not found
+
+Mismatch Summary: Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl apply -n default -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-payment-access
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: checkoutservice
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: paymentservice
+    ports:
+    - protocol: TCP
+      port: 50051
+EOF
+Output: bash: error reading input file: Bad file descriptor
+Error from server (NotFound): networkpolicies.networking.k8s.io "allow-payment-access" not found
+
+Mismatch Summary: Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl create -n default -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-payment-access
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: checkoutservice
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: paymentservice
+    ports:
+    - protocol: TCP
+      port: 50051
+EOF
+Output: bash: error reading input file: Bad file descriptor
+Error from server (NotFound): networkpolicies.networking.k8s.io "allow-payment-access" not found
+
+Mismatch Summary: Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+

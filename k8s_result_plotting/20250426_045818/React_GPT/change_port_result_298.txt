@@ -1,0 +1,22 @@
+LLM Command: kubectl get networkpolicy -A
+Output: NAMESPACE   NAME                    POD-SELECTOR                AGE
+default     adservice               app=adservice               3h51m
+default     cartservice             app=cartservice             3h51m
+default     checkoutservice         app=checkoutservice         3h51m
+default     currencyservice         app=currencyservice         3h51m
+default     emailservice            app=emailservice            3h51m
+default     frontend                app=frontend                3h51m
+default     loadgenerator           app=loadgenerator           3h51m
+default     paymentservice          app=paymentservice          3h51m
+default     productcatalogservice   app=productcatalogservice   3h51m
+default     recommendationservice   app=recommendationservice   3h51m
+default     redis-cart              app=redis-cart              3h51m
+default     shippingservice         app=shippingservice         3h51m
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy checkoutservice -n default --type=json -p '[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "frontend"}}}}, {"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 5050, "protocol": "TCP"}}]'
+Output: networkpolicy.networking.k8s.io/checkoutservice patched
+
+Mismatch Summary: No mismatches found.
+

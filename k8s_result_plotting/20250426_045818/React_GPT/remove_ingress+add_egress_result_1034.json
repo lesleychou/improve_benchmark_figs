@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend",
+        "output": "",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n cartservice -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy -n cartservice --type='json' -p='[{\n  \"op\": \"add\",\n  \"path\": \"/spec\",\n  \"value\": {\n    \"podSelector\": {},\n    \"ingress\": [\n      {\n        \"from\": [\n          {\n            \"podSelector\": {\n              \"matchLabels\": {\n                \"app\": \"redis-cart\"\n              }\n            }\n          }\n        ],\n        \"ports\": [\n          {\n            \"protocol\": \"TCP\",\n            \"port\": 6379\n          }\n        ]\n      }\n    ]\n  }\n}]'",
+        "output": "error: resource(s) were provided, but no name was specified\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n redis-cart -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy -n redis-cart --type='json' -p='[{\n  \"op\": \"add\",\n  \"path\": \"/spec\",\n  \"value\": {\n    \"podSelector\": {},\n    \"ingress\": [\n      {\n        \"from\": [\n          {\n            \"podSelector\": {\n              \"matchLabels\": {\n                \"app\": \"cartservice\"\n              }\n            }\n          }\n        ],\n        \"ports\": [\n          {\n            \"protocol\": \"TCP\",\n            \"port\": 6379\n          }\n        ]\n      }\n    ]\n  }\n}]'",
+        "output": "error: resource(s) were provided, but no name was specified\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl apply -n cartservice -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-redis-cart\nspec:\n  podSelector:\n    matchLabels:\n      app: cartservice\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: redis-cart\n    ports:\n    - protocol: TCP\n      port: 6379\nEOF",
+        "output": "error: resource(s) were provided, but no name was specified\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl apply -n cartservice -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-redis-cart\nspec:\n  podSelector:\n    matchLabels:\n      app: cartservice\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: redis-cart\n    ports:\n    - protocol: TCP\n      port: 6379\nEOF",
+        "output": "error: resource(s) were provided, but no name was specified\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl apply -n redis-cart -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-cartservice\nspec:\n  podSelector:\n    matchLabels:\n      app: redis-cart\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: cartservice\n    ports:\n    - protocol: TCP\n      port: 6379\nEOF",
+        "output": "error: resource(s) were provided, but no name was specified\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy allow-cartservice -n redis-cart --type='json' -p='[{\n  \"op\": \"add\",\n  \"path\": \"/spec\",\n  \"value\": {\n    \"podSelector\": {\n      \"matchLabels\": {\n        \"app\": \"redis-cart\"\n      }\n    },\n    \"ingress\": [\n      {\n        \"from\": [\n          {\n            \"podSelector\": {\n              \"matchLabels\": {\n                \"app\": \"cartservice\"\n              }\n            }\n          }\n        ],\n        \"ports\": [\n          {\n            \"protocol\": \"TCP\",\n            \"port\": 6379\n          }\n        ]\n      }\n    ]\n  }\n}]'",
+        "output": "Error from server (NotFound): namespaces \"redis-cart\" not found\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)"
+    }
+]

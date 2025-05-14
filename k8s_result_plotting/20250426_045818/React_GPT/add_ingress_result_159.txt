@@ -1,0 +1,58 @@
+LLM Command: kubectl get networkpolicy -n frontend
+Output: 
+Mismatch Summary: Mismatch: adservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: cartservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy <networkpolicy-name> -n shippingservice --type=json -p '[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "adservice"}}, "ports": [{"port": 50051}]}}, {"op": "remove", "path": "/spec/ingress/0/from"}]'
+Output: /bin/bash: line 1: networkpolicy-name: No such file or directory
+
+Mismatch Summary: Mismatch: adservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: cartservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n shippingservice
+Output: 
+Mismatch Summary: Mismatch: adservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: cartservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n shippingservice -o jsonpath='{.items[*].metadata.name}'
+Output: 
+Mismatch Summary: Mismatch: adservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: cartservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: python
+# Attempting to retrieve the network policy names in the shippingservice namespace
+kubectl_command = "kubectl get networkpolicy -n shippingservice -o jsonpath='{.items[*].metadata.name}'"
+kubectl_command
+Output: /bin/bash: line 3: kubectl_command: command not found
+/bin/bash: line 4: kubectl_command: command not found
+
+Mismatch Summary: Mismatch: adservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: cartservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n shippingservice -o jsonpath='{.items[*].metadata.name}'
+Output: 
+Mismatch Summary: Mismatch: adservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: cartservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n shippingservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: adservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: cartservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy deny-ad-cart-to-shipping -n shippingservice --type=json -p '[{"op": "add", "path": "/spec", "value": {"podSelector": {}, "policyTypes": ["Ingress"], "ingress": [{"from": [{"podSelector": {"matchLabels": {"app": "adservice"}}}, {"podSelector": {"matchLabels": {"app": "cartservice"}}}], "ports": [{"port": 50051}]}}}]'
+Output: error: unable to parse "[{\"op\": \"add\", \"path\": \"/spec\", \"value\": {\"podSelector\": {}, \"policyTypes\": [\"Ingress\"], \"ingress\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"adservice\"}}}, {\"podSelector\": {\"matchLabels\": {\"app\": \"cartservice\"}}}], \"ports\": [{\"port\": 50051}]}}}]": yaml: did not find expected ',' or ']'
+
+Mismatch Summary: Mismatch: adservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: cartservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy deny-ad-cart-to-shipping -n shippingservice --type=json -p '[{"op": "add", "path": "/spec", "value": {"podSelector": {}, "policyTypes": ["Ingress"], "ingress": [{"from": [{"podSelector": {"matchLabels": {"app": "adservice"}}}, {"podSelector": {"matchLabels": {"app": "cartservice"}}}], "ports": [{"port": 50051}]}}}]'
+Output: error: unable to parse "[{\"op\": \"add\", \"path\": \"/spec\", \"value\": {\"podSelector\": {}, \"policyTypes\": [\"Ingress\"], \"ingress\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"adservice\"}}}, {\"podSelector\": {\"matchLabels\": {\"app\": \"cartservice\"}}}], \"ports\": [{\"port\": 50051}]}}}]": yaml: did not find expected ',' or ']'
+
+Mismatch Summary: Mismatch: adservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: cartservice → shippingservice:50051 (Expected: False, Actual: True)
+

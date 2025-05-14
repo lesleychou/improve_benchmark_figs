@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: cartservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n cartservice -o yaml",
+        "output": "apiVersion: v1\nitems:\n- apiVersion: networking.k8s.io/v1\n  kind: NetworkPolicy\n  metadata:\n    annotations:\n      kubectl.kubernetes.io/last-applied-configuration: |\n        {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"allow-cart-to-redis\",\"namespace\":\"cartservice\"},\"spec\":{\"ingress\":[{\"from\":[{\"namespaceSelector\":{\"matchLabels\":{}}}],\"ports\":[{\"port\":6379,\"protocol\":\"TCP\"}]}],\"podSelector\":{},\"policyTypes\":[\"Ingress\"]}}\n    creationTimestamp: \"2025-04-26T05:19:07Z\"\n    generation: 16\n    name: allow-cart-to-redis\n    namespace: cartservice\n    resourceVersion: \"3441\"\n    uid: 4c9b1f55-8904-49ff-8270-cab94ede49b9\n  spec:\n    egress:\n    - ports:\n      - port: 6379\n        protocol: TCP\n      to:\n      - podSelector:\n          matchLabels:\n            app: redis\n    ingress:\n    - {}\n    podSelector: {}\n    policyTypes:\n    - Ingress\n    - Egress\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy allow-cart-to-redis -n cartservice --type='merge' -p '{\"spec\":{\"egress\":[{\"to\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"redis\"}}}],\"ports\":[{\"port\":6379,\"protocol\":\"TCP\"}]}]}}'",
+        "output": "networkpolicy.networking.k8s.io/allow-cart-to-redis patched (no change)\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n currencyservice -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy deny-all-ingress -n currencyservice --type='merge' -p '{\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"name\":\"deny-all-ingress\",\"namespace\":\"currencyservice\"},\"spec\":{\"podSelector\":{},\"policyTypes\":[\"Ingress\"]}}'",
+        "output": "Error from server (NotFound): namespaces \"currencyservice\" not found\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                    STATUS   AGE\nadservice               Active   20m\ncartservice             Active   11m\ncheckoutservice         Active   16m\ndefault                 Active   31m\nemailservice            Active   16m\nkube-node-lease         Active   31m\nkube-public             Active   31m\nkube-system             Active   31m\nlocal-path-storage      Active   31m\nproductcatalogservice   Active   65s\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl create namespace currencyservice",
+        "output": "namespace/currencyservice created\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy deny-all-ingress -n currencyservice --type='merge' -p '{\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"name\":\"deny-all-ingress\",\"namespace\":\"currencyservice\"},\"spec\":{\"podSelector\":{},\"policyTypes\":[\"Ingress\"]}}'",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"deny-all-ingress\" not found\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy deny-all-ingress -n currencyservice --type='merge' -p '{\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"name\":\"deny-all-ingress\",\"namespace\":\"currencyservice\"},\"spec\":{\"podSelector\":{},\"policyTypes\":[\"Ingress\"],\"ingress\":[]}}'",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"deny-all-ingress\" not found\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    }
+]

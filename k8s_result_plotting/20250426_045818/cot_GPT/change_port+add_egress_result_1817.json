@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n cartservice -o yaml",
+        "output": "apiVersion: v1\nitems:\n- apiVersion: networking.k8s.io/v1\n  kind: NetworkPolicy\n  metadata:\n    annotations:\n      kubectl.kubernetes.io/last-applied-configuration: |\n        {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"cartservice-policy\",\"namespace\":\"cartservice\"},\"spec\":{\"egress\":[{\"ports\":[{\"port\":5050,\"protocol\":\"TCP\"}],\"to\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"checkoutservice\"}}}]}],\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}}}],\"ports\":[{\"port\":7070,\"protocol\":\"TCP\"}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"cartservice\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n    creationTimestamp: \"2025-04-27T15:59:42Z\"\n    generation: 13\n    name: cartservice-policy\n    namespace: cartservice\n    resourceVersion: \"3497\"\n    uid: d4c475e3-b916-4e7b-9b1d-52c2633ba7d5\n  spec:\n    egress:\n    - ports:\n      - port: 6379\n        protocol: TCP\n      to:\n      - podSelector:\n          matchLabels:\n            app: redis-cache\n      - podSelector:\n          matchLabels:\n            app: checkoutservice\n      - podSelector:\n          matchLabels:\n            app: checkoutservice\n    ingress:\n    - from:\n      - podSelector:\n          matchLabels:\n            app: frontend\n      ports:\n      - port: 7070\n        protocol: TCP\n    podSelector:\n      matchLabels:\n        app: cartservice\n    policyTypes:\n    - Ingress\n    - Egress\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy cartservice-policy -n cartservice --type=json -p='[{\"op\": \"remove\", \"path\": \"/spec/egress/1\"}]'",
+        "output": "The request is invalid: the server rejected our request due to an error in our request\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "bash\nkubectl patch networkpolicy cartservice-policy -n cartservice --type=json -p='[{\"op\": \"remove\", \"path\": \"/spec/egress/1\"}]'",
+        "output": "bash: error reading input file: Bad file descriptor\nThe request is invalid: the server rejected our request due to an error in our request\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy cartservice-policy -n cartservice --type=json -p='[{\"op\": \"remove\", \"path\": \"/spec/egress/1\"}]'",
+        "output": "The request is invalid: the server rejected our request due to an error in our request\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy cartservice-policy -n cartservice --type=json -p='[{\"op\": \"remove\", \"path\": \"/spec/egress/1\"}]'",
+        "output": "The request is invalid: the server rejected our request due to an error in our request\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy cartservice-policy -n cartservice -o json",
+        "output": "{\n    \"apiVersion\": \"networking.k8s.io/v1\",\n    \"kind\": \"NetworkPolicy\",\n    \"metadata\": {\n        \"annotations\": {\n            \"kubectl.kubernetes.io/last-applied-configuration\": \"{\\\"apiVersion\\\":\\\"networking.k8s.io/v1\\\",\\\"kind\\\":\\\"NetworkPolicy\\\",\\\"metadata\\\":{\\\"annotations\\\":{},\\\"name\\\":\\\"cartservice-policy\\\",\\\"namespace\\\":\\\"cartservice\\\"},\\\"spec\\\":{\\\"egress\\\":[{\\\"ports\\\":[{\\\"port\\\":5050,\\\"protocol\\\":\\\"TCP\\\"}],\\\"to\\\":[{\\\"podSelector\\\":{\\\"matchLabels\\\":{\\\"app\\\":\\\"checkoutservice\\\"}}}]}],\\\"ingress\\\":[{\\\"from\\\":[{\\\"podSelector\\\":{\\\"matchLabels\\\":{\\\"app\\\":\\\"frontend\\\"}}}],\\\"ports\\\":[{\\\"port\\\":7070,\\\"protocol\\\":\\\"TCP\\\"}]}],\\\"podSelector\\\":{\\\"matchLabels\\\":{\\\"app\\\":\\\"cartservice\\\"}},\\\"policyTypes\\\":[\\\"Ingress\\\",\\\"Egress\\\"]}}\\n\"\n        },\n        \"creationTimestamp\": \"2025-04-27T15:59:42Z\",\n        \"generation\": 13,\n        \"name\": \"cartservice-policy\",\n        \"namespace\": \"cartservice\",\n        \"resourceVersion\": \"3497\",\n        \"uid\": \"d4c475e3-b916-4e7b-9b1d-52c2633ba7d5\"\n    },\n    \"spec\": {\n        \"egress\": [\n            {\n                \"ports\": [\n                    {\n                        \"port\": 6379,\n                        \"protocol\": \"TCP\"\n                    }\n                ],\n                \"to\": [\n                    {\n                        \"podSelector\": {\n                            \"matchLabels\": {\n                                \"app\": \"redis-cache\"\n                            }\n                        }\n                    },\n                    {\n                        \"podSelector\": {\n                            \"matchLabels\": {\n                                \"app\": \"checkoutservice\"\n                            }\n                        }\n                    },\n                    {\n                        \"podSelector\": {\n                            \"matchLabels\": {\n                                \"app\": \"checkoutservice\"\n                            }\n                        }\n                    }\n                ]\n            }\n        ],\n        \"ingress\": [\n            {\n                \"from\": [\n                    {\n                        \"podSelector\": {\n                            \"matchLabels\": {\n                                \"app\": \"frontend\"\n                            }\n                        }\n                    }\n                ],\n                \"ports\": [\n                    {\n                        \"port\": 7070,\n                        \"protocol\": \"TCP\"\n                    }\n                ]\n            }\n        ],\n        \"podSelector\": {\n            \"matchLabels\": {\n                \"app\": \"cartservice\"\n            }\n        },\n        \"policyTypes\": [\n            \"Ingress\",\n            \"Egress\"\n        ]\n    }\n}\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy cartservice-policy -n cartservice --type=json -p='[{\"op\": \"replace\", \"path\": \"/spec/egress\", \"value\": [{\"ports\":[{\"port\":6379,\"protocol\":\"TCP\"}],\"to\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"redis-cache\"}}}]}]}]'",
+        "output": "networkpolicy.networking.k8s.io/cartservice-policy patched\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n checkoutservice -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    }
+]

@@ -1,0 +1,37 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n cartservice -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy -n cartservice --type='merge' -p '{\n  \"apiVersion\": \"networking.k8s.io/v1\",\n  \"kind\": \"NetworkPolicy\",\n  \"metadata\": {\n    \"name\": \"allow-frontend-checkout\"\n  },\n  \"spec\": {\n    \"podSelector\": {},\n    \"policyTypes\": [\"Ingress\"],\n    \"ingress\": [\n      {\n        \"from\": [\n          {\n            \"namespaceSelector\": {\n              \"matchLabels\": {\n                \"name\": \"frontend\"\n              }\n            }\n          },\n          {\n            \"namespaceSelector\": {\n              \"matchLabels\": {\n                \"name\": \"checkoutservice\"\n              }\n            }\n          }\n        ],\n        \"ports\": [\n          {\n            \"protocol\": \"TCP\",\n            \"port\": 7070\n          }\n        ]\n      }\n    ]\n  }\n}'",
+        "output": "error: resource(s) were provided, but no name was specified\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl apply -n cartservice -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-frontend-checkout\nspec:\n  podSelector: {}\n  policyTypes:\n  - Ingress\n  ingress:\n  - from:\n    - namespaceSelector:\n        matchLabels:\n          name: frontend\n    - namespaceSelector:\n        matchLabels:\n          name: checkoutservice\n    ports:\n    - protocol: TCP\n      port: 7070\nEOF",
+        "output": "Error from server (NotFound): error when creating \"STDIN\": namespaces \"cartservice\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\nadservice            Active   30s\ndefault              Active   11m\nkube-node-lease      Active   11m\nkube-public          Active   11m\nkube-system          Active   11m\nlocal-path-storage   Active   11m\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get pods --all-namespaces",
+        "output": "NAMESPACE            NAME                                         READY   STATUS    RESTARTS   AGE\ndefault              adservice-76f594d56f-2prlg                   1/1     Running   0          8m37s\ndefault              cartservice-5958849bb7-49tjm                 1/1     Running   0          8m37s\ndefault              checkoutservice-55d99bbf75-z49bp             1/1     Running   0          8m37s\ndefault              currencyservice-649964f87f-nxj9q             1/1     Running   0          8m37s\ndefault              emailservice-6d85f47b76-rdnmb                1/1     Running   0          8m37s\ndefault              frontend-fc4bf5fdb-rmj59                     1/1     Running   0          8m37s\ndefault              loadgenerator-6d98cc6686-4m4tn               1/1     Running   0          8m2s\ndefault              paymentservice-7dc8859fb8-vnwl8              1/1     Running   0          8m37s\ndefault              productcatalogservice-5bd4cb4488-7m8zm       1/1     Running   0          8m37s\ndefault              recommendationservice-c64454f56-4k2kx        1/1     Running   0          8m37s\ndefault              redis-cart-799f8fc4c-p9wps                   1/1     Running   0          8m36s\ndefault              shippingservice-5dd466d969-ppcwn             1/1     Running   0          8m36s\nkube-system          coredns-668d6bf9bc-7vskf                     1/1     Running   0          11m\nkube-system          coredns-668d6bf9bc-vhtsb                     1/1     Running   0          11m\nkube-system          etcd-kind-control-plane                      1/1     Running   0          11m\nkube-system          kindnet-kf59t                                1/1     Running   0          11m\nkube-system          kube-apiserver-kind-control-plane            1/1     Running   0          11m\nkube-system          kube-controller-manager-kind-control-plane   1/1     Running   0          11m\nkube-system          kube-proxy-t9chz                             1/1     Running   0          11m\nkube-system          kube-scheduler-kind-control-plane            1/1     Running   0          11m\nlocal-path-storage   local-path-provisioner-58cc7856b6-czqc8      1/1     Running   0          11m\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl apply -n default -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-frontend-checkout-to-cart\nspec:\n  podSelector:\n    matchLabels:\n      app: cartservice\n  policyTypes:\n  - Ingress\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    - podSelector:\n        matchLabels:\n          app: checkoutservice\n    ports:\n    - protocol: TCP\n      port: 7070\nEOF",
+        "output": "networkpolicy.networking.k8s.io/allow-frontend-checkout-to-cart created\n",
+        "mismatch_summary": "No mismatches found."
+    }
+]

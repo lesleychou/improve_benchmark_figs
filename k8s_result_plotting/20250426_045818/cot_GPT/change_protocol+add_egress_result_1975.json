@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: redis-cart \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n shippingservice",
+        "output": "NAME                                POD-SELECTOR          AGE\nallow-checkout-to-shipping          app=shippingservice   82m\nallow-frontend-ingress              app=shippingservice   86m\nallow-frontend-to-shipping          app=shippingservice   82m\nallow-frontend-to-shippingservice   app=shippingservice   86m\nshippingservice-allow-frontend      app=shippingservice   114m\nshippingservice-policy              app=shippingservice   45m\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: redis-cart \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl describe networkpolicy allow-frontend-to-shipping -n shippingservice",
+        "output": "Name:         allow-frontend-to-shipping\nNamespace:    shippingservice\nCreated on:   2025-04-27 16:43:58 +0000 UTC\nLabels:       <none>\nAnnotations:  <none>\nSpec:\n  PodSelector:     app=shippingservice\n  Allowing ingress traffic:\n    To Port: 50051/TCP\n    From:\n      PodSelector: app=frontend\n  Not affecting egress traffic\n  Policy Types: Ingress\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: redis-cart \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy allow-frontend-to-shipping -n shippingservice --type='json' -p='[{\"op\": \"replace\", \"path\": \"/spec/ingress/0/from\", \"value\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}}]}]'",
+        "output": "networkpolicy.networking.k8s.io/allow-frontend-to-shipping patched (no change)\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: redis-cart \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl describe networkpolicy shippingservice-policy -n shippingservice",
+        "output": "Name:         shippingservice-policy\nNamespace:    shippingservice\nCreated on:   2025-04-27 17:20:51 +0000 UTC\nLabels:       <none>\nAnnotations:  <none>\nSpec:\n  PodSelector:     app=shippingservice\n  Allowing ingress traffic:\n    To Port: 50051/TCP\n    To Port: 50051/TCP\n    From:\n      PodSelector: app=frontend\n    From:\n      PodSelector: app=frontend\n  Not affecting egress traffic\n  Policy Types: Ingress\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: redis-cart \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend",
+        "output": "NAME                       POD-SELECTOR   AGE\nfrontend-allow             app=frontend   136m\nfrontend-allow-adservice   app=frontend   149m\nfrontend-allow-shipping    app=frontend   78m\nfrontend-network-policy    app=frontend   69m\nfrontend-policy            app=frontend   149m\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: redis-cart \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl describe networkpolicy frontend-allow-shipping -n frontend",
+        "output": "Name:         frontend-allow-shipping\nNamespace:    frontend\nCreated on:   2025-04-27 16:48:02 +0000 UTC\nLabels:       <none>\nAnnotations:  <none>\nSpec:\n  PodSelector:     app=frontend\n  Allowing ingress traffic:\n    To Port: 50051/TCP\n    From:\n      PodSelector: app=shippingservice\n  Not affecting egress traffic\n  Policy Types: Ingress\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: redis-cart \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy shippingservice-policy -n shippingservice --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}}}]'",
+        "output": "networkpolicy.networking.k8s.io/shippingservice-policy patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: redis-cart \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl describe networkpolicy frontend-allow -n frontend",
+        "output": "Name:         frontend-allow\nNamespace:    frontend\nCreated on:   2025-04-27 15:49:44 +0000 UTC\nLabels:       <none>\nAnnotations:  <none>\nSpec:\n  PodSelector:     app=frontend\n  Allowing ingress traffic:\n    To Port: 9555/TCP\n    From:\n      PodSelector: app=adservice\n  Not affecting egress traffic\n  Policy Types: Ingress\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 shippingservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: redis-cart \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    }
+]

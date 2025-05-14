@@ -1,0 +1,17 @@
+[
+    {
+        "llm_command": "kubectl get networkpolicy -A",
+        "output": "NAMESPACE   NAME                    POD-SELECTOR                AGE\ndefault     adservice               app=adservice               4h7m\ndefault     cartservice             app=cartservice             4h7m\ndefault     checkoutservice         app=checkoutservice         4h7m\ndefault     currencyservice         app=currencyservice         4h7m\ndefault     emailservice            app=emailservice            4h7m\ndefault     frontend                app=frontend                4h7m\ndefault     loadgenerator           app=loadgenerator           4h7m\ndefault     paymentservice          app=paymentservice          4h7m\ndefault     productcatalogservice   app=productcatalogservice   4h7m\ndefault     recommendationservice   app=recommendationservice   4h7m\ndefault     redis-cart              app=redis-cart              4h7m\ndefault     shippingservice         app=shippingservice         4h7m\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy adservice -n default -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"adservice\",\"namespace\":\"default\"},\"spec\":{\"egress\":[{}],\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}}}],\"ports\":[{\"port\":40433,\"protocol\":\"TCP\"}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"adservice\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n  creationTimestamp: \"2025-05-07T16:33:45Z\"\n  generation: 129\n  name: adservice\n  namespace: default\n  resourceVersion: \"21054\"\n  uid: 2acfba7a-0315-464e-9e9a-2eb9d717536e\nspec:\n  egress:\n  - {}\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    ports:\n    - port: 40433\n      protocol: TCP\n  podSelector:\n    matchLabels:\n      app: adservice\n  policyTypes:\n  - Ingress\n  - Egress\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy adservice -n default --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 9555, \"protocol\": \"TCP\"}}]'",
+        "output": "networkpolicy.networking.k8s.io/adservice patched\n",
+        "mismatch_summary": "No mismatches found."
+    }
+]

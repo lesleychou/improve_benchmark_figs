@@ -1,0 +1,116 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → recommendationservice:8080 (Expected: False, Actual: True)
+
+LLM Command: bash
+kubectl get networkpolicy currencyservice -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"currencyservice","namespace":"default"},"spec":{"egress":[{}],"ingress":[],"podSelector":{"matchLabels":{"app":"currencyservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-04-26T05:21:06Z"
+  generation: 120
+  name: currencyservice
+  namespace: default
+  resourceVersion: "23345"
+  uid: 17fbc1d9-9dfd-44d6-b178-5c2d33a49dc1
+spec:
+  egress:
+  - {}
+  podSelector:
+    matchLabels:
+      app: currencyservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → recommendationservice:8080 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy currencyservice --type=merge -p $'
+spec:
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+  ports:
+    - port: 7000
+      protocol: TCP
+'
+Output: networkpolicy.networking.k8s.io/currencyservice patched
+
+Mismatch Summary: Mismatch: checkoutservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → recommendationservice:8080 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy recommendationservice -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"recommendationservice","namespace":"default"},"spec":{"egress":[{}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":8080,"protocol":"TCP"}]},{"from":[{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}]},{"from":[{"podSelector":{"matchLabels":{"app":"productcatalogservice"}}}]}],"podSelector":{"matchLabels":{"app":"recommendationservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-04-26T05:21:07Z"
+  generation: 244
+  name: recommendationservice
+  namespace: default
+  resourceVersion: "23348"
+  uid: 86dd0329-94d7-4215-9c9c-a6bfa49e534b
+spec:
+  egress:
+  - {}
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    ports:
+    - port: 8080
+      protocol: TCP
+  - from:
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+  - from:
+    - podSelector:
+        matchLabels:
+          app: productcatalogservice
+  podSelector:
+    matchLabels:
+      app: recommendationservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: checkoutservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → recommendationservice:8080 (Expected: False, Actual: True)
+
+LLM Command: bash
+kubectl patch networkpolicy recommendationservice --type=merge -p $'
+spec:
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    ports:
+    - port: 8080
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: recommendationservice
+'
+Output: networkpolicy.networking.k8s.io/recommendationservice patched
+
+Mismatch Summary: No mismatches found.
+

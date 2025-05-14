@@ -1,0 +1,12 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy currencyservice --type=merge -p $'\nspec:\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    - podSelector:\n        matchLabels:\n          app: checkoutservice\n  ports:\n    - port: 7000\n      protocol: TCP\n'",
+        "output": "networkpolicy.networking.k8s.io/currencyservice patched\n",
+        "mismatch_summary": "No mismatches found."
+    }
+]

@@ -1,0 +1,94 @@
+LLM Command: NAME                  POD-SELECTOR   INGRESS   EGRESS   POLICYTYPES
+          frontend-policy       app=frontend   true      false    Ingress
+          checkout-policy       app=checkout   true      false    Ingress
+          recommendation-policy app=recommendation true   false    Ingress
+          cart-policy           app=cart       true      false    Ingress
+          redis-cache-policy    app=redis-cache true     false    Ingress
+Output: /bin/bash: line 1: NAME: command not found
+/bin/bash: line 2: frontend-policy: command not found
+/bin/bash: line 3: checkout-policy: command not found
+/bin/bash: line 4: recommendation-policy: command not found
+/bin/bash: line 5: cart-policy: command not found
+/bin/bash: line 6: redis-cache-policy: command not found
+
+Mismatch Summary: Mismatch: adservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: shippingservice → productcatalogservice:3550 (Expected: False, Actual: True)
+
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: adservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: shippingservice → productcatalogservice:3550 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n default
+Output: NAME                    POD-SELECTOR                AGE
+adservice               app=adservice               5h40m
+cartservice             app=cartservice             5h40m
+checkoutservice         app=checkoutservice         5h40m
+currencyservice         app=currencyservice         5h40m
+emailservice            app=emailservice            5h40m
+frontend                app=frontend                5h40m
+loadgenerator           app=loadgenerator           5h40m
+paymentservice          app=paymentservice          5h40m
+productcatalogservice   app=productcatalogservice   5h40m
+recommendationservice   app=recommendationservice   5h40m
+redis-cart              app=redis-cart              5h40m
+shippingservice         app=shippingservice         5h40m
+
+Mismatch Summary: Mismatch: adservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: shippingservice → productcatalogservice:3550 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy adservice -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"adservice","namespace":"default"},"spec":{"egress":[{}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":9555,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"adservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-04-28T05:25:41Z"
+  generation: 31
+  name: adservice
+  namespace: default
+  resourceVersion: "27305"
+  uid: d5bf7487-2140-4779-8b00-e06ebc6dab8b
+spec:
+  egress:
+  - {}
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    ports:
+    - port: 9555
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: adservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: adservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: shippingservice → productcatalogservice:3550 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy adservice -n default -p '{"spec":{"egress":[{"to":[{"podSelector":{"matchLabels":{"app":"productcatalogservice"}}}],"ports":[{"port":3550,"protocol":"TCP"}]}]}}'
+Output: networkpolicy.networking.k8s.io/adservice patched
+
+Mismatch Summary: Mismatch: shippingservice → productcatalogservice:3550 (Expected: False, Actual: True)
+
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: shippingservice → productcatalogservice:3550 (Expected: False, Actual: True)
+
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: shippingservice → productcatalogservice:3550 (Expected: False, Actual: True)
+
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: shippingservice → productcatalogservice:3550 (Expected: False, Actual: True)
+
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: shippingservice → productcatalogservice:3550 (Expected: False, Actual: True)
+

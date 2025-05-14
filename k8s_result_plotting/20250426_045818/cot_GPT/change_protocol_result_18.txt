@@ -1,0 +1,153 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy checkout-network-policy -n checkoutservice --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "frontend"}}}}]'
+Output: Error from server (NotFound): namespaces "checkoutservice" not found
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+
+LLM Command: kubectl get namespaces
+Output: NAME                 STATUS   AGE
+adservice            Active   53s
+default              Active   11m
+kube-node-lease      Active   11m
+kube-public          Active   11m
+kube-system          Active   11m
+local-path-storage   Active   11m
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+
+LLM Command: kubectl get pods --all-namespaces
+Output: NAMESPACE            NAME                                         READY   STATUS    RESTARTS   AGE
+default              adservice-76f594d56f-2prlg                   1/1     Running   0          8m59s
+default              cartservice-5958849bb7-49tjm                 1/1     Running   0          8m59s
+default              checkoutservice-55d99bbf75-z49bp             1/1     Running   0          8m59s
+default              currencyservice-649964f87f-nxj9q             1/1     Running   0          8m59s
+default              emailservice-6d85f47b76-rdnmb                1/1     Running   0          8m59s
+default              frontend-fc4bf5fdb-rmj59                     1/1     Running   0          8m59s
+default              loadgenerator-6d98cc6686-4m4tn               1/1     Running   0          8m24s
+default              paymentservice-7dc8859fb8-vnwl8              1/1     Running   0          8m59s
+default              productcatalogservice-5bd4cb4488-7m8zm       1/1     Running   0          8m59s
+default              recommendationservice-c64454f56-4k2kx        1/1     Running   0          8m59s
+default              redis-cart-799f8fc4c-p9wps                   1/1     Running   0          8m58s
+default              shippingservice-5dd466d969-ppcwn             1/1     Running   0          8m58s
+kube-system          coredns-668d6bf9bc-7vskf                     1/1     Running   0          11m
+kube-system          coredns-668d6bf9bc-vhtsb                     1/1     Running   0          11m
+kube-system          etcd-kind-control-plane                      1/1     Running   0          11m
+kube-system          kindnet-kf59t                                1/1     Running   0          11m
+kube-system          kube-apiserver-kind-control-plane            1/1     Running   0          11m
+kube-system          kube-controller-manager-kind-control-plane   1/1     Running   0          11m
+kube-system          kube-proxy-t9chz                             1/1     Running   0          11m
+kube-system          kube-scheduler-kind-control-plane            1/1     Running   0          11m
+local-path-storage   local-path-provisioner-58cc7856b6-czqc8      1/1     Running   0          11m
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy checkout-network-policy -n default --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "frontend"}}}}]'
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "checkout-network-policy" not found
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n default
+Output: NAME                              POD-SELECTOR                AGE
+adservice                         app=adservice               8m1s
+allow-currency-ingress            app=currencyservice         3m16s
+allow-frontend-checkout           app=shippingservice         5m45s
+allow-frontend-checkout-to-cart   app=cartservice             24s
+allow-productcatalog-access       app=productcatalogservice   6m20s
+cartservice                       app=cartservice             8m1s
+checkoutservice                   app=checkoutservice         8m1s
+checkoutservice-policy            app=checkoutservice         2m51s
+currencyservice                   app=currencyservice         8m1s
+emailservice                      app=emailservice            8m1s
+frontend                          app=frontend                8m
+loadgenerator                     app=loadgenerator           8m
+paymentservice                    app=paymentservice          8m
+productcatalogservice             app=productcatalogservice   8m
+recommendationservice             app=recommendationservice   8m
+redis-cart                        app=redis-cart              8m
+shippingservice                   app=shippingservice         8m
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy checkoutservice-policy -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"checkoutservice-policy","namespace":"default"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"paymentservice"}}}],"ports":[{"port":50051,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"checkoutservice"}},"policyTypes":["Ingress"]}}
+  creationTimestamp: "2025-04-26T05:07:54Z"
+  generation: 3
+  name: checkoutservice-policy
+  namespace: default
+  resourceVersion: "1640"
+  uid: 62190730-ca5c-4eb2-a95f-e0ade7a1b28b
+spec:
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: paymentservice
+    - podSelector:
+        matchLabels:
+          app: emailservice
+          skaffold.dev/run-id: 00adce13-6ae0-4db6-9ff3-9bd0af686efb
+    ports:
+    - port: 50051
+      protocol: TCP
+    - port: 5000
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: checkoutservice
+  policyTypes:
+  - Ingress
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy checkoutservice-policy -n default --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "frontend"}}}}]'
+Output: networkpolicy.networking.k8s.io/checkoutservice-policy patched
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy checkoutservice-policy -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"checkoutservice-policy","namespace":"default"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"paymentservice"}}}],"ports":[{"port":50051,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"checkoutservice"}},"policyTypes":["Ingress"]}}
+  creationTimestamp: "2025-04-26T05:07:54Z"
+  generation: 4
+  name: checkoutservice-policy
+  namespace: default
+  resourceVersion: "1829"
+  uid: 62190730-ca5c-4eb2-a95f-e0ade7a1b28b
+spec:
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: paymentservice
+    - podSelector:
+        matchLabels:
+          app: emailservice
+          skaffold.dev/run-id: 00adce13-6ae0-4db6-9ff3-9bd0af686efb
+    - podSelector:
+        matchLabels:
+          app: frontend
+    ports:
+    - port: 50051
+      protocol: TCP
+    - port: 5000
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: checkoutservice
+  policyTypes:
+  - Ingress
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+

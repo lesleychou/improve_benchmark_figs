@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy shippingservice-policy -n shippingservice --type=json -p='[{\"op\": \"remove\", \"path\": \"/spec/ingress/0/from/0/podSelector/matchLabels/checkoutservice\"}]'",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"shippingservice-policy\" not found\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n shippingservice",
+        "output": "NAME                                  POD-SELECTOR          AGE\nallow-frontend-to-shippingservice     app=shippingservice   169m\ndeny-checkout-access                  app=shippingservice   6h27m\ndeny-checkout-currency                <none>                7h29m\ndeny-egress-to-checkout-and-payment   app=shippingservice   10m\ndeny-payment-access                   app=shippingservice   6h27m\ndeny-shippingservice-egress           app=shippingservice   7h15m\nshippingservice                       app=shippingservice   3h23m\nshippingservice-deny-all              app=shippingservice   6h40m\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy deny-egress-to-checkout-and-payment -n shippingservice --type=json -p='[{\"op\": \"add\", \"path\": \"/spec/egress/0/to/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"checkoutservice\"}}, \"ports\": [{\"port\": 5050}]}},{\"op\": \"add\", \"path\": \"/spec/egress/0/to/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"paymentservice\"}}, \"ports\": [{\"port\": 50051}]}}]'",
+        "output": "networkpolicy.networking.k8s.io/deny-egress-to-checkout-and-payment patched\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n emailservice",
+        "output": "NAME                           POD-SELECTOR       AGE\nallow-checkout-to-email        app=emailservice   4h53m\nemailservice                   app=emailservice   7h13m\nemailservice-deny-frontend     app=emailservice   7h25m\nemailservice-deny-unexpected   app=emailservice   7h25m\nemailservice-policy            app=emailservice   5h10m\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy emailservice-policy -n emailservice -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"emailservice-policy\",\"namespace\":\"emailservice\"},\"spec\":{\"egress\":[{\"ports\":[{\"port\":5050,\"protocol\":\"TCP\"}],\"to\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"checkoutservice\"}}}]},{\"ports\":[{\"port\":50051,\"protocol\":\"TCP\"}],\"to\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"paymentservice\"}}}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"emailservice\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n  creationTimestamp: \"2025-04-26T08:12:59Z\"\n  generation: 10\n  name: emailservice-policy\n  namespace: emailservice\n  resourceVersion: \"42242\"\n  uid: 41e37ede-2430-4607-a357-571a4bd97800\nspec:\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: checkoutservice\n    - podSelector:\n        matchLabels:\n          app: checkoutservice\n    - podSelector:\n        matchLabels:\n          app: checkoutservice\n    - podSelector:\n        matchLabels:\n          app: checkoutservice\n    ports:\n    - port: 5000\n      protocol: TCP\n    - port: 5000\n      protocol: TCP\n  podSelector:\n    matchLabels:\n      app: emailservice\n  policyTypes:\n  - Ingress\n  - Egress\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy deny-egress-to-checkout-and-payment -n shippingservice --type=json -p='[{\"op\": \"remove\", \"path\": \"/spec/egress/0/to\"}]'",
+        "output": "networkpolicy.networking.k8s.io/deny-egress-to-checkout-and-payment patched\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy deny-egress-to-checkout-and-payment -n shippingservice --type=json -p='[{\"op\": \"add\", \"path\": \"/spec/egress/0/to\", \"value\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"checkoutservice\"}}, \"ports\": [{\"port\": 5050}]}, {\"podSelector\": {\"matchLabels\": {\"app\": \"paymentservice\"}}, \"ports\": [{\"port\": 50051}]}]}]'",
+        "output": "networkpolicy.networking.k8s.io/deny-egress-to-checkout-and-payment patched\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy deny-egress-to-checkout-and-payment -n shippingservice -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"deny-egress-to-checkout-and-payment\",\"namespace\":\"shippingservice\"},\"spec\":{\"egress\":[{\"ports\":[{\"port\":5050,\"protocol\":\"TCP\"}],\"to\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"checkoutservice\"}}}]},{\"ports\":[{\"port\":50051,\"protocol\":\"TCP\"}],\"to\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"paymentservice\"}}}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"shippingservice\"}},\"policyTypes\":[\"Egress\"]}}\n  creationTimestamp: \"2025-04-26T13:12:56Z\"\n  generation: 7\n  name: deny-egress-to-checkout-and-payment\n  namespace: shippingservice\n  resourceVersion: \"42880\"\n  uid: 25225e0f-fde9-4853-aa8c-316f9d05d78b\nspec:\n  egress:\n  - ports:\n    - port: 5050\n      protocol: TCP\n    to:\n    - podSelector:\n        matchLabels:\n          app: checkoutservice\n    - podSelector:\n        matchLabels:\n          app: paymentservice\n  - ports:\n    - port: 50051\n      protocol: TCP\n    to:\n    - podSelector:\n        matchLabels:\n          app: paymentservice\n  podSelector:\n    matchLabels:\n      app: shippingservice\n  policyTypes:\n  - Egress\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    }
+]

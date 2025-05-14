@@ -1,0 +1,131 @@
+LLM Command: kubectl get networkpolicy --all-namespaces
+Output: NAMESPACE   NAME                    POD-SELECTOR                AGE
+default     adservice               app=adservice               18h
+default     cartservice             app=cartservice             18h
+default     checkoutservice         app=checkoutservice         18h
+default     currencyservice         app=currencyservice         18h
+default     emailservice            app=emailservice            18h
+default     frontend                app=frontend                18h
+default     loadgenerator           app=loadgenerator           18h
+default     paymentservice          app=paymentservice          18h
+default     productcatalogservice   app=productcatalogservice   18h
+default     recommendationservice   app=recommendationservice   18h
+default     redis-cart              app=redis-cart              18h
+default     shippingservice         app=shippingservice         18h
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: adservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: recommendationservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy frontend -n default --type=json -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "cartservice"}}}}, {"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 7070, "protocol": "TCP"}}]'
+Output: The request is invalid: the server rejected our request due to an error in our request
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: adservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: recommendationservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy frontend -n default --type=json -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "cartservice"}}}}, {"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 7070, "protocol": "TCP"}}]'
+Output: The request is invalid: the server rejected our request due to an error in our request
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: adservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: recommendationservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl describe networkpolicy frontend -n default
+Output: Name:         frontend
+Namespace:    default
+Created on:   2025-05-07 16:33:46 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=frontend
+  Allowing ingress traffic:
+    To Port: <any> (traffic allowed to all ports)
+    From: <any> (traffic not restricted by source)
+  Allowing egress traffic:
+    To Port: <any> (traffic allowed to all ports)
+    To: <any> (traffic not restricted by destination)
+  Policy Types: Ingress, Egress
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: adservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: recommendationservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy frontend -n default --type=json -p='[{"op": "add", "path": "/spec/ingress", "value": [{"from": [{"podSelector": {"matchLabels": {"app": "cartservice"}}}], "ports": [{"port": 7070, "protocol": "TCP"}]}]}]'
+Output: networkpolicy.networking.k8s.io/frontend patched
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: adservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: recommendationservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl describe networkpolicy cartservice -n default
+Output: Name:         cartservice
+Namespace:    default
+Created on:   2025-05-07 16:33:45 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=cartservice
+  Allowing ingress traffic:
+    To Port: 20550/TCP
+    From:
+      PodSelector: app=frontend
+    From:
+      PodSelector: app=checkoutservice
+  Allowing egress traffic:
+    To Port: <any> (traffic allowed to all ports)
+    To: <any> (traffic not restricted by destination)
+  Policy Types: Ingress, Egress
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: adservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: recommendationservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy cartservice -n default --type=json -p='[{"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 7070, "protocol": "TCP"}}, {"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "frontend"}}}}, {"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "checkoutservice"}}}}]'
+Output: networkpolicy.networking.k8s.io/cartservice patched
+
+Mismatch Summary: Mismatch: adservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: recommendationservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl describe networkpolicy shippingservice -n default
+Output: Name:         shippingservice
+Namespace:    default
+Created on:   2025-05-07 16:33:47 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=shippingservice
+  Allowing ingress traffic:
+    To Port: 50051/TCP
+    From:
+      PodSelector: app=frontend
+    From:
+      PodSelector: app=checkoutservice
+    ----------
+    To Port: <any> (traffic allowed to all ports)
+    From:
+      PodSelector: app=adservice
+    ----------
+    To Port: <any> (traffic allowed to all ports)
+    From:
+      PodSelector: app=recommendationservice
+  Allowing egress traffic:
+    To Port: <any> (traffic allowed to all ports)
+    To: <any> (traffic not restricted by destination)
+  Policy Types: Ingress, Egress
+
+Mismatch Summary: Mismatch: adservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: recommendationservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy shippingservice -n default --type=json -p='[{"op": "remove", "path": "/spec/ingress/2"}, {"op": "remove", "path": "/spec/ingress/3"}]'
+Output: The request is invalid: the server rejected our request due to an error in our request
+
+Mismatch Summary: Mismatch: adservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: recommendationservice → shippingservice:50051 (Expected: False, Actual: True)
+

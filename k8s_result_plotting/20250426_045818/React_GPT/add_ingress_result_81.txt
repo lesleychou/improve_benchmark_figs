@@ -1,0 +1,152 @@
+LLM Command: kubectl get networkpolicy --all-namespaces
+Output: NAMESPACE   NAME                    POD-SELECTOR                AGE
+default     adservice               app=adservice               66m
+default     cartservice             app=cartservice             66m
+default     checkoutservice         app=checkoutservice         66m
+default     currencyservice         app=currencyservice         66m
+default     emailservice            app=emailservice            66m
+default     frontend                app=frontend                66m
+default     loadgenerator           app=loadgenerator           66m
+default     paymentservice          app=paymentservice          66m
+default     productcatalogservice   app=productcatalogservice   66m
+default     recommendationservice   app=recommendationservice   66m
+default     redis-cart              app=redis-cart              66m
+default     shippingservice         app=shippingservice         66m
+
+Mismatch Summary: Mismatch: frontend → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: recommendationservice → emailservice:5000 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy frontend -n default --type='json' -p='[{"op": "add", "path": "/spec/egress/-", "value": {"to": [{"podSelector": {"matchLabels": {"app": "emailservice"}}}], "ports": [{"port": 5000, "protocol": "TCP"}]}}]'
+Output: networkpolicy.networking.k8s.io/frontend patched
+
+Mismatch Summary: Mismatch: frontend → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: recommendationservice → emailservice:5000 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy recommendationservice -n default --type='json' -p='[{"op": "add", "path": "/spec/egress/-", "value": {"to": [{"podSelector": {"matchLabels": {"app": "emailservice"}}}], "ports": [{"port": 5000, "protocol": "TCP"}]}}]'
+Output: networkpolicy.networking.k8s.io/recommendationservice patched
+
+Mismatch Summary: Mismatch: frontend → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: recommendationservice → emailservice:5000 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy frontend -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"frontend","namespace":"default"},"spec":{"egress":[{}],"ingress":[{}],"podSelector":{"matchLabels":{"app":"frontend"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-05-07T16:33:46Z"
+  generation: 21
+  name: frontend
+  namespace: default
+  resourceVersion: "6452"
+  uid: 65f1a6bc-bb5a-471a-b427-281a3d426ea1
+spec:
+  egress:
+  - {}
+  - ports:
+    - port: 5000
+      protocol: TCP
+    to:
+    - podSelector:
+        matchLabels:
+          app: emailservice
+  ingress:
+  - {}
+  podSelector:
+    matchLabels:
+      app: frontend
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: frontend → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: recommendationservice → emailservice:5000 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy frontend -n default --type='json' -p='[{"op": "remove", "path": "/spec/egress/1"}]'
+Output: networkpolicy.networking.k8s.io/frontend patched
+
+Mismatch Summary: Mismatch: frontend → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: recommendationservice → emailservice:5000 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy recommendationservice -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"recommendationservice","namespace":"default"},"spec":{"egress":[{}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":8080,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"recommendationservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-05-07T16:33:46Z"
+  generation: 25
+  name: recommendationservice
+  namespace: default
+  resourceVersion: "6462"
+  uid: 430f0c3d-737d-4625-94e1-31ea3f76fa9f
+spec:
+  egress:
+  - {}
+  - ports:
+    - port: 5000
+      protocol: TCP
+    to:
+    - podSelector:
+        matchLabels:
+          app: emailservice
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    ports:
+    - port: 8080
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: recommendationservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: frontend → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: recommendationservice → emailservice:5000 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy recommendationservice -n default --type='json' -p='[{"op": "remove", "path": "/spec/egress/1"}]'
+Output: networkpolicy.networking.k8s.io/recommendationservice patched
+
+Mismatch Summary: Mismatch: frontend → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: recommendationservice → emailservice:5000 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy frontend -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"frontend","namespace":"default"},"spec":{"egress":[{}],"ingress":[{}],"podSelector":{"matchLabels":{"app":"frontend"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-05-07T16:33:46Z"
+  generation: 22
+  name: frontend
+  namespace: default
+  resourceVersion: "6472"
+  uid: 65f1a6bc-bb5a-471a-b427-281a3d426ea1
+spec:
+  egress:
+  - {}
+  ingress:
+  - {}
+  podSelector:
+    matchLabels:
+      app: frontend
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: frontend → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: recommendationservice → emailservice:5000 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy frontend -n default --type='json' -p='[{"op": "add", "path": "/spec/egress", "value": [{"to": [], "ports": []}]}]'
+Output: networkpolicy.networking.k8s.io/frontend patched
+
+Mismatch Summary: Mismatch: frontend → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: recommendationservice → emailservice:5000 (Expected: False, Actual: True)
+

@@ -1,0 +1,124 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n frontend -o yaml
+Output: apiVersion: v1
+items:
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"frontend-allow-adservice","namespace":"frontend"},"spec":{"ingress":[{"from":[{"namespaceSelector":{"matchLabels":{"name":"adservice"}}}],"ports":[{"port":9555,"protocol":"TCP"}]}],"podSelector":{},"policyTypes":["Ingress"]}}
+    creationTimestamp: "2025-04-27T15:36:39Z"
+    generation: 3
+    name: frontend-allow-adservice
+    namespace: frontend
+    resourceVersion: "1299"
+    uid: 7abeb705-11ae-467e-8fe1-f72eabc1710b
+  spec:
+    ingress:
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: adservice
+      ports:
+      - port: 9555
+        protocol: TCP
+    podSelector: {}
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"frontend-policy","namespace":"frontend"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"adservice"}}}],"ports":[{"port":9555,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"frontend"}}}}
+    creationTimestamp: "2025-04-27T15:37:10Z"
+    generation: 5
+    name: frontend-policy
+    namespace: frontend
+    resourceVersion: "1534"
+    uid: bbdb2b23-ff7c-4637-bff2-4072d54fac16
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: adservice
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: shippingservice
+      - namespaceSelector:
+          matchLabels:
+            kubernetes.io/metadata.name: checkoutservice
+      ports:
+      - port: 9555
+        protocol: TCP
+      - port: 50051
+        protocol: TCP
+      - port: 5050
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: frontend
+    policyTypes:
+    - Ingress
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy frontend-policy -n frontend --type='json' -p='[{"op":"add","path":"/spec/ingress/0/ports/-","value":{"port":8080,"protocol":"TCP"}},{"op":"add","path":"/spec/ingress/0/from/-","value":{"namespaceSelector":{"matchLabels":{"kubernetes.io/metadata.name":"recommendationservice"}}}}]'
+Output: networkpolicy.networking.k8s.io/frontend-policy patched
+
+Mismatch Summary: Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get namespace recommendationservice --show-labels
+Output: Error from server (NotFound): namespaces "recommendationservice" not found
+
+Mismatch Summary: Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get pods --all-namespaces -l app=recommendation
+Output: 
+Mismatch Summary: Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get pods --all-namespaces -l app=recommendation -o wide
+Output: 
+Mismatch Summary: Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get namespaces
+Output: NAME                 STATUS   AGE
+adservice            Active   5m44s
+default              Active   10m
+frontend             Active   5m55s
+kube-node-lease      Active   10m
+kube-public          Active   10m
+kube-system          Active   10m
+local-path-storage   Active   10m
+shippingservice      Active   2m2s
+
+Mismatch Summary: Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl create namespace recommendationservice
+Output: namespace/recommendationservice created
+
+Mismatch Summary: Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get namespace recommendationservice --show-labels
+Output: NAME                    STATUS   AGE   LABELS
+recommendationservice   Active   4s    kubernetes.io/metadata.name=recommendationservice
+
+Mismatch Summary: Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+

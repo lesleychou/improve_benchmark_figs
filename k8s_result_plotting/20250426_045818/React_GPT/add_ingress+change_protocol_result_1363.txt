@@ -1,0 +1,124 @@
+LLM Command: kubectl get networkpolicy -n frontend
+Output: 
+Mismatch Summary: Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: emailservice → adservice:9555 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy <networkpolicy-name> -n frontend --type=json -p '[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "shippingservice"}}}}, {"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 50051, "protocol": "TCP"}}]'
+Output: /bin/bash: line 1: networkpolicy-name: No such file or directory
+
+Mismatch Summary: Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: emailservice → adservice:9555 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n frontend -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: emailservice → adservice:9555 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -n frontend -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-frontend-shipping
+  namespace: frontend
+spec:
+  podSelector:
+    matchLabels:
+      app: frontend
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: shippingservice
+    ports:
+    - protocol: TCP
+      port: 50051
+EOF
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: emailservice → adservice:9555 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy allow-frontend-shipping -n frontend --type=json -p '[{"op": "add", "path": "/spec/ingress", "value": [{"from": [{"podSelector": {"matchLabels": {"app": "shippingservice"}}}], "ports": [{"port": 50051, "protocol": "TCP"}]}]}]'
+Output: Error from server (NotFound): namespaces "frontend" not found
+
+Mismatch Summary: Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: emailservice → adservice:9555 (Expected: False, Actual: True)
+
+LLM Command: kubectl get namespaces
+Output: NAME                 STATUS   AGE
+default              Active   21h
+kube-node-lease      Active   21h
+kube-public          Active   21h
+kube-system          Active   21h
+local-path-storage   Active   21h
+
+Mismatch Summary: Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: emailservice → adservice:9555 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods --all-namespaces -o wide | grep -E 'shippingservice|checkoutservice|recommendationservice|adservice'
+Output: default              adservice-7c7687ff5b-fbq2s                   1/1     Running   0               21h   10.244.0.5    kind-control-plane   <none>           <none>
+default              checkoutservice-769b8ff7b8-jxzrv             1/1     Running   0               21h   10.244.0.7    kind-control-plane   <none>           <none>
+default              recommendationservice-c468b6867-pcbbn        1/1     Running   0               21h   10.244.0.12   kind-control-plane   <none>           <none>
+default              shippingservice-f6bc4cd5d-69r7d              1/1     Running   0               21h   10.244.0.14   kind-control-plane   <none>           <none>
+
+Mismatch Summary: Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: emailservice → adservice:9555 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy allow-frontend-shipping -n default --type=json -p '[{"op": "add", "path": "/spec/ingress", "value": [{"from": [{"podSelector": {"matchLabels": {"app": "shippingservice"}}}], "ports": [{"port": 50051, "protocol": "TCP"}]}]}]'
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "allow-frontend-shipping" not found
+
+Mismatch Summary: Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: emailservice → adservice:9555 (Expected: False, Actual: True)
+
+LLM Command: bash
+kubectl apply -n default -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-frontend-shipping
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: frontend
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: shippingservice
+    ports:
+    - protocol: TCP
+      port: 50051
+EOF
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "allow-frontend-shipping" not found
+
+Mismatch Summary: Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: emailservice → adservice:9555 (Expected: False, Actual: True)
+

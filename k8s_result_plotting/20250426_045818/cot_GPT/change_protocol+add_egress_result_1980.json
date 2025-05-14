@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: redis-cart \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy allow-frontend-to-adservice -n adservice --type=json -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}}}]'",
+        "output": "networkpolicy.networking.k8s.io/allow-frontend-to-adservice patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: redis-cart \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy allow-frontend-to-adservice -n adservice --type=json -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 9555, \"protocol\": \"TCP\"}}]'",
+        "output": "networkpolicy.networking.k8s.io/allow-frontend-to-adservice patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: redis-cart \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get pods -n frontend --show-labels",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: redis-cart \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get pods -n frontend --show-labels",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: redis-cart \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get pods -n adservice --show-labels",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: redis-cart \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n adservice -o yaml",
+        "output": "apiVersion: v1\nitems:\n- apiVersion: networking.k8s.io/v1\n  kind: NetworkPolicy\n  metadata:\n    annotations:\n      kubectl.kubernetes.io/last-applied-configuration: |\n        {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"allow-frontend-ingress\",\"namespace\":\"adservice\"},\"spec\":{\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}}}],\"ports\":[{\"port\":9555,\"protocol\":\"TCP\"}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"adservice\"}}}}\n    creationTimestamp: \"2025-04-27T16:27:30Z\"\n    generation: 3\n    name: allow-frontend-ingress\n    namespace: adservice\n    resourceVersion: \"14127\"\n    uid: f950d4f3-fe29-48a8-bc57-b933fdf9d85d\n  spec:\n    ingress:\n    - from:\n      - podSelector:\n          matchLabels:\n            app: frontend\n      ports:\n      - port: 9555\n        protocol: TCP\n    podSelector:\n      matchLabels:\n        app: adservice\n    policyTypes:\n    - Ingress\n- apiVersion: networking.k8s.io/v1\n  kind: NetworkPolicy\n  metadata:\n    annotations:\n      kubectl.kubernetes.io/last-applied-configuration: |\n        {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"allow-frontend-to-adservice\",\"namespace\":\"adservice\"},\"spec\":{\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}}}],\"ports\":[{\"port\":9555,\"protocol\":\"TCP\"}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"adservice\"}}}}\n    creationTimestamp: \"2025-04-27T16:25:16Z\"\n    generation: 9\n    name: allow-frontend-to-adservice\n    namespace: adservice\n    resourceVersion: \"14230\"\n    uid: 5b8e2f6a-d344-402f-aecf-65ee7633422b\n  spec:\n    ingress:\n    - from:\n      - podSelector:\n          matchLabels:\n            app: frontend\n      - podSelector:\n          matchLabels:\n            app: frontend\n      ports:\n      - port: 9555\n        protocol: TCP\n      - port: 9555\n        protocol: TCP\n    podSelector:\n      matchLabels:\n        app: adservice\n    policyTypes:\n    - Ingress\n- apiVersion: networking.k8s.io/v1\n  kind: NetworkPolicy\n  metadata:\n    annotations:\n      kubectl.kubernetes.io/last-applied-configuration: |\n        {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"deny-egress-to-checkout\",\"namespace\":\"adservice\"},\"spec\":{\"egress\":[{\"ports\":[{\"port\":5050,\"protocol\":\"TCP\"}],\"to\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"checkoutservice\"}}}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"adservice\"}},\"policyTypes\":[\"Egress\"]}}\n    creationTimestamp: \"2025-04-27T16:48:44Z\"\n    generation: 1\n    name: deny-egress-to-checkout\n    namespace: adservice\n    resourceVersion: \"7332\"\n    uid: 8633bf9b-25e7-4c3a-b4ce-2bb06c6e9b85\n  spec:\n    egress:\n    - ports:\n      - port: 5050\n        protocol: TCP\n      to:\n      - podSelector:\n          matchLabels:\n            app: checkoutservice\n    podSelector:\n      matchLabels:\n        app: adservice\n    policyTypes:\n    - Egress\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: redis-cart \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy allow-frontend-to-adservice -n adservice --type=json -p='[{\"op\": \"remove\", \"path\": \"/spec/ingress/0/from/1\"}]'",
+        "output": "networkpolicy.networking.k8s.io/allow-frontend-to-adservice patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: redis-cart \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get pods -n frontend --show-labels",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: redis-cart \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    }
+]

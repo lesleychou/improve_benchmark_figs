@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy <networkpolicy-name> -n frontend --type=json -p '[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"currencyservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 7000, \"protocol\": \"TCP\"}}]'",
+        "output": "/bin/bash: line 1: networkpolicy-name: No such file or directory\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend -o json",
+        "output": "{\n    \"apiVersion\": \"v1\",\n    \"items\": [],\n    \"kind\": \"List\",\n    \"metadata\": {\n        \"resourceVersion\": \"\"\n    }\n}\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n currencyservice -o json",
+        "output": "{\n    \"apiVersion\": \"v1\",\n    \"items\": [],\n    \"kind\": \"List\",\n    \"metadata\": {\n        \"resourceVersion\": \"\"\n    }\n}\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n recommendationservice -o json",
+        "output": "{\n    \"apiVersion\": \"v1\",\n    \"items\": [],\n    \"kind\": \"List\",\n    \"metadata\": {\n        \"resourceVersion\": \"\"\n    }\n}\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy allow-currencyservice -n frontend --type=json -p '[{\"op\": \"add\", \"path\": \"/spec\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}, \"ingress\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"currencyservice\"}}}], \"ports\": [{\"port\": 7000, \"protocol\": \"TCP\"}}]}}]'",
+        "output": "error: unable to parse \"[{\\\"op\\\": \\\"add\\\", \\\"path\\\": \\\"/spec\\\", \\\"value\\\": {\\\"podSelector\\\": {\\\"matchLabels\\\": {\\\"app\\\": \\\"frontend\\\"}}, \\\"ingress\\\": [{\\\"from\\\": [{\\\"podSelector\\\": {\\\"matchLabels\\\": {\\\"app\\\": \\\"currencyservice\\\"}}}], \\\"ports\\\": [{\\\"port\\\": 7000, \\\"protocol\\\": \\\"TCP\\\"}}]}}]\": yaml: did not find expected ',' or ']'\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy allow-currencyservice -n frontend --type=json -p '[{\"op\": \"add\", \"path\": \"/spec\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}, \"ingress\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"currencyservice\"}}}], \"ports\": [{\"port\": 7000, \"protocol\": \"TCP\"}]}]}}]'",
+        "output": "Error from server (NotFound): namespaces \"frontend\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get pods --all-namespaces -l app=frontend",
+        "output": "NAMESPACE   NAME                        READY   STATUS    RESTARTS   AGE\ndefault     frontend-7ffbffc6f7-9hb4b   1/1     Running   0          19h\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy allow-currencyservice -n default --type=json -p '[{\"op\": \"add\", \"path\": \"/spec\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}, \"ingress\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"currencyservice\"}}}], \"ports\": [{\"port\": 7000, \"protocol\": \"TCP\"}]}]}}]'",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"allow-currencyservice\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)"
+    }
+]

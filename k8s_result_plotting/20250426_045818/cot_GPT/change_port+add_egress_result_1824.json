@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy frontend -n frontend --type=json -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"adservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 9555, \"protocol\": \"TCP\"}}]'",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"frontend\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend",
+        "output": "NAME                       POD-SELECTOR   AGE\nfrontend-allow             app=frontend   19m\nfrontend-allow-adservice   app=frontend   32m\nfrontend-policy            app=frontend   32m\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl describe networkpolicy frontend-allow-adservice -n frontend",
+        "output": "Name:         frontend-allow-adservice\nNamespace:    frontend\nCreated on:   2025-04-27 15:36:39 +0000 UTC\nLabels:       <none>\nAnnotations:  <none>\nSpec:\n  PodSelector:     app=frontend\n  Allowing ingress traffic:\n    To Port: 9555/TCP\n    From:\n      NamespaceSelector: name=adservice\n    From:\n      PodSelector: app=adservice\n  Not affecting egress traffic\n  Policy Types: Ingress\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy frontend-allow-adservice -n frontend --type=json -p='[{\"op\": \"remove\", \"path\": \"/spec/ingress/0/from/0\"}]'",
+        "output": "networkpolicy.networking.k8s.io/frontend-allow-adservice patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy frontend-allow-adservice -n frontend --type=json -p='[{\"op\": \"replace\", \"path\": \"/spec/ingress/0/from/0\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"adservice\"}}}}]'",
+        "output": "networkpolicy.networking.k8s.io/frontend-allow-adservice patched (no change)\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy frontend-allow-adservice -n frontend --type=json -p='[{\"op\": \"replace\", \"path\": \"/spec/ingress/0/from/0\", \"value\": {\"namespaceSelector\": {\"matchLabels\": {\"name\": \"adservice\"}}}}]'",
+        "output": "networkpolicy.networking.k8s.io/frontend-allow-adservice patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get namespace adservice --show-labels",
+        "output": "NAME        STATUS   AGE   LABELS\nadservice   Active   33m   kubernetes.io/metadata.name=adservice,name=adservice\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy frontend-allow-adservice -n frontend --type=json -p='[{\"op\": \"replace\", \"path\": \"/spec/ingress/0/from/0\", \"value\": {\"namespaceSelector\": {\"matchLabels\": {\"kubernetes.io/metadata.name\": \"adservice\"}}}}]'",
+        "output": "networkpolicy.networking.k8s.io/frontend-allow-adservice patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    }
+]

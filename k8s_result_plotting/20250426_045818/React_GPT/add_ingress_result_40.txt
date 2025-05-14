@@ -1,0 +1,277 @@
+LLM Command: kubectl get networkpolicy -n frontend
+Output: 
+Mismatch Summary: Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n checkout -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy -n checkout --type='merge' -p '{
+  "apiVersion": "networking.k8s.io/v1",
+  "kind": "NetworkPolicy",
+  "metadata": {
+    "name": "checkout-allow-specific"
+  },
+  "spec": {
+    "podSelector": {
+      "matchLabels": {
+        "app": "checkoutservice"
+      }
+    },
+    "policyTypes": ["Ingress"],
+    "ingress": [
+      {
+        "from": [
+          {
+            "podSelector": {
+              "matchLabels": {
+                "app": "paymentservice"
+              }
+            }
+          },
+          {
+            "podSelector": {
+              "matchLabels": {
+                "app": "shippingservice"
+              }
+            }
+          },
+          {
+            "podSelector": {
+              "matchLabels": {
+                "app": "emailservice"
+              }
+            }
+          },
+          {
+            "podSelector": {
+              "matchLabels": {
+                "app": "currencyservice"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}'
+Output: error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy checkout-allow-specific -n checkout --type='merge' -p '{
+  "apiVersion": "networking.k8s.io/v1",
+  "kind": "NetworkPolicy",
+  "metadata": {
+    "name": "checkout-allow-specific"
+  },
+  "spec": {
+    "podSelector": {
+      "matchLabels": {
+        "app": "checkoutservice"
+      }
+    },
+    "policyTypes": ["Ingress"],
+    "ingress": [
+      {
+        "from": [
+          {
+            "podSelector": {
+              "matchLabels": {
+                "app": "paymentservice"
+              }
+            }
+          },
+          {
+            "podSelector": {
+              "matchLabels": {
+                "app": "shippingservice"
+              }
+            }
+          },
+          {
+            "podSelector": {
+              "matchLabels": {
+                "app": "emailservice"
+              }
+            }
+          },
+          {
+            "podSelector": {
+              "matchLabels": {
+                "app": "currencyservice"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}'
+Output: Error from server (NotFound): namespaces "checkout" not found
+
+Mismatch Summary: Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods --all-namespaces -l app=checkoutservice
+Output: NAMESPACE   NAME                               READY   STATUS    RESTARTS   AGE
+default     checkoutservice-769b8ff7b8-jxzrv   1/1     Running   0          33m
+
+Mismatch Summary: Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy checkout-allow-specific -n default --type='merge' -p '{
+  "apiVersion": "networking.k8s.io/v1",
+  "kind": "NetworkPolicy",
+  "metadata": {
+    "name": "checkout-allow-specific"
+  },
+  "spec": {
+    "podSelector": {
+      "matchLabels": {
+        "app": "checkoutservice"
+      }
+    },
+    "policyTypes": ["Ingress"],
+    "ingress": [
+      {
+        "from": [
+          {
+            "podSelector": {
+              "matchLabels": {
+                "app": "paymentservice"
+              }
+            }
+          },
+          {
+            "podSelector": {
+              "matchLabels": {
+                "app": "shippingservice"
+              }
+            }
+          },
+          {
+            "podSelector": {
+              "matchLabels": {
+                "app": "emailservice"
+              }
+            }
+          },
+          {
+            "podSelector": {
+              "matchLabels": {
+                "app": "currencyservice"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}'
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "checkout-allow-specific" not found
+
+Mismatch Summary: Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -n default -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: checkout-allow-specific
+spec:
+  podSelector:
+    matchLabels:
+      app: checkoutservice
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: paymentservice
+    - podSelector:
+        matchLabels:
+          app: shippingservice
+    - podSelector:
+        matchLabels:
+          app: emailservice
+    - podSelector:
+        matchLabels:
+          app: currencyservice
+EOF
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "checkout-allow-specific" not found
+
+Mismatch Summary: Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -n default -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: checkout-allow-specific
+spec:
+  podSelector:
+    matchLabels:
+      app: checkoutservice
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: paymentservice
+    - podSelector:
+        matchLabels:
+          app: shippingservice
+    - podSelector:
+        matchLabels:
+          app: emailservice
+    - podSelector:
+        matchLabels:
+          app: currencyservice
+EOF
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "checkout-allow-specific" not found
+
+Mismatch Summary: Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl create -n default -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: checkout-allow-specific
+spec:
+  podSelector:
+    matchLabels:
+      app: checkoutservice
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: paymentservice
+    - podSelector:
+        matchLabels:
+          app: shippingservice
+    - podSelector:
+        matchLabels:
+          app: emailservice
+    - podSelector:
+        matchLabels:
+          app: currencyservice
+EOF
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "checkout-allow-specific" not found
+
+Mismatch Summary: Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+

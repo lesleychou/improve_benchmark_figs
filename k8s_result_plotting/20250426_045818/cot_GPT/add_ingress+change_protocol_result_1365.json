@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy frontend-network-policy -n frontend -p '{\"spec\":{\"egress\":[{\"to\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"checkout\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"ad\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"recommendation\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"productcatalog\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"cart\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"shipping\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"currency\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"email\"}}}],\"ports\":[{\"port\":80,\"protocol\":\"TCP\"}]}]}}'",
+        "output": "networkpolicy.networking.k8s.io/frontend-network-policy patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy frontend-network-policy -n frontend -p '{\"spec\":{\"egress\":[{\"to\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"checkout\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"ad\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"recommendation\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"productcatalog\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"cart\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"shipping\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"currency\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"email\"}}}],\"ports\":[{\"port\":80,\"protocol\":\"TCP\"}]}],\"policyTypes\":[\"Egress\"]}}'",
+        "output": "networkpolicy.networking.k8s.io/frontend-network-policy patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n payment -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy payment-network-policy -n payment --type='merge' -p '{\"spec\":{\"podSelector\":{\"matchLabels\":{\"app\":\"payment\"}},\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"checkout\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}}}],\"ports\":[{\"port\":50051,\"protocol\":\"TCP\"}]}],\"policyTypes\":[\"Ingress\"]}}'",
+        "output": "Error from server (NotFound): namespaces \"payment\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                    STATUS   AGE\nadservice               Active   18h\ncartservice             Active   17h\ncheckoutservice         Active   18h\ncurrencyservice         Active   17h\ndefault                 Active   18h\nemailservice            Active   18h\nfrontend                Active   14h\nkube-node-lease         Active   18h\nkube-public             Active   18h\nkube-system             Active   18h\nlocal-path-storage      Active   18h\npaymentservice          Active   15h\nproductcatalogservice   Active   17h\nrecommendationservice   Active   17h\nredis-cart              Active   17h\nshippingservice         Active   17h\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy payment-network-policy -n paymentservice --type='merge' -p '{\"spec\":{\"podSelector\":{\"matchLabels\":{\"app\":\"payment\"}},\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"checkout\"}}}],\"ports\":[{\"port\":50051,\"protocol\":\"TCP\"}]}],\"policyTypes\":[\"Ingress\"]}}'",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"payment-network-policy\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl apply -n paymentservice -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: payment-network-policy\nspec:\n  podSelector:\n    matchLabels:\n      app: payment\n  policyTypes:\n  - Ingress\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: checkout\n    ports:\n    - protocol: TCP\n      port: 50051\nEOF",
+        "output": "networkpolicy.networking.k8s.io/payment-network-policy created\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "bash\nkubectl patch networkpolicy frontend-network-policy -n frontend --type='merge' -p '{\"spec\":{\"egress\":[{\"to\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"checkout\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"ad\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"recommendation\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"productcatalog\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"cart\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"shipping\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"currency\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"email\"}}}],\"ports\":[{\"port\":80,\"protocol\":\"TCP\"}]}],\"policyTypes\":[\"Egress\"]}}'",
+        "output": "networkpolicy.networking.k8s.io/frontend-network-policy patched (no change)\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    }
+]

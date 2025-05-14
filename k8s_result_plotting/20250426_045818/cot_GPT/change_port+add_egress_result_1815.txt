@@ -1,0 +1,364 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n frontend -o yaml
+Output: apiVersion: v1
+items:
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"frontend-allow","namespace":"frontend"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"recommendationservice"}}}],"ports":[{"port":8080,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"frontend"}}}}
+    creationTimestamp: "2025-04-27T15:49:44Z"
+    generation: 4
+    name: frontend-allow
+    namespace: frontend
+    resourceVersion: "3251"
+    uid: 2432962a-221c-49df-b7b7-bd0b31612729
+  spec:
+    egress:
+    - ports:
+      - port: 8080
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: recommendationservice
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: adservice
+      - podSelector:
+          matchLabels:
+            app: cartservice
+      - podSelector:
+          matchLabels:
+            app: checkoutservice
+      - podSelector:
+          matchLabels:
+            app: currencyservice
+      - podSelector:
+          matchLabels:
+            app: productcatalogservice
+      - podSelector:
+          matchLabels:
+            app: recommendationservice
+      - podSelector:
+          matchLabels:
+            app: shippingservice
+      - podSelector:
+          matchLabels:
+            app: recommendationservice
+      ports:
+      - port: 9555
+        protocol: TCP
+      - port: 7070
+        protocol: TCP
+      - port: 5050
+        protocol: TCP
+      - port: 7000
+        protocol: TCP
+      - port: 3550
+        protocol: TCP
+      - port: 8080
+        protocol: TCP
+      - port: 50051
+        protocol: TCP
+      - port: 8080
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: frontend
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"frontend-allow-adservice","namespace":"frontend"},"spec":{"ingress":[{"from":[{"namespaceSelector":{"matchLabels":{"name":"adservice"}}}],"ports":[{"port":9555,"protocol":"TCP"}]}],"podSelector":{},"policyTypes":["Ingress"]}}
+    creationTimestamp: "2025-04-27T15:36:39Z"
+    generation: 10
+    name: frontend-allow-adservice
+    namespace: frontend
+    resourceVersion: "3166"
+    uid: 7abeb705-11ae-467e-8fe1-f72eabc1710b
+  spec:
+    ingress:
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            name: adservice
+      - podSelector:
+          matchLabels:
+            app: adservice
+      ports:
+      - port: 9555
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: frontend
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"frontend-policy","namespace":"frontend"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"adservice"}}}],"ports":[{"port":9555,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"frontend"}}}}
+    creationTimestamp: "2025-04-27T15:37:10Z"
+    generation: 47
+    name: frontend-policy
+    namespace: frontend
+    resourceVersion: "3197"
+    uid: bbdb2b23-ff7c-4637-bff2-4072d54fac16
+  spec:
+    egress:
+    - ports:
+      - port: 9555
+        protocol: TCP
+      - port: 9555
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: adservice
+      - podSelector:
+          matchLabels:
+            app: recommendationservice
+      - podSelector:
+          matchLabels:
+            app: adservice
+      - podSelector:
+          matchLabels:
+            app: cartservice
+    - ports:
+      - port: 7070
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: cartservice
+    - ports:
+      - port: 5050
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: checkoutservice
+    - ports:
+      - port: 7000
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: currencyservice
+    - ports:
+      - port: 3550
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: productcatalogservice
+    - ports:
+      - port: 8080
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: recommendationservice
+    - ports:
+      - port: 50051
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: shippingservice
+    - ports:
+      - port: 50051
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: shippingservice
+    - ports:
+      - port: 80
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: emailservice
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: adservice
+      ports:
+      - port: 9555
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: frontend
+    policyTypes:
+    - Ingress
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy frontend-policy -n frontend --type='json' -p='[{"op": "add", "path": "/spec/egress/0/to/-", "value": {"podSelector": {"matchLabels": {"app": "recommendationservice"}}}}, {"op": "add", "path": "/spec/egress/0/ports/-", "value": {"port": 8080, "protocol": "TCP"}}]'
+Output: networkpolicy.networking.k8s.io/frontend-policy patched
+
+Mismatch Summary: Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n recommendationservice -o yaml
+Output: apiVersion: v1
+items:
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"recommendationservice-allow","namespace":"recommendationservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":8080,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"recommendationservice"}}}}
+    creationTimestamp: "2025-04-27T16:00:52Z"
+    generation: 1
+    name: recommendationservice-allow
+    namespace: recommendationservice
+    resourceVersion: "3233"
+    uid: 1b639774-6cbd-45e0-9d78-04c674cb6a63
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: frontend
+      ports:
+      - port: 8080
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: recommendationservice
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"recommendationservice-policy","namespace":"recommendationservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":8080,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"recommendationservice"}},"policyTypes":["Ingress"]}}
+    creationTimestamp: "2025-04-27T15:49:16Z"
+    generation: 1
+    name: recommendationservice-policy
+    namespace: recommendationservice
+    resourceVersion: "2256"
+    uid: 35e282ac-57e5-4431-bac5-5c72ddb1bc62
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: frontend
+      ports:
+      - port: 8080
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: recommendationservice
+    policyTypes:
+    - Ingress
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy recommendationservice-policy -n recommendationservice --type='json' -p='[{"op": "add", "path": "/spec/egress", "value": [{"to": [{"podSelector": {"matchLabels": {"app": "productcatalogservice"}}}], "ports": [{"port": 3550, "protocol": "TCP"}]}]}]'
+Output: networkpolicy.networking.k8s.io/recommendationservice-policy patched
+
+Mismatch Summary: Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: bash
+kubectl patch networkpolicy frontend-policy -n frontend --type='json' -p='[{"op": "add", "path": "/spec/egress/-", "value": {"to": [{"podSelector": {"matchLabels": {"app": "recommendationservice"}}}], "ports": [{"port": 8080, "protocol": "TCP"}]}}]'
+Output: networkpolicy.networking.k8s.io/frontend-policy patched
+
+Mismatch Summary: Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n cartservice -o yaml
+Output: apiVersion: v1
+items:
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"cartservice-policy","namespace":"cartservice"},"spec":{"egress":[{"ports":[{"port":5050,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}]}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":7070,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"cartservice"}},"policyTypes":["Ingress","Egress"]}}
+    creationTimestamp: "2025-04-27T15:59:42Z"
+    generation: 8
+    name: cartservice-policy
+    namespace: cartservice
+    resourceVersion: "3333"
+    uid: d4c475e3-b916-4e7b-9b1d-52c2633ba7d5
+  spec:
+    egress:
+    - ports:
+      - port: 6379
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: redis-cache
+      - podSelector:
+          matchLabels:
+            app: checkoutservice
+      - podSelector:
+          matchLabels:
+            app: checkoutservice
+    ingress:
+    - ports:
+      - port: 7070
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: cartservice
+    policyTypes:
+    - Ingress
+    - Egress
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: bash
+kubectl patch networkpolicy frontend-policy -n frontend --type='json' -p='[{"op": "add", "path": "/spec/egress/-", "value": {"to": [{"podSelector": {"matchLabels": {"app": "recommendationservice"}}}], "ports": [{"port": 8080, "protocol": "TCP"}]}}]'
+Output: networkpolicy.networking.k8s.io/frontend-policy patched
+
+Mismatch Summary: Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy frontend-policy -n frontend --type='json' -p='[{"op": "replace", "path": "/spec/egress/0/to", "value": [{"podSelector": {"matchLabels": {"app": "recommendationservice"}}}]}, {"op": "replace", "path": "/spec/egress/0/ports", "value": [{"port": 8080, "protocol": "TCP"}]}]'
+Output: networkpolicy.networking.k8s.io/frontend-policy patched
+
+Mismatch Summary: Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+

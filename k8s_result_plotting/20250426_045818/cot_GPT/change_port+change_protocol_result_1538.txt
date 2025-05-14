@@ -1,0 +1,599 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n shippingservice -o yaml
+Output: apiVersion: v1
+items:
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"allow-checkout-to-shipping","namespace":"shippingservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}],"ports":[{"port":50051,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"shippingservice"}}}}
+    creationTimestamp: "2025-04-26T17:22:17Z"
+    generation: 1
+    name: allow-checkout-to-shipping
+    namespace: shippingservice
+    resourceVersion: "62255"
+    uid: c1cee698-e4dc-4954-a002-fdf33be982d6
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: checkoutservice
+      ports:
+      - port: 50051
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: shippingservice
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"allow-frontend-to-shipping","namespace":"shippingservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":50051,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"shipping"}}}}
+    creationTimestamp: "2025-04-26T20:27:51Z"
+    generation: 1
+    name: allow-frontend-to-shipping
+    namespace: shippingservice
+    resourceVersion: "77458"
+    uid: 9de9e5e9-7b21-4c82-9554-3b94ddf35000
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: frontend
+      ports:
+      - port: 50051
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: shipping
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"allow-frontend-to-shippingservice","namespace":"shippingservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":50051,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"shippingservice"}}}}
+    creationTimestamp: "2025-04-26T10:34:33Z"
+    generation: 8
+    name: allow-frontend-to-shippingservice
+    namespace: shippingservice
+    resourceVersion: "55762"
+    uid: 3c2456a0-dead-4aef-8eb6-1c74339f8f0f
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: frontend
+      - podSelector:
+          matchLabels:
+            app: frontend
+      ports:
+      - port: 50051
+        protocol: TCP
+      - port: 50051
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: shippingservice
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"deny-egress-to-checkout-and-payment","namespace":"shippingservice"},"spec":{"egress":[{"ports":[{"port":5050,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}]},{"ports":[{"port":50051,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"paymentservice"}}}]}],"podSelector":{"matchLabels":{"app":"shippingservice"}},"policyTypes":["Egress"]}}
+    creationTimestamp: "2025-04-26T13:12:56Z"
+    generation: 153
+    name: deny-egress-to-checkout-and-payment
+    namespace: shippingservice
+    resourceVersion: "102671"
+    uid: 25225e0f-fde9-4853-aa8c-316f9d05d78b
+  spec:
+    egress:
+    - ports:
+      - port: 5050
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: checkoutservice
+    podSelector:
+      matchLabels:
+        app: shippingservice
+    policyTypes:
+    - Egress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"deny-payment-access","namespace":"shippingservice"},"spec":{"egress":[{"ports":[{"port":50051,"protocol":"TCP"}],"to":[{"namespaceSelector":{"matchLabels":{"kubernetes.io/metadata.name":"paymentservice"}}}]}],"podSelector":{},"policyTypes":["Egress"]}}
+    creationTimestamp: "2025-04-26T06:56:13Z"
+    generation: 17
+    name: deny-payment-access
+    namespace: shippingservice
+    resourceVersion: "61613"
+    uid: 80a8ad9a-3017-442a-8ce2-d367875d0d62
+  spec:
+    podSelector:
+      matchLabels:
+        app: shippingservice
+    policyTypes:
+    - Egress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"deny-productcatalog-to-shipping","namespace":"shippingservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"productcatalogservice"}}}],"ports":[{"port":50051,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"shippingservice"}},"policyTypes":["Ingress"]}}
+    creationTimestamp: "2025-04-26T19:22:33Z"
+    generation: 1
+    name: deny-productcatalog-to-shipping
+    namespace: shippingservice
+    resourceVersion: "72095"
+    uid: 02f9b05a-6c18-4994-ab32-152a1f889d50
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: productcatalogservice
+      ports:
+      - port: 50051
+        protocol: TCP
+    podSelector:
+      matchLabels:
+        app: shippingservice
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"deny-shipping-to-checkout","namespace":"shippingservice"},"spec":{"egress":[{"ports":[{"port":5050,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}]}],"podSelector":{"matchLabels":{"app":"shippingservice"}},"policyTypes":["Egress"]}}
+    creationTimestamp: "2025-04-26T20:17:40Z"
+    generation: 13
+    name: deny-shipping-to-checkout
+    namespace: shippingservice
+    resourceVersion: "91858"
+    uid: 191ccf28-e499-4f1d-b15b-62c9f8450270
+  spec:
+    egress:
+    - ports:
+      - port: 5050
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: recommendationservice
+    podSelector:
+      matchLabels:
+        app: shippingservice
+    policyTypes:
+    - Egress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"deny-shippingservice-egress","namespace":"shippingservice"},"spec":{"egress":[{"ports":[{"port":5050,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}]},{"ports":[{"port":3550,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"productcatalogservice"}}}]}],"podSelector":{"matchLabels":{"app":"shippingservice"}},"policyTypes":["Egress"]}}
+    creationTimestamp: "2025-04-26T06:08:22Z"
+    generation: 29
+    name: deny-shippingservice-egress
+    namespace: shippingservice
+    resourceVersion: "91892"
+    uid: dabd2dc5-9ebd-43af-af78-9b623ae09d69
+  spec:
+    podSelector:
+      matchLabels:
+        app: shippingservice
+    policyTypes:
+    - Egress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"deny-shippingservice-to-checkoutservice","namespace":"shippingservice"},"spec":{"egress":[{"ports":[{"port":5050,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}]}],"podSelector":{"matchLabels":{"app":"shippingservice"}},"policyTypes":["Egress"]}}
+    creationTimestamp: "2025-04-26T19:54:04Z"
+    generation: 13
+    name: deny-shippingservice-to-checkoutservice
+    namespace: shippingservice
+    resourceVersion: "102541"
+    uid: 3cf7c632-2ece-49f2-81f6-ac41bbbf4c97
+  spec:
+    egress:
+    - ports:
+      - port: 5050
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: checkoutservice
+    podSelector:
+      matchLabels:
+        app: shippingservice
+    policyTypes:
+    - Egress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"shippingservice","namespace":"shippingservice"},"spec":{"egress":[{"to":[{"podSelector":{"matchLabels":{"app":"frontend"}}},{"podSelector":{"matchLabels":{"app":"currencyservice"}}}]}],"podSelector":{"matchLabels":{"app":"shippingservice"}},"policyTypes":["Egress"]}}
+    creationTimestamp: "2025-04-26T17:03:43Z"
+    generation: 24
+    name: shippingservice
+    namespace: shippingservice
+    resourceVersion: "87508"
+    uid: 29926efb-2087-4bd2-bb7f-a21968247478
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: frontend
+    podSelector:
+      matchLabels:
+        app: shippingservice
+    policyTypes:
+    - Ingress
+    - Egress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"shippingservice-deny-productcatalog","namespace":"shippingservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"productcatalogservice"}}}],"ports":[{"port":50051}]}],"podSelector":{"matchLabels":{"app":"shippingservice"}},"policyTypes":["Ingress"]}}
+    creationTimestamp: "2025-04-26T19:22:16Z"
+    generation: 2
+    name: shippingservice-deny-productcatalog
+    namespace: shippingservice
+    resourceVersion: "72085"
+    uid: 860e0ef5-8751-4f2f-8e96-3e5d4ddef1b9
+  spec:
+    podSelector:
+      matchLabels:
+        app: shippingservice
+    policyTypes:
+    - Ingress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"shippingservice-policy","namespace":"shippingservice"},"spec":{"ingress":[{"from":[]}],"podSelector":{},"policyTypes":["Ingress"]}}
+    creationTimestamp: "2025-04-26T19:33:45Z"
+    generation: 102
+    name: shippingservice-policy
+    namespace: shippingservice
+    resourceVersion: "102627"
+    uid: 9c155e6d-6e86-4086-8c37-69ad5c82ac4a
+  spec:
+    egress:
+    - ports:
+      - port: 5050
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: checkoutservice
+    ingress:
+    - {}
+    podSelector:
+      matchLabels:
+        app: shippingservice
+    policyTypes:
+    - Ingress
+    - Egress
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy deny-shippingservice-to-checkoutservice -n shippingservice --type='merge' -p '{"spec":{"egress":[{"ports":[{"port":5050,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}]}]}}'
+Output: networkpolicy.networking.k8s.io/deny-shippingservice-to-checkoutservice patched (no change)
+
+Mismatch Summary: Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy deny-shippingservice-to-checkoutservice -n shippingservice --type='merge' -p '{"spec":{"egress":[{"ports":[{"port":5050,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}]}],"podSelector":{"matchLabels":{"app":"shippingservice"}}}}'
+Output: networkpolicy.networking.k8s.io/deny-shippingservice-to-checkoutservice patched (no change)
+
+Mismatch Summary: Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n shippingservice -o yaml | grep "egress" -A 20
+Output:         {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"deny-egress-to-checkout-and-payment","namespace":"shippingservice"},"spec":{"egress":[{"ports":[{"port":5050,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}]},{"ports":[{"port":50051,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"paymentservice"}}}]}],"podSelector":{"matchLabels":{"app":"shippingservice"}},"policyTypes":["Egress"]}}
+    creationTimestamp: "2025-04-26T13:12:56Z"
+    generation: 153
+    name: deny-egress-to-checkout-and-payment
+    namespace: shippingservice
+    resourceVersion: "102671"
+    uid: 25225e0f-fde9-4853-aa8c-316f9d05d78b
+  spec:
+    egress:
+    - ports:
+      - port: 5050
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: checkoutservice
+    podSelector:
+      matchLabels:
+        app: shippingservice
+    policyTypes:
+    - Egress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"deny-payment-access","namespace":"shippingservice"},"spec":{"egress":[{"ports":[{"port":50051,"protocol":"TCP"}],"to":[{"namespaceSelector":{"matchLabels":{"kubernetes.io/metadata.name":"paymentservice"}}}]}],"podSelector":{},"policyTypes":["Egress"]}}
+    creationTimestamp: "2025-04-26T06:56:13Z"
+    generation: 17
+    name: deny-payment-access
+    namespace: shippingservice
+    resourceVersion: "61613"
+    uid: 80a8ad9a-3017-442a-8ce2-d367875d0d62
+  spec:
+    podSelector:
+      matchLabels:
+        app: shippingservice
+    policyTypes:
+    - Egress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"deny-productcatalog-to-shipping","namespace":"shippingservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"productcatalogservice"}}}],"ports":[{"port":50051,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"shippingservice"}},"policyTypes":["Ingress"]}}
+    creationTimestamp: "2025-04-26T19:22:33Z"
+    generation: 1
+--
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"deny-shipping-to-checkout","namespace":"shippingservice"},"spec":{"egress":[{"ports":[{"port":5050,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}]}],"podSelector":{"matchLabels":{"app":"shippingservice"}},"policyTypes":["Egress"]}}
+    creationTimestamp: "2025-04-26T20:17:40Z"
+    generation: 13
+    name: deny-shipping-to-checkout
+    namespace: shippingservice
+    resourceVersion: "91858"
+    uid: 191ccf28-e499-4f1d-b15b-62c9f8450270
+  spec:
+    egress:
+    - ports:
+      - port: 5050
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: recommendationservice
+    podSelector:
+      matchLabels:
+        app: shippingservice
+    policyTypes:
+    - Egress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"deny-shippingservice-egress","namespace":"shippingservice"},"spec":{"egress":[{"ports":[{"port":5050,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}]},{"ports":[{"port":3550,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"productcatalogservice"}}}]}],"podSelector":{"matchLabels":{"app":"shippingservice"}},"policyTypes":["Egress"]}}
+    creationTimestamp: "2025-04-26T06:08:22Z"
+    generation: 29
+    name: deny-shippingservice-egress
+    namespace: shippingservice
+    resourceVersion: "91892"
+    uid: dabd2dc5-9ebd-43af-af78-9b623ae09d69
+  spec:
+    podSelector:
+      matchLabels:
+        app: shippingservice
+    policyTypes:
+    - Egress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"deny-shippingservice-to-checkoutservice","namespace":"shippingservice"},"spec":{"egress":[{"ports":[{"port":5050,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}]}],"podSelector":{"matchLabels":{"app":"shippingservice"}},"policyTypes":["Egress"]}}
+    creationTimestamp: "2025-04-26T19:54:04Z"
+    generation: 13
+    name: deny-shippingservice-to-checkoutservice
+    namespace: shippingservice
+    resourceVersion: "102541"
+    uid: 3cf7c632-2ece-49f2-81f6-ac41bbbf4c97
+  spec:
+    egress:
+    - ports:
+      - port: 5050
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: checkoutservice
+    podSelector:
+      matchLabels:
+        app: shippingservice
+    policyTypes:
+    - Egress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"shippingservice","namespace":"shippingservice"},"spec":{"egress":[{"to":[{"podSelector":{"matchLabels":{"app":"frontend"}}},{"podSelector":{"matchLabels":{"app":"currencyservice"}}}]}],"podSelector":{"matchLabels":{"app":"shippingservice"}},"policyTypes":["Egress"]}}
+    creationTimestamp: "2025-04-26T17:03:43Z"
+    generation: 24
+    name: shippingservice
+    namespace: shippingservice
+    resourceVersion: "87508"
+    uid: 29926efb-2087-4bd2-bb7f-a21968247478
+  spec:
+    ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: frontend
+    podSelector:
+      matchLabels:
+        app: shippingservice
+    policyTypes:
+    - Ingress
+    - Egress
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+--
+    egress:
+    - ports:
+      - port: 5050
+        protocol: TCP
+      to:
+      - podSelector:
+          matchLabels:
+            app: checkoutservice
+    ingress:
+    - {}
+    podSelector:
+      matchLabels:
+        app: shippingservice
+    policyTypes:
+    - Ingress
+    - Egress
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: bash
+kubectl patch networkpolicy deny-egress-to-checkout-and-payment -n shippingservice --type='merge' -p '{"spec":{"egress":[{"ports":[{"port":50051,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"paymentservice"}}}]}]}}'
+Output: networkpolicy.networking.k8s.io/deny-egress-to-checkout-and-payment patched
+
+Mismatch Summary: Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy deny-egress-to-checkout-and-payment -n shippingservice --type='merge' -p '{"spec":{"egress":[{"ports":[{"port":5050,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}]}],"podSelector":{"matchLabels":{"app":"shippingservice"}}}}'
+Output: networkpolicy.networking.k8s.io/deny-egress-to-checkout-and-payment patched
+
+Mismatch Summary: Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl
+kubectl patch networkpolicy deny-egress-to-checkout-and-payment -n shippingservice --type='merge' -p '{"spec":{"egress":[{"ports":[{"port":5050,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}]}],"podSelector":{"matchLabels":{"app":"shippingservice"}}}}'
+Output: kubectl controls the Kubernetes cluster manager.
+
+ Find more information at: https://kubernetes.io/docs/reference/kubectl/
+
+Basic Commands (Beginner):
+  create          Create a resource from a file or from stdin
+  expose          Take a replication controller, service, deployment or pod and expose it as a new Kubernetes service
+  run             Run a particular image on the cluster
+  set             Set specific features on objects
+
+Basic Commands (Intermediate):
+  explain         Get documentation for a resource
+  get             Display one or many resources
+  edit            Edit a resource on the server
+  delete          Delete resources by file names, stdin, resources and names, or by resources and label selector
+
+Deploy Commands:
+  rollout         Manage the rollout of a resource
+  scale           Set a new size for a deployment, replica set, or replication controller
+  autoscale       Auto-scale a deployment, replica set, stateful set, or replication controller
+
+Cluster Management Commands:
+  certificate     Modify certificate resources
+  cluster-info    Display cluster information
+  top             Display resource (CPU/memory) usage
+  cordon          Mark node as unschedulable
+  uncordon        Mark node as schedulable
+  drain           Drain node in preparation for maintenance
+  taint           Update the taints on one or more nodes
+
+Troubleshooting and Debugging Commands:
+  describe        Show details of a specific resource or group of resources
+  logs            Print the logs for a container in a pod
+  attach          Attach to a running container
+  exec            Execute a command in a container
+  port-forward    Forward one or more local ports to a pod
+  proxy           Run a proxy to the Kubernetes API server
+  cp              Copy files and directories to and from containers
+  auth            Inspect authorization
+  debug           Create debugging sessions for troubleshooting workloads and nodes
+  events          List events
+
+Advanced Commands:
+  diff            Diff the live version against a would-be applied version
+  apply           Apply a configuration to a resource by file name or stdin
+  patch           Update fields of a resource
+  replace         Replace a resource by file name or stdin
+  wait            Experimental: Wait for a specific condition on one or many resources
+  kustomize       Build a kustomization target from a directory or URL
+
+Settings Commands:
+  label           Update the labels on a resource
+  annotate        Update the annotations on a resource
+  completion      Output shell completion code for the specified shell (bash, zsh, fish, or powershell)
+
+Subcommands provided by plugins:
+
+Other Commands:
+  api-resources   Print the supported API resources on the server
+  api-versions    Print the supported API versions on the server, in the form of "group/version"
+  config          Modify kubeconfig files
+  plugin          Provides utilities for interacting with plugins
+  version         Print the client and server version information
+
+Usage:
+  kubectl [flags] [options]
+
+Use "kubectl <command> --help" for more information about a given command.
+Use "kubectl options" for a list of global command-line options (applies to all commands).
+networkpolicy.networking.k8s.io/deny-egress-to-checkout-and-payment patched (no change)
+
+Mismatch Summary: Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: bash
+kubectl patch networkpolicy deny-egress-to-checkout-and-payment -n shippingservice --type='merge' -p '{"spec":{"egress":[{"ports":[{"port":5050,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}]},{"ports":[{"port":50051,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"paymentservice"}}}]}],"podSelector":{"matchLabels":{"app":"shippingservice"}}}}'
+Output: networkpolicy.networking.k8s.io/deny-egress-to-checkout-and-payment patched
+
+Mismatch Summary: Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+

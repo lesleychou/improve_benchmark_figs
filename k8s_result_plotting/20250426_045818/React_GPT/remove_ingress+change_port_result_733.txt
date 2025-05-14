@@ -1,0 +1,198 @@
+LLM Command: kubectl get networkpolicy -n frontend
+Output: 
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n checkoutservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy -n checkoutservice --type='json' -p='[{
+  "op": "add",
+  "path": "/spec",
+  "value": {
+    "podSelector": {},
+    "policyTypes": ["Ingress"],
+    "ingress": [
+      {
+        "from": [
+          {
+            "podSelector": {
+              "matchLabels": {
+                "app": "emailservice"
+              }
+            }
+          }
+        ],
+        "ports": [
+          {
+            "protocol": "TCP",
+            "port": 5000
+          }
+        ]
+      },
+      {
+        "from": [
+          {
+            "podSelector": {
+              "matchLabels": {
+                "app": "paymentservice"
+              }
+            }
+          }
+        ],
+        "ports": [
+          {
+            "protocol": "TCP",
+            "port": 50051
+          }
+        ]
+      }
+    ]
+  }
+}]'
+Output: error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl apply -n checkoutservice -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-checkout-communication
+  namespace: checkoutservice
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: emailservice
+    ports:
+    - protocol: TCP
+      port: 5000
+  - from:
+    - podSelector:
+        matchLabels:
+          app: paymentservice
+    ports:
+    - protocol: TCP
+      port: 50051
+EOF
+Output: error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl create -n checkoutservice -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-checkout-communication
+  namespace: checkoutservice
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: emailservice
+    ports:
+    - protocol: TCP
+      port: 5000
+  - from:
+    - podSelector:
+        matchLabels:
+          app: paymentservice
+    ports:
+    - protocol: TCP
+      port: 50051
+EOF
+Output: error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy allow-checkout-communication -n checkoutservice --type='json' -p='[{
+  "op": "add",
+  "path": "/spec",
+  "value": {
+    "podSelector": {},
+    "policyTypes": ["Ingress"],
+    "ingress": [
+      {
+        "from": [
+          {
+            "podSelector": {
+              "matchLabels": {
+                "app": "emailservice"
+              }
+            }
+          }
+        ],
+        "ports": [
+          {
+            "protocol": "TCP",
+            "port": 5000
+          }
+        ]
+      },
+      {
+        "from": [
+          {
+            "podSelector": {
+              "matchLabels": {
+                "app": "paymentservice"
+              }
+            }
+          }
+        ],
+        "ports": [
+          {
+            "protocol": "TCP",
+            "port": 50051
+          }
+        ]
+      }
+    ]
+  }
+}]'
+Output: Error from server (NotFound): namespaces "checkoutservice" not found
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl get namespaces
+Output: NAME                 STATUS   AGE
+default              Active   10h
+kube-node-lease      Active   10h
+kube-public          Active   10h
+kube-system          Active   10h
+local-path-storage   Active   10h
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubernetes microservices architecture checkoutservice namespace
+Output: /bin/bash: line 1: kubernetes: command not found
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubernetes microservices architecture checkoutservice namespace
+Output: /bin/bash: line 1: kubernetes: command not found
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+

@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy allow-productcatalog-access -n frontend --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec\", \"value\": {\"podSelector\": {}, \"ingress\": [{\"from\": [{\"namespaceSelector\": {\"matchLabels\": {\"name\": \"frontend\"}}}, {\"namespaceSelector\": {\"matchLabels\": {\"name\": \"checkoutservice\"}}}, {\"namespaceSelector\": {\"matchLabels\": {\"name\": \"recommendationservice\"}}}], \"ports\": [{\"port\": 3550, \"protocol\": \"TCP\"}]}]}}]'",
+        "output": "Error from server (NotFound): namespaces \"frontend\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\ndefault              Active   7m35s\nkube-node-lease      Active   7m35s\nkube-public          Active   7m35s\nkube-system          Active   7m35s\nlocal-path-storage   Active   7m30s\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get pods --all-namespaces",
+        "output": "NAMESPACE            NAME                                         READY   STATUS    RESTARTS   AGE\ndefault              adservice-7c7687ff5b-fbq2s                   1/1     Running   0          4m34s\ndefault              cartservice-7c8966d6fd-c8rb4                 1/1     Running   0          4m34s\ndefault              checkoutservice-769b8ff7b8-jxzrv             1/1     Running   0          4m34s\ndefault              currencyservice-578dcb55f6-bdvtr             1/1     Running   0          4m34s\ndefault              emailservice-d5d54d4fc-lksfn                 1/1     Running   0          4m34s\ndefault              frontend-7ffbffc6f7-9hb4b                    1/1     Running   0          4m33s\ndefault              loadgenerator-7d9cfb7cb9-9zjhk               1/1     Running   0          3m59s\ndefault              paymentservice-b67c65d9c-ztkqg               1/1     Running   0          4m33s\ndefault              productcatalogservice-5f94b6cd47-lk6vh       1/1     Running   0          4m33s\ndefault              recommendationservice-c468b6867-pcbbn        1/1     Running   0          4m33s\ndefault              redis-cart-5b6f47b748-9rgzw                  1/1     Running   0          4m33s\ndefault              shippingservice-f6bc4cd5d-69r7d              1/1     Running   0          4m33s\nkube-system          coredns-668d6bf9bc-g5z8v                     1/1     Running   0          7m27s\nkube-system          coredns-668d6bf9bc-l2w7d                     1/1     Running   0          7m27s\nkube-system          etcd-kind-control-plane                      1/1     Running   0          7m35s\nkube-system          kindnet-g596l                                1/1     Running   0          7m27s\nkube-system          kube-apiserver-kind-control-plane            1/1     Running   0          7m35s\nkube-system          kube-controller-manager-kind-control-plane   1/1     Running   0          7m35s\nkube-system          kube-proxy-48f5g                             1/1     Running   0          7m27s\nkube-system          kube-scheduler-kind-control-plane            1/1     Running   0          7m35s\nlocal-path-storage   local-path-provisioner-58cc7856b6-nfdzv      1/1     Running   0          7m27s\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy allow-productcatalog-access -n default --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"productcatalogservice\"}}, \"ingress\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}}, {\"podSelector\": {\"matchLabels\": {\"app\": \"checkoutservice\"}}}, {\"podSelector\": {\"matchLabels\": {\"app\": \"recommendationservice\"}}}], \"ports\": [{\"port\": 3550, \"protocol\": \"TCP\"}]}]}}]'",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"allow-productcatalog-access\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl apply -n default -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-productcatalog-access\n  namespace: default\nspec:\n  podSelector:\n    matchLabels:\n      app: productcatalogservice\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    - podSelector:\n        matchLabels:\n          app: checkoutservice\n    - podSelector:\n        matchLabels:\n          app: recommendationservice\n    ports:\n    - port: 3550\n      protocol: TCP\nEOF",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"allow-productcatalog-access\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl apply -n default -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-productcatalog-access\n  namespace: default\nspec:\n  podSelector:\n    matchLabels:\n      app: productcatalogservice\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    - podSelector:\n        matchLabels:\n          app: checkoutservice\n    - podSelector:\n        matchLabels:\n          app: recommendationservice\n    ports:\n    - port: 3550\n      protocol: TCP\nEOF",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"allow-productcatalog-access\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl apply -n default -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-productcatalog-access\n  namespace: default\nspec:\n  podSelector:\n    matchLabels:\n      app: productcatalogservice\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    - podSelector:\n        matchLabels:\n          app: checkoutservice\n    - podSelector:\n        matchLabels:\n          app: recommendationservice\n    ports:\n    - port: 3550\n      protocol: TCP\nEOF",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"allow-productcatalog-access\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    }
+]

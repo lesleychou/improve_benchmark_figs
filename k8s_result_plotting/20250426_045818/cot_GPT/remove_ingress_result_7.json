@@ -1,0 +1,52 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy checkout-network-policy -n checkoutservice --type=json -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}}}]'",
+        "output": "Error from server (NotFound): namespaces \"checkoutservice\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get svc checkoutservice --all-namespaces",
+        "output": "error: a resource cannot be retrieved by name across all namespaces\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\ndefault              Active   6m34s\nkube-node-lease      Active   6m34s\nkube-public          Active   6m34s\nkube-system          Active   6m34s\nlocal-path-storage   Active   6m27s\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get svc --all-namespaces",
+        "output": "NAMESPACE     NAME                    TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)                  AGE\ndefault       adservice               ClusterIP      10.96.205.178   <none>        9555/TCP                 3m42s\ndefault       cartservice             ClusterIP      10.96.85.95     <none>        7070/TCP                 3m42s\ndefault       checkoutservice         ClusterIP      10.96.118.118   <none>        5050/TCP                 3m41s\ndefault       currencyservice         ClusterIP      10.96.140.252   <none>        7000/TCP                 3m41s\ndefault       emailservice            ClusterIP      10.96.36.126    <none>        5000/TCP                 3m41s\ndefault       frontend                ClusterIP      10.96.76.231    <none>        80/TCP                   3m41s\ndefault       frontend-external       LoadBalancer   10.96.188.159   <pending>     80:30378/TCP             3m41s\ndefault       kubernetes              ClusterIP      10.96.0.1       <none>        443/TCP                  6m35s\ndefault       paymentservice          ClusterIP      10.96.5.186     <none>        50051/TCP                3m41s\ndefault       productcatalogservice   ClusterIP      10.96.85.216    <none>        3550/TCP                 3m41s\ndefault       recommendationservice   ClusterIP      10.96.45.217    <none>        8080/TCP                 3m41s\ndefault       redis-cart              ClusterIP      10.96.122.155   <none>        6379/TCP                 3m41s\ndefault       shippingservice         ClusterIP      10.96.95.128    <none>        50051/TCP                3m41s\nkube-system   kube-dns                ClusterIP      10.96.0.10      <none>        53/UDP,53/TCP,9153/TCP   6m32s\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy checkout-network-policy -n default --type=json -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}}}]'",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"checkout-network-policy\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n default",
+        "output": "NAME                          POD-SELECTOR                AGE\nadservice                     app=adservice               2m45s\nallow-frontend-checkout       app=cartservice             29s\nallow-productcatalog-access   app=productcatalogservice   64s\ncartservice                   app=cartservice             2m45s\ncheckoutservice               app=checkoutservice         2m45s\ncurrencyservice               app=currencyservice         2m45s\nemailservice                  app=emailservice            2m45s\nfrontend                      app=frontend                2m44s\nloadgenerator                 app=loadgenerator           2m44s\npaymentservice                app=paymentservice          2m44s\nproductcatalogservice         app=productcatalogservice   2m44s\nrecommendationservice         app=recommendationservice   2m44s\nredis-cart                    app=redis-cart              2m44s\nshippingservice               app=shippingservice         2m44s\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy checkoutservice -n default --type=json -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}}}]'",
+        "output": "The request is invalid: the server rejected our request due to an error in our request\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy checkoutservice -n default -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"checkoutservice\",\"namespace\":\"default\"},\"spec\":{\"egress\":[{}],\"ingress\":[],\"podSelector\":{\"matchLabels\":{\"app\":\"checkoutservice\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n  creationTimestamp: \"2025-04-26T05:02:44Z\"\n  generation: 2\n  name: checkoutservice\n  namespace: default\n  resourceVersion: \"1356\"\n  uid: 35564efc-1c59-43fc-a67f-7c18db8116a1\nspec:\n  egress:\n  - {}\n  podSelector:\n    matchLabels:\n      app: checkoutservice\n  policyTypes:\n  - Ingress\n  - Egress\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "bash\nkubectl patch networkpolicy checkoutservice -n default --type=json -p='[{\"op\": \"add\", \"path\": \"/spec/ingress\", \"value\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}}]}]}]'",
+        "output": "networkpolicy.networking.k8s.io/checkoutservice patched\n",
+        "mismatch_summary": "No mismatches found."
+    }
+]

@@ -1,0 +1,322 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: cartservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: emailservice → productcatalogservice:3550 (Expected: False, Actual: True)
+
+LLM Command: bash
+kubectl get networkpolicy -n frontend -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: cartservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: emailservice → productcatalogservice:3550 (Expected: False, Actual: True)
+
+LLM Command: bash
+kubectl patch networkpolicy allow-frontend-communication -n frontend --type='merge' -p '{"spec":{"podSelector":{},"ingress":[{"from":[{"namespaceSelector":{"matchLabels":{"name":"frontend"}}}],"ports":[{"protocol":"TCP","port":9555}]}]}}'
+Output: bash: error reading input file: Bad file descriptor
+Error from server (NotFound): namespaces "frontend" not found
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: cartservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: emailservice → productcatalogservice:3550 (Expected: False, Actual: True)
+
+LLM Command: bash
+kubectl apply -n frontend -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-frontend-communication
+  namespace: frontend
+spec:
+  podSelector:
+    matchLabels:
+      app: frontend
+  ingress:
+  - from:
+    - podSelector: {}
+    ports:
+    - protocol: TCP
+      port: 9555
+    - protocol: TCP
+      port: 7070
+    - protocol: TCP
+      port: 5050
+    - protocol: TCP
+      port: 7000
+    - protocol: TCP
+      port: 3550
+    - protocol: TCP
+      port: 8080
+    - protocol: TCP
+      port: 50051
+EOF
+Output: bash: error reading input file: Bad file descriptor
+Error from server (NotFound): namespaces "frontend" not found
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: cartservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: emailservice → productcatalogservice:3550 (Expected: False, Actual: True)
+
+LLM Command: kubectl get namespaces
+Output: NAME                 STATUS   AGE
+default              Active   38m
+kube-node-lease      Active   38m
+kube-public          Active   38m
+kube-system          Active   38m
+local-path-storage   Active   37m
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: cartservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: emailservice → productcatalogservice:3550 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods --all-namespaces
+Output: NAMESPACE            NAME                                         READY   STATUS    RESTARTS   AGE
+default              adservice-597dc59b77-q8dfh                   1/1     Running   0          34m
+default              cartservice-577f8d8c75-5lfjl                 1/1     Running   0          34m
+default              checkoutservice-55698bfcc5-hrjtk             1/1     Running   0          34m
+default              currencyservice-c5968f8f5-dx7rq              1/1     Running   0          34m
+default              emailservice-6c56b65f6d-fkhwd                1/1     Running   0          34m
+default              frontend-797c8f7758-fkv9r                    1/1     Running   0          34m
+default              loadgenerator-6c5b65b44b-wp4z7               1/1     Running   0          34m
+default              paymentservice-76948fc564-dlnrz              1/1     Running   0          34m
+default              productcatalogservice-5f9d5c689b-x9sdp       1/1     Running   0          34m
+default              recommendationservice-67cbb84b7b-c2src       1/1     Running   0          34m
+default              redis-cart-866688457f-zsqdb                  1/1     Running   0          34m
+default              shippingservice-9ddf878c7-gr8bc              1/1     Running   0          34m
+kube-system          coredns-668d6bf9bc-2gvnv                     1/1     Running   0          37m
+kube-system          coredns-668d6bf9bc-kwdwg                     1/1     Running   0          37m
+kube-system          etcd-kind-control-plane                      1/1     Running   0          38m
+kube-system          kindnet-8b9cs                                1/1     Running   0          37m
+kube-system          kube-apiserver-kind-control-plane            1/1     Running   0          38m
+kube-system          kube-controller-manager-kind-control-plane   1/1     Running   0          38m
+kube-system          kube-proxy-fj5w5                             1/1     Running   0          37m
+kube-system          kube-scheduler-kind-control-plane            1/1     Running   0          38m
+local-path-storage   local-path-provisioner-58cc7856b6-mhn49      1/1     Running   0          37m
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: cartservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: emailservice → productcatalogservice:3550 (Expected: False, Actual: True)
+
+LLM Command: bash
+kubectl apply -n default -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-frontend-communication
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: frontend
+  ingress:
+  - from:
+    - podSelector: {}
+    ports:
+    - protocol: TCP
+      port: 9555
+    - protocol: TCP
+      port: 7070
+    - protocol: TCP
+      port: 5050
+    - protocol: TCP
+      port: 7000
+    - protocol: TCP
+      port: 3550
+    - protocol: TCP
+      port: 8080
+    - protocol: TCP
+      port: 50051
+EOF
+Output: NAMESPACE            NAME                                         READY   STATUS    RESTARTS   AGE
+default              adservice-597dc59b77-q8dfh                   1/1     Running   0          34m
+default              cartservice-577f8d8c75-5lfjl                 1/1     Running   0          34m
+default              checkoutservice-55698bfcc5-hrjtk             1/1     Running   0          34m
+default              currencyservice-c5968f8f5-dx7rq              1/1     Running   0          34m
+default              emailservice-6c56b65f6d-fkhwd                1/1     Running   0          34m
+default              frontend-797c8f7758-fkv9r                    1/1     Running   0          34m
+default              loadgenerator-6c5b65b44b-wp4z7               1/1     Running   0          34m
+default              paymentservice-76948fc564-dlnrz              1/1     Running   0          34m
+default              productcatalogservice-5f9d5c689b-x9sdp       1/1     Running   0          34m
+default              recommendationservice-67cbb84b7b-c2src       1/1     Running   0          34m
+default              redis-cart-866688457f-zsqdb                  1/1     Running   0          34m
+default              shippingservice-9ddf878c7-gr8bc              1/1     Running   0          34m
+kube-system          coredns-668d6bf9bc-2gvnv                     1/1     Running   0          37m
+kube-system          coredns-668d6bf9bc-kwdwg                     1/1     Running   0          37m
+kube-system          etcd-kind-control-plane                      1/1     Running   0          38m
+kube-system          kindnet-8b9cs                                1/1     Running   0          37m
+kube-system          kube-apiserver-kind-control-plane            1/1     Running   0          38m
+kube-system          kube-controller-manager-kind-control-plane   1/1     Running   0          38m
+kube-system          kube-proxy-fj5w5                             1/1     Running   0          37m
+kube-system          kube-scheduler-kind-control-plane            1/1     Running   0          38m
+local-path-storage   local-path-provisioner-58cc7856b6-mhn49      1/1     Running   0          37m
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: cartservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: emailservice → productcatalogservice:3550 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -n default -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-frontend-communication
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: frontend
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: adservice
+    ports:
+    - protocol: TCP
+      port: 9555
+  - from:
+    - podSelector:
+        matchLabels:
+          app: cartservice
+    ports:
+    - protocol: TCP
+      port: 7070
+  - from:
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+    ports:
+    - protocol: TCP
+      port: 5050
+  - from:
+    - podSelector:
+        matchLabels:
+          app: currencyservice
+    ports:
+    - protocol: TCP
+      port: 7000
+  - from:
+    - podSelector:
+        matchLabels:
+          app: productcatalogservice
+    ports:
+    - protocol: TCP
+      port: 3550
+  - from:
+    - podSelector:
+        matchLabels:
+          app: recommendationservice
+    ports:
+    - protocol: TCP
+      port: 8080
+  - from:
+    - podSelector:
+        matchLabels:
+          app: shippingservice
+    ports:
+    - protocol: TCP
+      port: 50051
+EOF
+Output: NAMESPACE            NAME                                         READY   STATUS    RESTARTS   AGE
+default              adservice-597dc59b77-q8dfh                   1/1     Running   0          34m
+default              cartservice-577f8d8c75-5lfjl                 1/1     Running   0          34m
+default              checkoutservice-55698bfcc5-hrjtk             1/1     Running   0          34m
+default              currencyservice-c5968f8f5-dx7rq              1/1     Running   0          34m
+default              emailservice-6c56b65f6d-fkhwd                1/1     Running   0          34m
+default              frontend-797c8f7758-fkv9r                    1/1     Running   0          34m
+default              loadgenerator-6c5b65b44b-wp4z7               1/1     Running   0          34m
+default              paymentservice-76948fc564-dlnrz              1/1     Running   0          34m
+default              productcatalogservice-5f9d5c689b-x9sdp       1/1     Running   0          34m
+default              recommendationservice-67cbb84b7b-c2src       1/1     Running   0          34m
+default              redis-cart-866688457f-zsqdb                  1/1     Running   0          34m
+default              shippingservice-9ddf878c7-gr8bc              1/1     Running   0          34m
+kube-system          coredns-668d6bf9bc-2gvnv                     1/1     Running   0          37m
+kube-system          coredns-668d6bf9bc-kwdwg                     1/1     Running   0          37m
+kube-system          etcd-kind-control-plane                      1/1     Running   0          38m
+kube-system          kindnet-8b9cs                                1/1     Running   0          37m
+kube-system          kube-apiserver-kind-control-plane            1/1     Running   0          38m
+kube-system          kube-controller-manager-kind-control-plane   1/1     Running   0          38m
+kube-system          kube-proxy-fj5w5                             1/1     Running   0          37m
+kube-system          kube-scheduler-kind-control-plane            1/1     Running   0          38m
+local-path-storage   local-path-provisioner-58cc7856b6-mhn49      1/1     Running   0          37m
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: cartservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: emailservice → productcatalogservice:3550 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods -n default --show-labels
+Output: NAME                                     READY   STATUS    RESTARTS   AGE   LABELS
+adservice-597dc59b77-q8dfh               1/1     Running   0          35m   app=adservice,pod-template-hash=597dc59b77,skaffold.dev/run-id=71d8bd08-b5c3-43be-bb43-8f51fb0b19d6
+cartservice-577f8d8c75-5lfjl             1/1     Running   0          35m   app=cartservice,pod-template-hash=577f8d8c75,skaffold.dev/run-id=71d8bd08-b5c3-43be-bb43-8f51fb0b19d6
+checkoutservice-55698bfcc5-hrjtk         1/1     Running   0          35m   app=checkoutservice,pod-template-hash=55698bfcc5,skaffold.dev/run-id=71d8bd08-b5c3-43be-bb43-8f51fb0b19d6
+currencyservice-c5968f8f5-dx7rq          1/1     Running   0          35m   app=currencyservice,pod-template-hash=c5968f8f5,skaffold.dev/run-id=71d8bd08-b5c3-43be-bb43-8f51fb0b19d6
+emailservice-6c56b65f6d-fkhwd            1/1     Running   0          35m   app=emailservice,pod-template-hash=6c56b65f6d,skaffold.dev/run-id=71d8bd08-b5c3-43be-bb43-8f51fb0b19d6
+frontend-797c8f7758-fkv9r                1/1     Running   0          35m   app=frontend,pod-template-hash=797c8f7758,skaffold.dev/run-id=71d8bd08-b5c3-43be-bb43-8f51fb0b19d6
+loadgenerator-6c5b65b44b-wp4z7           1/1     Running   0          35m   app=loadgenerator,pod-template-hash=6c5b65b44b,skaffold.dev/run-id=71d8bd08-b5c3-43be-bb43-8f51fb0b19d6
+paymentservice-76948fc564-dlnrz          1/1     Running   0          35m   app=paymentservice,pod-template-hash=76948fc564,skaffold.dev/run-id=71d8bd08-b5c3-43be-bb43-8f51fb0b19d6
+productcatalogservice-5f9d5c689b-x9sdp   1/1     Running   0          35m   app=productcatalogservice,pod-template-hash=5f9d5c689b,skaffold.dev/run-id=71d8bd08-b5c3-43be-bb43-8f51fb0b19d6
+recommendationservice-67cbb84b7b-c2src   1/1     Running   0          35m   app=recommendationservice,pod-template-hash=67cbb84b7b,skaffold.dev/run-id=71d8bd08-b5c3-43be-bb43-8f51fb0b19d6
+redis-cart-866688457f-zsqdb              1/1     Running   0          35m   app=redis-cart,pod-template-hash=866688457f,skaffold.dev/run-id=71d8bd08-b5c3-43be-bb43-8f51fb0b19d6
+shippingservice-9ddf878c7-gr8bc          1/1     Running   0          35m   app=shippingservice,pod-template-hash=9ddf878c7,skaffold.dev/run-id=71d8bd08-b5c3-43be-bb43-8f51fb0b19d6
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: cartservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: emailservice → productcatalogservice:3550 (Expected: False, Actual: True)
+

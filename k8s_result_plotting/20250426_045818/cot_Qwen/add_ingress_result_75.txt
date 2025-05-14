@@ -1,0 +1,89 @@
+LLM Command: NAME                  POD-SELECTOR   INGRESS   EGRESS   POLICYTYPES
+          frontend-policy       app=frontend   true      false    Ingress
+          checkout-policy       app=checkout   true      false    Ingress
+          recommendation-policy app=recommendation true   false    Ingress
+          cart-policy           app=cart       true      false    Ingress
+          redis-cache-policy    app=redis-cache true     false    Ingress
+Output: /bin/bash: line 1: NAME: command not found
+/bin/bash: line 2: frontend-policy: command not found
+/bin/bash: line 3: checkout-policy: command not found
+/bin/bash: line 4: recommendation-policy: command not found
+/bin/bash: line 5: cart-policy: command not found
+/bin/bash: line 6: redis-cache-policy: command not found
+
+Mismatch Summary: Mismatch: shippingservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: shippingservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n default
+Output: NAME                    POD-SELECTOR                AGE
+adservice               app=adservice               3h51m
+cartservice             app=cartservice             3h51m
+checkoutservice         app=checkoutservice         3h51m
+currencyservice         app=currencyservice         3h51m
+emailservice            app=emailservice            3h51m
+frontend                app=frontend                3h51m
+loadgenerator           app=loadgenerator           3h51m
+paymentservice          app=paymentservice          3h51m
+productcatalogservice   app=productcatalogservice   3h51m
+recommendationservice   app=recommendationservice   3h51m
+redis-cart              app=redis-cart              3h51m
+shippingservice         app=shippingservice         3h51m
+
+Mismatch Summary: Mismatch: shippingservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy currencyservice -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"currencyservice","namespace":"default"},"spec":{"egress":[{}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}},{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}],"ports":[{"port":7000,"protocol":"TCP"}]},{"from":[{"podSelector":{"matchLabels":{"app":"emailservice"}}}]},{"from":[{"podSelector":{"matchLabels":{"app":"shippingservice"}}}]}],"podSelector":{"matchLabels":{"app":"currencyservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-04-28T05:25:42Z"
+  generation: 18
+  name: currencyservice
+  namespace: default
+  resourceVersion: "19261"
+  uid: 081f7b80-97e4-4da8-8dda-37f613618340
+spec:
+  egress:
+  - {}
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+    ports:
+    - port: 7000
+      protocol: TCP
+  - from:
+    - podSelector:
+        matchLabels:
+          app: emailservice
+  - from:
+    - podSelector:
+        matchLabels:
+          app: shippingservice
+  podSelector:
+    matchLabels:
+      app: currencyservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: shippingservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy currencyservice -n default -p '{"spec": {"ingress": [{"from": [{"podSelector": {"matchLabels": {"app": "frontend"}}}, {"podSelector": {"matchLabels": {"app": "checkoutservice"}}}], "ports": [{"port": 7000, "protocol": "TCP"}]}]}}'
+Output: networkpolicy.networking.k8s.io/currencyservice patched
+
+Mismatch Summary: No mismatches found.
+

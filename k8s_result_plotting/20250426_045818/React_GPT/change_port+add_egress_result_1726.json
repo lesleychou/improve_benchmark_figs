@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n currencyservice -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "bash\nkubectl patch networkpolicy allow-frontend-checkout-to-currency -n currencyservice --type='merge' -p '{\"apiVersion\": \"networking.k8s.io/v1\", \"kind\": \"NetworkPolicy\", \"metadata\": {\"name\": \"allow-frontend-checkout-to-currency\"}, \"spec\": {\"podSelector\": {}, \"policyTypes\": [\"Ingress\"], \"ingress\": [{\"from\": [{\"namespaceSelector\": {\"matchLabels\": {\"name\": \"frontend\"}}}, {\"namespaceSelector\": {\"matchLabels\": {\"name\": \"checkoutservice\"}}}], \"ports\": [{\"protocol\": \"TCP\", \"port\": 7000}]}]}}'",
+        "output": "bash: error reading input file: Bad file descriptor\nError from server (NotFound): namespaces \"currencyservice\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\ndefault              Active   8h\nkube-node-lease      Active   8h\nkube-public          Active   8h\nkube-system          Active   8h\nlocal-path-storage   Active   8h\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get pods --all-namespaces",
+        "output": "NAMESPACE            NAME                                         READY   STATUS    RESTARTS        AGE\ndefault              adservice-597dc59b77-q8dfh                   1/1     Running   0               8h\ndefault              cartservice-577f8d8c75-5lfjl                 1/1     Running   0               8h\ndefault              checkoutservice-55698bfcc5-hrjtk             1/1     Running   0               8h\ndefault              currencyservice-c5968f8f5-dx7rq              1/1     Running   2 (20m ago)     8h\ndefault              emailservice-6c56b65f6d-fkhwd                1/1     Running   0               8h\ndefault              frontend-797c8f7758-fkv9r                    1/1     Running   0               8h\ndefault              loadgenerator-6c5b65b44b-wp4z7               1/1     Running   0               8h\ndefault              paymentservice-76948fc564-dlnrz              1/1     Running   1 (4h16m ago)   8h\ndefault              productcatalogservice-5f9d5c689b-x9sdp       1/1     Running   0               8h\ndefault              recommendationservice-67cbb84b7b-c2src       1/1     Running   0               8h\ndefault              redis-cart-866688457f-zsqdb                  1/1     Running   0               8h\ndefault              shippingservice-9ddf878c7-gr8bc              1/1     Running   0               8h\nkube-system          coredns-668d6bf9bc-2gvnv                     1/1     Running   0               8h\nkube-system          coredns-668d6bf9bc-kwdwg                     1/1     Running   0               8h\nkube-system          etcd-kind-control-plane                      1/1     Running   0               8h\nkube-system          kindnet-8b9cs                                1/1     Running   0               8h\nkube-system          kube-apiserver-kind-control-plane            1/1     Running   0               8h\nkube-system          kube-controller-manager-kind-control-plane   1/1     Running   0               8h\nkube-system          kube-proxy-fj5w5                             1/1     Running   0               8h\nkube-system          kube-scheduler-kind-control-plane            1/1     Running   0               8h\nlocal-path-storage   local-path-provisioner-58cc7856b6-mhn49      1/1     Running   0               8h\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "bash\nkubectl patch networkpolicy allow-frontend-checkout-to-currency -n default --type='merge' -p '{\"apiVersion\": \"networking.k8s.io/v1\", \"kind\": \"NetworkPolicy\", \"metadata\": {\"name\": \"allow-frontend-checkout-to-currency\"}, \"spec\": {\"podSelector\": {\"matchLabels\": {\"app\": \"currencyservice\"}}, \"policyTypes\": [\"Ingress\"], \"ingress\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}}, {\"podSelector\": {\"matchLabels\": {\"app\": \"checkoutservice\"}}}], \"ports\": [{\"protocol\": \"TCP\", \"port\": 7000}]}]}}'",
+        "output": "bash: error reading input file: Bad file descriptor\nError from server (NotFound): networkpolicies.networking.k8s.io \"allow-frontend-checkout-to-currency\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "bash\nkubectl apply -n default -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-frontend-checkout-to-currency\n  namespace: default\nspec:\n  podSelector:\n    matchLabels:\n      app: currencyservice\n  policyTypes:\n  - Ingress\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    - podSelector:\n        matchLabels:\n          app: checkoutservice\n    ports:\n    - protocol: TCP\n      port: 7000\nEOF",
+        "output": "bash: error reading input file: Bad file descriptor\nError from server (NotFound): networkpolicies.networking.k8s.io \"allow-frontend-checkout-to-currency\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl apply -n default -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-frontend-checkout-to-currency\nspec:\n  podSelector:\n    matchLabels:\n      app: currencyservice\n  policyTypes:\n  - Ingress\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    - podSelector:\n        matchLabels:\n          app: checkoutservice\n    ports:\n    - protocol: TCP\n      port: 7000\nEOF",
+        "output": "bash: error reading input file: Bad file descriptor\nError from server (NotFound): networkpolicies.networking.k8s.io \"allow-frontend-checkout-to-currency\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl create -n default -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-frontend-checkout-to-currency\nspec:\n  podSelector:\n    matchLabels:\n      app: currencyservice\n  policyTypes:\n  - Ingress\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    - podSelector:\n        matchLabels:\n          app: checkoutservice\n    ports:\n    - protocol: TCP\n      port: 7000\nEOF",
+        "output": "bash: error reading input file: Bad file descriptor\nError from server (NotFound): networkpolicies.networking.k8s.io \"allow-frontend-checkout-to-currency\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    }
+]

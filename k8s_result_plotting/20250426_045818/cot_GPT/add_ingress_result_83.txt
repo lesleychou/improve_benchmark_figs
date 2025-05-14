@@ -1,0 +1,110 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: cartservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy adservice -n adservice --type=json -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "cartservice"}}}}]'
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "adservice" not found
+
+Mismatch Summary: Mismatch: cartservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: adservice-policy
+  namespace: adservice
+spec:
+  podSelector:
+    matchLabels:
+      app: adservice
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: frontend
+        - podSelector:
+            matchLabels:
+              app: recommendation
+      ports:
+        - protocol: TCP
+          port: 9555
+EOF
+Output: networkpolicy.networking.k8s.io/adservice-policy configured
+
+Mismatch Summary: Mismatch: cartservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: cartservice-egress-policy
+  namespace: cartservice
+spec:
+  podSelector:
+    matchLabels:
+      app: cartservice
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app: adservice
+      ports:
+        - protocol: TCP
+          port: 9555
+EOF
+Output: networkpolicy.networking.k8s.io/cartservice-egress-policy created
+
+Mismatch Summary: Mismatch: cartservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy cartservice-egress-policy -n cartservice --type=json -p='[{"op": "remove", "path": "/spec/egress/0/to/0"}]'
+Output: networkpolicy.networking.k8s.io/cartservice-egress-policy patched
+
+Mismatch Summary: Mismatch: cartservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy cartservice-egress-policy -n cartservice --type=json -p='[{"op": "remove", "path": "/spec/egress"}]'
+Output: networkpolicy.networking.k8s.io/cartservice-egress-policy patched
+
+Mismatch Summary: Mismatch: cartservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy adservice-policy -n adservice --type=json -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "cartservice"}}}}]'
+Output: networkpolicy.networking.k8s.io/adservice-policy patched
+
+Mismatch Summary: Mismatch: cartservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy adservice-policy -n adservice --type=json -p='[{"op": "remove", "path": "/spec/ingress/0/from/2"}]'
+Output: networkpolicy.networking.k8s.io/adservice-policy patched
+
+Mismatch Summary: Mismatch: cartservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy adservice-policy -n adservice --type=json -p='[{"op": "replace", "path": "/spec/ingress", "value": [{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}},{"podSelector":{"matchLabels":{"app":"recommendation"}}}],"ports":[{"protocol":"TCP","port":9555}]}]}]'
+Output: networkpolicy.networking.k8s.io/adservice-policy patched (no change)
+
+Mismatch Summary: Mismatch: cartservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+

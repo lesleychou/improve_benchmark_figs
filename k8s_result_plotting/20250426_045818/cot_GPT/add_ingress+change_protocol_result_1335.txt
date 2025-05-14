@@ -1,0 +1,118 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: recommendationservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy currencyservice --namespace=currencyservice --type=json -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "recommendationservice"}}}}]'
+Output: networkpolicy.networking.k8s.io/currencyservice patched
+
+Mismatch Summary: Mismatch: recommendationservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy currencyservice --namespace=currencyservice --type=json -p='[{"op": "remove", "path": "/spec/ingress/0/from"}]'
+Output: networkpolicy.networking.k8s.io/currencyservice patched
+
+Mismatch Summary: Mismatch: recommendationservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy currencyservice --namespace=currencyservice --type=json -p='[{"op": "add", "path": "/spec/ingress/0/from", "value": {"podSelector": {"matchLabels": {"app": "checkoutservice"}}}}]'
+Output: The request is invalid: patch: Invalid value: "{\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"name\":\"currencyservice\",\"namespace\":\"currencyservice\",\"uid\":\"13b8b02b-7912-49bf-8ce1-ac1fd70f0512\",\"resourceVersion\":\"89023\",\"generation\":22,\"creationTimestamp\":\"2025-04-26T18:35:51Z\",\"annotations\":{\"kubectl.kubernetes.io/last-applied-configuration\":\"{\\\"apiVersion\\\":\\\"networking.k8s.io/v1\\\",\\\"kind\\\":\\\"NetworkPolicy\\\",\\\"metadata\\\":{\\\"annotations\\\":{},\\\"name\\\":\\\"currencyservice\\\",\\\"namespace\\\":\\\"currencyservice\\\"},\\\"spec\\\":{\\\"ingress\\\":[{\\\"from\\\":[{\\\"podSelector\\\":{\\\"matchLabels\\\":{\\\"app\\\":\\\"frontend\\\"}}}],\\\"ports\\\":[{\\\"port\\\":7000,\\\"protocol\\\":\\\"TCP\\\"}]}],\\\"podSelector\\\":{\\\"matchLabels\\\":{\\\"app\\\":\\\"currencyservice\\\"}}}}\\n\"},\"managedFields\":[{\"manager\":\"kubectl-client-side-apply\",\"operation\":\"Update\",\"apiVersion\":\"networking.k8s.io/v1\",\"time\":\"2025-04-26T18:35:51Z\",\"fieldsType\":\"FieldsV1\",\"fieldsV1\":{\"f:metadata\":{\"f:annotations\":{\".\":{},\"f:kubectl.kubernetes.io/last-applied-configuration\":{}}},\"f:spec\":{\"f:podSelector\":{},\"f:policyTypes\":{}}}},{\"manager\":\"kubectl-patch\",\"operation\":\"Update\",\"apiVersion\":\"networking.k8s.io/v1\",\"time\":\"2025-04-26T22:49:17Z\",\"fieldsType\":\"FieldsV1\",\"fieldsV1\":{\"f:spec\":{\"f:ingress\":{}}}}]},\"spec\":{\"ingress\":[{\"from\":{\"podSelector\":{\"matchLabels\":{\"app\":\"checkoutservice\"}}},\"ports\":[{\"protocol\":\"TCP\",\"port\":7000}]},{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}}}]},{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}}}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"currencyservice\"}},\"policyTypes\":[\"Ingress\"]}}": json: cannot unmarshal object into Go struct field NetworkPolicyIngressRule.spec.ingress.from of type []v1.NetworkPolicyPeer
+
+Mismatch Summary: Mismatch: recommendationservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy currencyservice --namespace=currencyservice --type=json -p='[{"op": "remove", "path": "/spec/ingress/0/from"}]'
+Output: The request is invalid: the server rejected our request due to an error in our request
+
+Mismatch Summary: Mismatch: recommendationservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy currencyservice --namespace=currencyservice -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"currencyservice","namespace":"currencyservice"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":7000,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"currencyservice"}}}}
+  creationTimestamp: "2025-04-26T18:35:51Z"
+  generation: 22
+  name: currencyservice
+  namespace: currencyservice
+  resourceVersion: "89023"
+  uid: 13b8b02b-7912-49bf-8ce1-ac1fd70f0512
+spec:
+  ingress:
+  - ports:
+    - port: 7000
+      protocol: TCP
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+  podSelector:
+    matchLabels:
+      app: currencyservice
+  policyTypes:
+  - Ingress
+
+Mismatch Summary: Mismatch: recommendationservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy currencyservice --namespace=currencyservice --type=json -p='[{"op": "remove", "path": "/spec/ingress"}]'
+Output: networkpolicy.networking.k8s.io/currencyservice patched
+
+Mismatch Summary: Mismatch: recommendationservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy currencyservice --namespace=currencyservice --type=json -p='[{"op": "remove", "path": "/spec/ingress"}]'
+Output: The request is invalid: the server rejected our request due to an error in our request
+
+Mismatch Summary: Mismatch: recommendationservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy currencyservice --namespace=currencyservice --type=json -p='[{"op": "replace", "path": "/spec/ingress", "value": []}]'
+Output: networkpolicy.networking.k8s.io/currencyservice patched
+
+Mismatch Summary: Mismatch: recommendationservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+

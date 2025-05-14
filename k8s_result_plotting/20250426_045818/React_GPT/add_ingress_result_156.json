@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "python\n\"kubectl get networkpolicy -n frontend\"",
+        "output": "/bin/bash: line 2: kubectl get networkpolicy -n frontend: command not found\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy <network-policy-name> -n adservice --type=json -p '[{\"op\": \"remove\", \"path\": \"/spec/ingress/0/from\"}]'",
+        "output": "/bin/bash: line 1: network-policy-name: No such file or directory\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n adservice -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n redis-cart -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy deny-adservice-ingress -n redis-cart --type=json -p '[{\n  \"op\": \"add\",\n  \"path\": \"/spec\",\n  \"value\": {\n    \"podSelector\": {},\n    \"policyTypes\": [\"Ingress\"],\n    \"ingress\": [\n      {\n        \"from\": [\n          {\n            \"namespaceSelector\": {\n              \"matchLabels\": {\n                \"name\": \"adservice\"\n              }\n            }\n          }\n        ]\n      }\n    ]\n  }\n}]'",
+        "output": "Error from server (NotFound): namespaces \"redis-cart\" not found\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\ndefault              Active   128m\nkube-node-lease      Active   128m\nkube-public          Active   128m\nkube-system          Active   128m\nlocal-path-storage   Active   128m\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get services --all-namespaces",
+        "output": "NAMESPACE     NAME                    TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)                  AGE\ndefault       adservice               ClusterIP      10.96.182.150   <none>        9555/TCP                 125m\ndefault       cartservice             ClusterIP      10.96.134.110   <none>        7070/TCP                 125m\ndefault       checkoutservice         ClusterIP      10.96.50.97     <none>        5050/TCP                 125m\ndefault       currencyservice         ClusterIP      10.96.113.81    <none>        7000/TCP                 125m\ndefault       emailservice            ClusterIP      10.96.164.48    <none>        5000/TCP                 125m\ndefault       frontend                ClusterIP      10.96.210.18    <none>        80/TCP                   125m\ndefault       frontend-external       LoadBalancer   10.96.205.66    <pending>     80:32110/TCP             125m\ndefault       kubernetes              ClusterIP      10.96.0.1       <none>        443/TCP                  128m\ndefault       paymentservice          ClusterIP      10.96.159.123   <none>        50051/TCP                125m\ndefault       productcatalogservice   ClusterIP      10.96.239.23    <none>        3550/TCP                 125m\ndefault       recommendationservice   ClusterIP      10.96.134.174   <none>        8080/TCP                 125m\ndefault       redis-cart              ClusterIP      10.96.111.32    <none>        6379/TCP                 125m\ndefault       shippingservice         ClusterIP      10.96.206.53    <none>        50051/TCP                125m\nkube-system   kube-dns                ClusterIP      10.96.0.10      <none>        53/UDP,53/TCP,9153/TCP   128m\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy deny-adservice-ingress -n default --type=json -p '[{\n  \"op\": \"add\",\n  \"path\": \"/spec\",\n  \"value\": {\n    \"podSelector\": {\n      \"matchLabels\": {\n        \"app\": \"redis-cart\"\n      }\n    },\n    \"policyTypes\": [\"Ingress\"],\n    \"ingress\": [\n      {\n        \"from\": [\n          {\n            \"namespaceSelector\": {\n              \"matchLabels\": {\n                \"name\": \"adservice\"\n              }\n            }\n          }\n        ]\n      }\n    ]\n  }\n}]'",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"deny-adservice-ingress\" not found\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl apply -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: deny-adservice-ingress\n  namespace: default\nspec:\n  podSelector:\n    matchLabels:\n      app: redis-cart\n  policyTypes:\n  - Ingress\n  ingress:\n  - from:\n    - namespaceSelector:\n        matchLabels:\n          name: adservice\nEOF",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"deny-adservice-ingress\" not found\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    }
+]

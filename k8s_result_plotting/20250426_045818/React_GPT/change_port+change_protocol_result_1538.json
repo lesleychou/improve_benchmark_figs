@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n currencyservice -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "bash\nkubectl patch networkpolicy -n currencyservice --type='json' -p='[{\n  \"op\": \"add\",\n  \"path\": \"/items\",\n  \"value\": [{\n    \"apiVersion\": \"networking.k8s.io/v1\",\n    \"kind\": \"NetworkPolicy\",\n    \"metadata\": {\n      \"name\": \"allow-frontend-and-checkout-to-currency\"\n    },\n    \"spec\": {\n      \"podSelector\": {},\n      \"policyTypes\": [\"Ingress\"],\n      \"ingress\": [{\n        \"from\": [\n          {\n            \"namespaceSelector\": {\n              \"matchLabels\": {\n                \"kubernetes.io/metadata.name\": \"frontend\"\n              }\n            }\n          },\n          {\n            \"namespaceSelector\": {\n              \"matchLabels\": {\n                \"kubernetes.io/metadata.name\": \"checkoutservice\"\n              }\n            }\n          }\n        ],\n        \"ports\": [{\n          \"protocol\": \"TCP\",\n          \"port\": 7000\n        }]\n      }]\n    }\n  }]\n}]'",
+        "output": "bash: error reading input file: Bad file descriptor\nerror: resource(s) were provided, but no name was specified\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "bash\nkubectl patch networkpolicy -n currencyservice --type='json' -p='[{\n  \"op\": \"add\",\n  \"path\": \"/spec\",\n  \"value\": {\n    \"podSelector\": {},\n    \"policyTypes\": [\"Ingress\"],\n    \"ingress\": [{\n      \"from\": [\n        {\n          \"namespaceSelector\": {\n            \"matchLabels\": {\n              \"kubernetes.io/metadata.name\": \"frontend\"\n            }\n          }\n        },\n        {\n          \"namespaceSelector\": {\n            \"matchLabels\": {\n              \"kubernetes.io/metadata.name\": \"checkoutservice\"\n            }\n          }\n        }\n      ],\n      \"ports\": [{\n        \"protocol\": \"TCP\",\n        \"port\": 7000\n      }]\n    }]\n  }\n}]'",
+        "output": "bash: error reading input file: Bad file descriptor\nerror: resource(s) were provided, but no name was specified\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "bash\nkubectl get networkpolicy -n frontend -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy -n currencyservice --type='json' -p='[{\n  \"op\": \"add\",\n  \"path\": \"/\",\n  \"value\": {\n    \"apiVersion\": \"networking.k8s.io/v1\",\n    \"kind\": \"NetworkPolicy\",\n    \"metadata\": {\n      \"name\": \"allow-frontend-and-checkout-to-currency\"\n    },\n    \"spec\": {\n      \"podSelector\": {},\n      \"policyTypes\": [\"Ingress\"],\n      \"ingress\": [{\n        \"from\": [\n          {\n            \"namespaceSelector\": {\n              \"matchLabels\": {\n                \"kubernetes.io/metadata.name\": \"frontend\"\n              }\n            }\n          },\n          {\n            \"namespaceSelector\": {\n              \"matchLabels\": {\n                \"kubernetes.io/metadata.name\": \"checkoutservice\"\n              }\n            }\n          }\n        ],\n        \"ports\": [{\n          \"protocol\": \"TCP\",\n          \"port\": 7000\n        }]\n      }]\n    }\n  }\n}]'",
+        "output": "error: resource(s) were provided, but no name was specified\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl apply -n currencyservice -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-frontend-and-checkout-to-currency\n  namespace: currencyservice\nspec:\n  podSelector: {}\n  policyTypes:\n  - Ingress\n  ingress:\n  - from:\n    - namespaceSelector:\n        matchLabels:\n          kubernetes.io/metadata.name: frontend\n    - namespaceSelector:\n        matchLabels:\n          kubernetes.io/metadata.name: checkoutservice\n    ports:\n    - protocol: TCP\n      port: 7000\nEOF",
+        "output": "error: resource(s) were provided, but no name was specified\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy -n currencyservice --type='merge' -p='{\n  \"apiVersion\": \"networking.k8s.io/v1\",\n  \"kind\": \"NetworkPolicy\",\n  \"metadata\": {\n    \"name\": \"allow-frontend-and-checkout-to-currency\"\n  },\n  \"spec\": {\n    \"podSelector\": {},\n    \"policyTypes\": [\"Ingress\"],\n    \"ingress\": [\n      {\n        \"from\": [\n          {\n            \"namespaceSelector\": {\n              \"matchLabels\": {\n                \"kubernetes.io/metadata.name\": \"frontend\"\n              }\n            }\n          },\n          {\n            \"namespaceSelector\": {\n              \"matchLabels\": {\n                \"kubernetes.io/metadata.name\": \"checkoutservice\"\n              }\n            }\n          }\n        ],\n        \"ports\": [\n          {\n            \"protocol\": \"TCP\",\n            \"port\": 7000\n          }\n        ]\n      }\n    ]\n  }\n}'",
+        "output": "error: resource(s) were provided, but no name was specified\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 currencyservice:7000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 currencyservice:7000 (Expected: True, Actual: False)"
+    }
+]

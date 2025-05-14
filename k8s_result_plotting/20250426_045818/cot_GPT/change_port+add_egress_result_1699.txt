@@ -1,0 +1,528 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy recommendationservice --type=json -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "productcatalogservice"}}}}, {"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 3550, "protocol": "TCP"}}]'
+Output: networkpolicy.networking.k8s.io/recommendationservice patched
+
+Mismatch Summary: Mismatch: productcatalogservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy recommendationservice --type=json -p='[{"op": "replace", "path": "/spec/ingress", "value": [{"from": [{"podSelector": {"matchLabels": {"app": "productcatalogservice"}}}], "ports": [{"port": 3550, "protocol": "TCP"}]}]}]'
+Output: networkpolicy.networking.k8s.io/recommendationservice patched
+
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy recommendationservice -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"recommendationservice","namespace":"default"},"spec":{"egress":[{"to":[{"podSelector":{"matchLabels":{"app":"shippingservice"}}}]},{"to":[{"podSelector":{"matchLabels":{"app":"adservice"}}}]}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":8080,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"recommendationservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-04-26T05:02:45Z"
+  generation: 642
+  name: recommendationservice
+  namespace: default
+  resourceVersion: "113375"
+  uid: e9244131-557e-491d-ba97-41e3989196b1
+spec:
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: shippingservice
+  - to:
+    - podSelector:
+        matchLabels:
+          app: adservice
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: productcatalogservice
+    ports:
+    - port: 3550
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: recommendationservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy recommendationservice --type=json -p='[{"op": "add", "path": "/spec/egress/-", "value": {"to": [{"podSelector": {"matchLabels": {"app": "productcatalogservice"}}}], "ports": [{"port": 3550, "protocol": "TCP"}]}}]'
+Output: networkpolicy.networking.k8s.io/recommendationservice patched
+
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy productcatalogservice -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"productcatalogservice","namespace":"default"},"spec":{"egress":[{}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}},{"podSelector":{"matchLabels":{"app":"checkoutservice"}}},{"podSelector":{"matchLabels":{"app":"recommendationservice"}}}],"ports":[{"port":3550,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"productcatalogservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-04-26T05:02:45Z"
+  generation: 440
+  name: productcatalogservice
+  namespace: default
+  resourceVersion: "113237"
+  uid: d9c6a5ef-a9a7-4e53-bf85-74acbfe130ef
+spec:
+  egress:
+  - {}
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+    - podSelector:
+        matchLabels:
+          app: recommendationservice
+    ports:
+    - port: 3550
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: productcatalogservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy recommendationservice --type=json -p='[{"op": "replace", "path": "/spec/egress", "value": [{"to": [{"podSelector": {"matchLabels": {"app": "productcatalogservice"}}}], "ports": [{"port": 3550, "protocol": "TCP"}]}]}]'
+Output: networkpolicy.networking.k8s.io/recommendationservice patched
+
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods -l app=recommendationservice -o yaml
+Output: apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2025-04-26T05:01:40Z"
+    generateName: recommendationservice-c64454f56-
+    labels:
+      app: recommendationservice
+      pod-template-hash: c64454f56
+      skaffold.dev/run-id: 00adce13-6ae0-4db6-9ff3-9bd0af686efb
+    name: recommendationservice-c64454f56-4k2kx
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: recommendationservice-c64454f56
+      uid: 28e5d5ff-4d53-403f-bcfa-a507e096503a
+    resourceVersion: "1128"
+    uid: e2975d2c-29bd-4092-a459-7a4284160f3e
+  spec:
+    containers:
+    - env:
+      - name: PORT
+        value: "8080"
+      - name: PRODUCT_CATALOG_SERVICE_ADDR
+        value: productcatalogservice:3550
+      - name: DISABLE_PROFILER
+        value: "1"
+      image: recommendationservice:c8ea81b19cfe1b961d316c5a9735f2394b4c90171c8a8d29ade5dd98b593584b
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        failureThreshold: 3
+        grpc:
+          port: 8080
+          service: ""
+        periodSeconds: 5
+        successThreshold: 1
+        timeoutSeconds: 1
+      name: server
+      ports:
+      - containerPort: 8080
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 3
+        grpc:
+          port: 8080
+          service: ""
+        periodSeconds: 5
+        successThreshold: 1
+        timeoutSeconds: 1
+      resources:
+        limits:
+          cpu: 200m
+          memory: 450Mi
+        requests:
+          cpu: 100m
+          memory: 220Mi
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+          - ALL
+        privileged: false
+        readOnlyRootFilesystem: true
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-2gbzn
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    ephemeralContainers:
+    - command:
+      - sleep
+      - infinity
+      image: busybox
+      imagePullPolicy: Always
+      name: debugger-b6pb5
+      resources: {}
+      stdin: true
+      targetContainerName: server
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      tty: true
+    nodeName: kind-control-plane
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext:
+      fsGroup: 1000
+      runAsGroup: 1000
+      runAsNonRoot: true
+      runAsUser: 1000
+    serviceAccount: recommendationservice
+    serviceAccountName: recommendationservice
+    terminationGracePeriodSeconds: 5
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-2gbzn
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2025-04-26T05:01:44Z"
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2025-04-26T05:01:41Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2025-04-26T05:01:50Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2025-04-26T05:01:50Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2025-04-26T05:01:40Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: containerd://ad3e555fe51f40c674a709118b7a78d41a1c69c4b6589e02d2091967d789986a
+      image: docker.io/library/recommendationservice:c8ea81b19cfe1b961d316c5a9735f2394b4c90171c8a8d29ade5dd98b593584b
+      imageID: docker.io/library/import-2025-04-26@sha256:9dc1cc251f3e3e055003c89ce6168171cd758976e971e8bc9d679d3e76b34a22
+      lastState: {}
+      name: server
+      ready: true
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2025-04-26T05:01:43Z"
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-2gbzn
+        readOnly: true
+        recursiveReadOnly: Disabled
+    ephemeralContainerStatuses:
+    - containerID: containerd://447c231f41546991c5f797b0c510506a1cf849e5415a9566b7b4c158017ac4ce
+      image: docker.io/library/busybox:latest
+      imageID: docker.io/library/busybox@sha256:37f7b378a29ceb4c551b1b5582e27747b855bbfaa73fa11914fe0df028dc581f
+      lastState: {}
+      name: debugger-b6pb5
+      ready: false
+      restartCount: 0
+      state:
+        running:
+          startedAt: "2025-04-26T05:02:40Z"
+    hostIP: 172.18.0.2
+    hostIPs:
+    - ip: 172.18.0.2
+    phase: Running
+    podIP: 10.244.0.13
+    podIPs:
+    - ip: 10.244.0.13
+    qosClass: Burstable
+    startTime: "2025-04-26T05:01:41Z"
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods -l app=productcatalogservice -o yaml
+Output: apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2025-04-26T05:01:40Z"
+    generateName: productcatalogservice-5bd4cb4488-
+    labels:
+      app: productcatalogservice
+      pod-template-hash: 5bd4cb4488
+      skaffold.dev/run-id: 00adce13-6ae0-4db6-9ff3-9bd0af686efb
+    name: productcatalogservice-5bd4cb4488-7m8zm
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: productcatalogservice-5bd4cb4488
+      uid: ea8f925b-7cf5-4c4e-b73d-1a1f39aacb79
+    resourceVersion: "1119"
+    uid: 41662294-352f-4e5d-9399-8476af53d077
+  spec:
+    containers:
+    - env:
+      - name: PORT
+        value: "3550"
+      - name: DISABLE_PROFILER
+        value: "1"
+      image: productcatalogservice:a0d4f6ff2f579c900df96ce3ad275e95db5cdbf5bc4f7871b7219bde992f1530
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        failureThreshold: 3
+        grpc:
+          port: 3550
+          service: ""
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 1
+      name: server
+      ports:
+      - containerPort: 3550
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 3
+        grpc:
+          port: 3550
+          service: ""
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 1
+      resources:
+        limits:
+          cpu: 200m
+          memory: 128Mi
+        requests:
+          cpu: 100m
+          memory: 64Mi
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+          - ALL
+        privileged: false
+        readOnlyRootFilesystem: true
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-czfkm
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    ephemeralContainers:
+    - command:
+      - sleep
+      - infinity
+      image: busybox
+      imagePullPolicy: Always
+      name: debugger-svtz7
+      resources: {}
+      stdin: true
+      targetContainerName: server
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      tty: true
+    nodeName: kind-control-plane
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext:
+      fsGroup: 1000
+      runAsGroup: 1000
+      runAsNonRoot: true
+      runAsUser: 1000
+    serviceAccount: productcatalogservice
+    serviceAccountName: productcatalogservice
+    terminationGracePeriodSeconds: 5
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-czfkm
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2025-04-26T05:01:44Z"
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2025-04-26T05:01:40Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2025-04-26T05:01:44Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2025-04-26T05:01:44Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2025-04-26T05:01:40Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: containerd://b4c67a1d99d2560830afc93e379bafdd889994a73cddf486d1527498163b76e1
+      image: docker.io/library/productcatalogservice:a0d4f6ff2f579c900df96ce3ad275e95db5cdbf5bc4f7871b7219bde992f1530
+      imageID: docker.io/library/import-2025-04-26@sha256:eea875435304a7e7b8d9c47a0d4e1135871b3f48f8958aa7af588d252b97849e
+      lastState: {}
+      name: server
+      ready: true
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2025-04-26T05:01:43Z"
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-czfkm
+        readOnly: true
+        recursiveReadOnly: Disabled
+    ephemeralContainerStatuses:
+    - containerID: containerd://c7b4cf87ec7581788b1a7cc086534b22c490f952776dc5ccbb5cbd089dc603d1
+      image: docker.io/library/busybox:latest
+      imageID: docker.io/library/busybox@sha256:37f7b378a29ceb4c551b1b5582e27747b855bbfaa73fa11914fe0df028dc581f
+      lastState: {}
+      name: debugger-svtz7
+      ready: false
+      restartCount: 0
+      state:
+        running:
+          startedAt: "2025-04-26T05:02:37Z"
+    hostIP: 172.18.0.2
+    hostIPs:
+    - ip: 172.18.0.2
+    phase: Running
+    podIP: 10.244.0.12
+    podIPs:
+    - ip: 10.244.0.12
+    qosClass: Burstable
+    startTime: "2025-04-26T05:01:40Z"
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+

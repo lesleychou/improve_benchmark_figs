@@ -1,0 +1,118 @@
+LLM Command: kubectl get networkpolicy -n frontend
+Output: 
+Mismatch Summary: Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: productcatalogservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy <networkpolicy-name> -n frontend --type=json -p '[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "productcatalogservice"}}}}, {"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 3550, "protocol": "TCP"}}]'
+Output: /bin/bash: line 1: networkpolicy-name: No such file or directory
+
+Mismatch Summary: Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: productcatalogservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n frontend
+Output: 
+Mismatch Summary: Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: productcatalogservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n frontend -o jsonpath='{.items[*].metadata.name}'
+Output: 
+Mismatch Summary: Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: productcatalogservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n frontend -o json
+Output: {
+    "apiVersion": "v1",
+    "items": [],
+    "kind": "List",
+    "metadata": {
+        "resourceVersion": ""
+    }
+}
+
+Mismatch Summary: Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: productcatalogservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n checkoutservice -o json
+Output: {
+    "apiVersion": "v1",
+    "items": [],
+    "kind": "List",
+    "metadata": {
+        "resourceVersion": ""
+    }
+}
+
+Mismatch Summary: Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: productcatalogservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy allow-productcatalog-to-frontend -n frontend --type=json -p '[{"op": "add", "path": "/spec", "value": {"podSelector": {"matchLabels": {"app": "frontend"}}, "ingress": [{"from": [{"podSelector": {"matchLabels": {"app": "productcatalogservice"}}}], "ports": [{"port": 3550, "protocol": "TCP"}]}]}}]'
+Output: Error from server (NotFound): namespaces "frontend" not found
+
+Mismatch Summary: Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: productcatalogservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl get namespaces
+Output: NAME                 STATUS   AGE
+default              Active   20h
+kube-node-lease      Active   20h
+kube-public          Active   20h
+kube-system          Active   20h
+local-path-storage   Active   20h
+
+Mismatch Summary: Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: productcatalogservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods --all-namespaces -o wide
+Output: NAMESPACE            NAME                                         READY   STATUS    RESTARTS       AGE   IP            NODE                 NOMINATED NODE   READINESS GATES
+default              adservice-7c7687ff5b-fbq2s                   1/1     Running   0              20h   10.244.0.5    kind-control-plane   <none>           <none>
+default              cartservice-7c8966d6fd-c8rb4                 1/1     Running   0              20h   10.244.0.6    kind-control-plane   <none>           <none>
+default              checkoutservice-769b8ff7b8-jxzrv             1/1     Running   0              20h   10.244.0.7    kind-control-plane   <none>           <none>
+default              currencyservice-578dcb55f6-bdvtr             1/1     Running   5 (10m ago)    20h   10.244.0.9    kind-control-plane   <none>           <none>
+default              emailservice-d5d54d4fc-lksfn                 1/1     Running   0              20h   10.244.0.8    kind-control-plane   <none>           <none>
+default              frontend-7ffbffc6f7-9hb4b                    1/1     Running   0              20h   10.244.0.10   kind-control-plane   <none>           <none>
+default              loadgenerator-7d9cfb7cb9-9zjhk               1/1     Running   0              20h   10.244.0.16   kind-control-plane   <none>           <none>
+default              paymentservice-b67c65d9c-ztkqg               1/1     Running   4 (168m ago)   20h   10.244.0.11   kind-control-plane   <none>           <none>
+default              productcatalogservice-5f94b6cd47-lk6vh       1/1     Running   0              20h   10.244.0.15   kind-control-plane   <none>           <none>
+default              recommendationservice-c468b6867-pcbbn        1/1     Running   0              20h   10.244.0.12   kind-control-plane   <none>           <none>
+default              redis-cart-5b6f47b748-9rgzw                  1/1     Running   0              20h   10.244.0.13   kind-control-plane   <none>           <none>
+default              shippingservice-f6bc4cd5d-69r7d              1/1     Running   0              20h   10.244.0.14   kind-control-plane   <none>           <none>
+kube-system          coredns-668d6bf9bc-g5z8v                     1/1     Running   0              20h   10.244.0.2    kind-control-plane   <none>           <none>
+kube-system          coredns-668d6bf9bc-l2w7d                     1/1     Running   0              20h   10.244.0.4    kind-control-plane   <none>           <none>
+kube-system          etcd-kind-control-plane                      1/1     Running   0              20h   172.18.0.2    kind-control-plane   <none>           <none>
+kube-system          kindnet-g596l                                1/1     Running   0              20h   172.18.0.2    kind-control-plane   <none>           <none>
+kube-system          kube-apiserver-kind-control-plane            1/1     Running   0              20h   172.18.0.2    kind-control-plane   <none>           <none>
+kube-system          kube-controller-manager-kind-control-plane   1/1     Running   0              20h   172.18.0.2    kind-control-plane   <none>           <none>
+kube-system          kube-proxy-48f5g                             1/1     Running   0              20h   172.18.0.2    kind-control-plane   <none>           <none>
+kube-system          kube-scheduler-kind-control-plane            1/1     Running   0              20h   172.18.0.2    kind-control-plane   <none>           <none>
+local-path-storage   local-path-provisioner-58cc7856b6-nfdzv      1/1     Running   0              20h   10.244.0.3    kind-control-plane   <none>           <none>
+
+Mismatch Summary: Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: productcatalogservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → redis-cart:6379 (Expected: False, Actual: True)
+

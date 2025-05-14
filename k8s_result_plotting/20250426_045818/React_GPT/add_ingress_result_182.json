@@ -1,0 +1,32 @@
+[
+    {
+        "llm_command": "kubectl get networkpolicy --all-namespaces",
+        "output": "NAMESPACE   NAME                    POD-SELECTOR                AGE\ndefault     adservice               app=adservice               144m\ndefault     cartservice             app=cartservice             144m\ndefault     checkoutservice         app=checkoutservice         144m\ndefault     currencyservice         app=currencyservice         144m\ndefault     emailservice            app=emailservice            144m\ndefault     frontend                app=frontend                144m\ndefault     loadgenerator           app=loadgenerator           144m\ndefault     paymentservice          app=paymentservice          144m\ndefault     productcatalogservice   app=productcatalogservice   144m\ndefault     recommendationservice   app=recommendationservice   144m\ndefault     redis-cart              app=redis-cart              144m\ndefault     shippingservice         app=shippingservice         144m\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy cartservice -n default --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"adservice\"}}, \"namespaceSelector\": {}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"recommendationservice\"}}, \"namespaceSelector\": {}}}]'",
+        "output": "networkpolicy.networking.k8s.io/cartservice patched\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy cartservice -n default --type='json' -p='[{\"op\": \"replace\", \"path\": \"/spec/ingress\", \"value\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}}, {\"podSelector\": {\"matchLabels\": {\"app\": \"redis-cart\"}}}]}]}]'",
+        "output": "networkpolicy.networking.k8s.io/cartservice patched\n",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: redis-cart \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy cartservice -n default --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"checkoutservice\"}}}}, {\"op\": \"remove\", \"path\": \"/spec/ingress/0/from\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"redis-cart\"}}}}]'",
+        "output": "networkpolicy.networking.k8s.io/cartservice patched\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: redis-cart \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: loadgenerator \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy cartservice -n default --type='json' -p='[{\"op\": \"replace\", \"path\": \"/spec/ingress\", \"value\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}}, {\"podSelector\": {\"matchLabels\": {\"app\": \"redis-cart\"}}}]}]}]'",
+        "output": "networkpolicy.networking.k8s.io/cartservice patched\n",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: redis-cart \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy cartservice -n default --type='json' -p='[{\"op\": \"replace\", \"path\": \"/spec/ingress\", \"value\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}}, {\"podSelector\": {\"matchLabels\": {\"app\": \"checkoutservice\"}}}]}]}]'",
+        "output": "networkpolicy.networking.k8s.io/cartservice patched\n",
+        "mismatch_summary": "No mismatches found."
+    }
+]

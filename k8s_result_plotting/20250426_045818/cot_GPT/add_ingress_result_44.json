@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: adservice \u2192 productcatalogservice:3550 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 productcatalogservice:3550 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy adservice-policy -n adservice --type=json -p='[{\"op\": \"add\", \"path\": \"/spec/egress/-\", \"value\": {\"to\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"productcatalogservice\"}}}], \"ports\": [{\"port\": 3550, \"protocol\": \"TCP\"}]}}]'",
+        "output": "networkpolicy.networking.k8s.io/adservice-policy patched\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 productcatalogservice:3550 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 productcatalogservice:3550 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy adservice-policy -n adservice --type=json -p='[{\"op\": \"remove\", \"path\": \"/spec/egress\"}]'",
+        "output": "networkpolicy.networking.k8s.io/adservice-policy patched\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 productcatalogservice:3550 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 productcatalogservice:3550 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy adservice-policy -n adservice --type=json -p='[{\"op\": \"add\", \"path\": \"/spec/egress\", \"value\": [{\"to\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"productcatalogservice\"}}}], \"ports\": [{\"port\": 3550, \"protocol\": \"TCP\"}]}]}]'",
+        "output": "networkpolicy.networking.k8s.io/adservice-policy patched\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 productcatalogservice:3550 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 productcatalogservice:3550 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy adservice-policy -n adservice --type=json -p='[{\"op\": \"remove\", \"path\": \"/spec/egress\"}]'",
+        "output": "networkpolicy.networking.k8s.io/adservice-policy patched\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 productcatalogservice:3550 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 productcatalogservice:3550 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy adservice-policy -n adservice --type=json -p='[{\"op\": \"add\", \"path\": \"/spec/egress\", \"value\": [{\"to\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"productcatalogservice\"}}}], \"ports\": [{\"port\": 3550, \"protocol\": \"TCP\"}]}]}]'",
+        "output": "networkpolicy.networking.k8s.io/adservice-policy patched\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 productcatalogservice:3550 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 productcatalogservice:3550 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n productcatalogservice -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 productcatalogservice:3550 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 productcatalogservice:3550 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl apply -n productcatalogservice -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: deny-all-ingress\nspec:\n  podSelector: {}\n  policyTypes:\n  - Ingress\nEOF",
+        "output": "Error from server (NotFound): error when creating \"STDIN\": namespaces \"productcatalogservice\" not found\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 productcatalogservice:3550 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 productcatalogservice:3550 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\nadservice            Active   19m\ncartservice          Active   10m\ncheckoutservice      Active   15m\ndefault              Active   30m\nemailservice         Active   15m\nkube-node-lease      Active   30m\nkube-public          Active   30m\nkube-system          Active   30m\nlocal-path-storage   Active   30m\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 productcatalogservice:3550 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 productcatalogservice:3550 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    }
+]

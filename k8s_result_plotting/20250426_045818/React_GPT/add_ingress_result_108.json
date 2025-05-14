@@ -1,0 +1,22 @@
+[
+    {
+        "llm_command": "kubectl get networkpolicy -A",
+        "output": "NAMESPACE   NAME                    POD-SELECTOR                AGE\ndefault     adservice               app=adservice               89m\ndefault     cartservice             app=cartservice             89m\ndefault     checkoutservice         app=checkoutservice         89m\ndefault     currencyservice         app=currencyservice         89m\ndefault     emailservice            app=emailservice            89m\ndefault     frontend                app=frontend                89m\ndefault     loadgenerator           app=loadgenerator           89m\ndefault     paymentservice          app=paymentservice          89m\ndefault     productcatalogservice   app=productcatalogservice   89m\ndefault     recommendationservice   app=recommendationservice   89m\ndefault     redis-cart              app=redis-cart              89m\ndefault     shippingservice         app=shippingservice         89m\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy adservice -n default --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec/egress/-\", \"value\": {\"to\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"paymentservice\"}}}], \"ports\": [{\"port\": 50051, \"protocol\": \"TCP\"}]}}]'",
+        "output": "networkpolicy.networking.k8s.io/adservice patched\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy shippingservice -n default --type='json' -p='[{\"op\": \"remove\", \"path\": \"/spec/egress\"}]'",
+        "output": "networkpolicy.networking.k8s.io/shippingservice patched\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy adservice -n default --type='json' -p='[{\"op\": \"remove\", \"path\": \"/spec/egress\"}]'",
+        "output": "networkpolicy.networking.k8s.io/adservice patched\n",
+        "mismatch_summary": "No mismatches found."
+    }
+]

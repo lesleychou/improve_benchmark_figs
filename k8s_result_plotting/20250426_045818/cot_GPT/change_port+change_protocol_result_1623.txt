@@ -1,0 +1,204 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n shippingservice
+Output: NAME                                      POD-SELECTOR          AGE
+allow-checkout-to-shipping                app=shippingservice   9h
+allow-frontend-to-shipping                app=shipping          6h17m
+allow-frontend-to-shippingservice         app=shippingservice   16h
+deny-egress-to-checkout-and-payment       app=shippingservice   13h
+deny-payment-access                       app=shippingservice   19h
+deny-productcatalog-to-shipping           app=shippingservice   7h23m
+deny-shippingservice-egress               app=shippingservice   20h
+deny-shippingservice-to-checkoutservice   app=shippingservice   6h51m
+shippingservice                           app=shippingservice   9h
+shippingservice-deny-productcatalog       app=shippingservice   7h23m
+shippingservice-policy                    app=shippingservice   7h11m
+
+Mismatch Summary: Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy deny-shippingservice-to-checkoutservice -n shippingservice --type=json -p='[{"op": "add", "path": "/spec/egress/0/to/0/podSelector", "value": {"app": "checkoutservice"}}, {"op": "add", "path": "/spec/egress/0/ports", "value": [{"port": 5050, "protocol": "TCP"}]}]'
+Output: networkpolicy.networking.k8s.io/deny-shippingservice-to-checkoutservice patched
+
+Mismatch Summary: Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy deny-egress-to-checkout-and-payment -n shippingservice -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"deny-egress-to-checkout-and-payment","namespace":"shippingservice"},"spec":{"egress":[{"ports":[{"port":5050,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}]},{"ports":[{"port":50051,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"paymentservice"}}}]}],"podSelector":{"matchLabels":{"app":"shippingservice"}},"policyTypes":["Egress"]}}
+  creationTimestamp: "2025-04-26T13:12:56Z"
+  generation: 178
+  name: deny-egress-to-checkout-and-payment
+  namespace: shippingservice
+  resourceVersion: "108303"
+  uid: 25225e0f-fde9-4853-aa8c-316f9d05d78b
+spec:
+  egress:
+  - ports:
+    - port: 5050
+      protocol: TCP
+    to:
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+  podSelector:
+    matchLabels:
+      app: shippingservice
+  policyTypes:
+  - Egress
+
+Mismatch Summary: Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: bash
+kubectl patch networkpolicy deny-egress-to-checkout-and-payment -n shippingservice --type=json -p='[{"op": "replace", "path": "/spec/egress", "value": [{"to":[{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}],"ports":[{"port":5050,"protocol":"TCP"}]},{"to":[{"podSelector":{"matchLabels":{"app":"paymentservice"}}}],"ports":[{"port":50051,"protocol":"TCP"}]}]}]'
+Output: networkpolicy.networking.k8s.io/deny-egress-to-checkout-and-payment patched
+
+Mismatch Summary: Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n emailservice
+Output: NAME                            POD-SELECTOR       AGE
+deny-adservice                  app=emailservice   168m
+deny-adservice-ingress          app=emailservice   167m
+deny-egress-to-payment          app=emailservice   11h
+deny-frontend-access            <none>             5h24m
+deny-frontend-to-emailservice   app=emailservice   5h24m
+emailservice                    app=emailservice   20h
+emailservice-deny-frontend      app=emailservice   20h
+emailservice-deny-unexpected    app=emailservice   20h
+emailservice-policy             app=emailservice   18h
+restrict-emailservice-ingress   app=emailservice   5h24m
+
+Mismatch Summary: Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl describe networkpolicy deny-egress-to-checkout-and-payment -n shippingservice
+Output: Name:         deny-egress-to-checkout-and-payment
+Namespace:    shippingservice
+Created on:   2025-04-26 13:12:56 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=shippingservice
+  Not affecting ingress traffic
+  Allowing egress traffic:
+    To Port: 5050/TCP
+    To:
+      PodSelector: app=checkoutservice
+    ----------
+    To Port: 50051/TCP
+    To:
+      PodSelector: app=paymentservice
+  Policy Types: Egress
+
+Mismatch Summary: Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl
+kubectl patch networkpolicy deny-egress-to-checkout-and-payment -n shippingservice --type=json -p='[{"op": "replace", "path": "/spec/egress", "value": [{"to":[{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}],"ports":[{"port":5050,"protocol":"TCP"}]},{"to":[{"podSelector":{"matchLabels":{"app":"paymentservice"}}}],"ports":[{"port":50051,"protocol":"TCP"}]}]}]'
+Output: kubectl controls the Kubernetes cluster manager.
+
+ Find more information at: https://kubernetes.io/docs/reference/kubectl/
+
+Basic Commands (Beginner):
+  create          Create a resource from a file or from stdin
+  expose          Take a replication controller, service, deployment or pod and expose it as a new Kubernetes service
+  run             Run a particular image on the cluster
+  set             Set specific features on objects
+
+Basic Commands (Intermediate):
+  explain         Get documentation for a resource
+  get             Display one or many resources
+  edit            Edit a resource on the server
+  delete          Delete resources by file names, stdin, resources and names, or by resources and label selector
+
+Deploy Commands:
+  rollout         Manage the rollout of a resource
+  scale           Set a new size for a deployment, replica set, or replication controller
+  autoscale       Auto-scale a deployment, replica set, stateful set, or replication controller
+
+Cluster Management Commands:
+  certificate     Modify certificate resources
+  cluster-info    Display cluster information
+  top             Display resource (CPU/memory) usage
+  cordon          Mark node as unschedulable
+  uncordon        Mark node as schedulable
+  drain           Drain node in preparation for maintenance
+  taint           Update the taints on one or more nodes
+
+Troubleshooting and Debugging Commands:
+  describe        Show details of a specific resource or group of resources
+  logs            Print the logs for a container in a pod
+  attach          Attach to a running container
+  exec            Execute a command in a container
+  port-forward    Forward one or more local ports to a pod
+  proxy           Run a proxy to the Kubernetes API server
+  cp              Copy files and directories to and from containers
+  auth            Inspect authorization
+  debug           Create debugging sessions for troubleshooting workloads and nodes
+  events          List events
+
+Advanced Commands:
+  diff            Diff the live version against a would-be applied version
+  apply           Apply a configuration to a resource by file name or stdin
+  patch           Update fields of a resource
+  replace         Replace a resource by file name or stdin
+  wait            Experimental: Wait for a specific condition on one or many resources
+  kustomize       Build a kustomization target from a directory or URL
+
+Settings Commands:
+  label           Update the labels on a resource
+  annotate        Update the annotations on a resource
+  completion      Output shell completion code for the specified shell (bash, zsh, fish, or powershell)
+
+Subcommands provided by plugins:
+
+Other Commands:
+  api-resources   Print the supported API resources on the server
+  api-versions    Print the supported API versions on the server, in the form of "group/version"
+  config          Modify kubeconfig files
+  plugin          Provides utilities for interacting with plugins
+  version         Print the client and server version information
+
+Usage:
+  kubectl [flags] [options]
+
+Use "kubectl <command> --help" for more information about a given command.
+Use "kubectl options" for a list of global command-line options (applies to all commands).
+networkpolicy.networking.k8s.io/deny-egress-to-checkout-and-payment patched (no change)
+
+Mismatch Summary: Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy deny-egress-to-checkout-and-payment -n shippingservice --type=json -p='[{"op": "add", "path": "/spec/egress/0/to/0/podSelector", "value": {"matchLabels": {"app": "checkoutservice"}}}, {"op": "add", "path": "/spec/egress/0/ports", "value": [{"port": 5050, "protocol": "TCP"}]}]'
+Output: networkpolicy.networking.k8s.io/deny-egress-to-checkout-and-payment patched (no change)
+
+Mismatch Summary: Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+

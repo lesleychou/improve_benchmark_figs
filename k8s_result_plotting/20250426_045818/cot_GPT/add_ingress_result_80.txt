@@ -1,0 +1,111 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: shippingservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy shippingservice-policy -n shippingservice --type=json -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "adservice"}}}}, {"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 9555, "protocol": "TCP"}}]'
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "shippingservice-policy" not found
+
+Mismatch Summary: Mismatch: shippingservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n shippingservice
+Output: NAME                     POD-SELECTOR   AGE
+deny-checkout-currency   <none>         3m12s
+
+Mismatch Summary: Mismatch: shippingservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy deny-checkout-currency -n shippingservice --type=json -p='[{"op": "add", "path": "/spec/ingress", "value": [{"from": [{"podSelector": {"matchLabels": {"app": "checkoutservice"}}}], "ports": [{"port": 5050, "protocol": "TCP"}]}]}]'
+Output: networkpolicy.networking.k8s.io/deny-checkout-currency patched
+
+Mismatch Summary: Mismatch: shippingservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n emailservice
+Output: NAME       POD-SELECTOR   AGE
+deny-all   <none>         33m
+
+Mismatch Summary: Mismatch: shippingservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy deny-checkout-currency -n shippingservice --type=json -p='[{"op": "add", "path": "/spec/ingress/-", "value": {"from": [{"podSelector": {"matchLabels": {"app": "adservice"}}}], "ports": [{"port": 9555, "protocol": "TCP"}]}}]'
+Output: networkpolicy.networking.k8s.io/deny-checkout-currency patched
+
+Mismatch Summary: Mismatch: shippingservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy deny-checkout-currency -n shippingservice --type=json -p='[{"op": "add", "path": "/spec/egress", "value": [{"to": [{"podSelector": {"matchLabels": {"app": "adservice"}}}], "ports": [{"port": 9555, "protocol": "TCP"}]}]}]'
+Output: networkpolicy.networking.k8s.io/deny-checkout-currency patched
+
+Mismatch Summary: Mismatch: shippingservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods -n shippingservice --show-labels
+Output: 
+Mismatch Summary: Mismatch: shippingservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy deny-all -n emailservice -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"deny-all","namespace":"emailservice"},"spec":{"podSelector":{},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-04-26T05:23:24Z"
+  generation: 5
+  name: deny-all
+  namespace: emailservice
+  resourceVersion: "5517"
+  uid: 35ab8915-3f0f-4d25-9a8b-0d720efdf01a
+spec:
+  egress:
+  - ports:
+    - port: 7070
+      protocol: TCP
+    to:
+    - namespaceSelector:
+        matchLabels:
+          name: cartservice
+  - ports:
+    - port: 5050
+      protocol: TCP
+    to:
+    - namespaceSelector:
+        matchLabels:
+          name: checkoutservice
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: cartservice
+    ports:
+    - port: 5000
+      protocol: TCP
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: shippingservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+

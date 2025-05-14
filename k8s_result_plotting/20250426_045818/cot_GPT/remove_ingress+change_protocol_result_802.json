@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend",
+        "output": "NAME                                   POD-SELECTOR   AGE\nallow-frontend-to-adservice            app=frontend   6h58m\nfrontend                               app=frontend   6h23m\nfrontend-allow                         app=frontend   5h10m\nfrontend-allow-cartservice             app=frontend   6h4m\nfrontend-allow-checkoutservice         app=frontend   6h4m\nfrontend-allow-currencyservice         app=frontend   6h4m\nfrontend-allow-egress                  app=frontend   5h47m\nfrontend-allow-egress-to-adservice     app=frontend   4h27m\nfrontend-allow-productcatalogservice   app=frontend   6h4m\nfrontend-allow-recommendationservice   app=frontend   6h4m\nfrontend-network-policy                app=frontend   66m\nfrontend-policy                        app=frontend   5h15m\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy allow-frontend-to-adservice -n frontend --type=json -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from\", \"value\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}}]}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports\", \"value\": [{\"port\": 9555, \"protocol\": \"TCP\"}]}]'",
+        "output": "networkpolicy.networking.k8s.io/allow-frontend-to-adservice patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n adservice",
+        "output": "NAME                          POD-SELECTOR    AGE\nadservice                     app=adservice   9h\nadservice-allow               app=adservice   3h19m\nallow-frontend-ingress        app=adservice   82m\nallow-frontend-to-adservice   app=adservice   150m\ndeny-shipping-to-ad           app=adservice   148m\nrestrict-adservice-access     app=adservice   168m\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy allow-frontend-ingress -n adservice -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"allow-frontend-ingress\",\"namespace\":\"adservice\"},\"spec\":{\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}}}],\"ports\":[{\"port\":9555,\"protocol\":\"TCP\"}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"adservice\"}},\"policyTypes\":[\"Ingress\"]}}\n  creationTimestamp: \"2025-04-26T14:02:14Z\"\n  generation: 1\n  name: allow-frontend-ingress\n  namespace: adservice\n  resourceVersion: \"46146\"\n  uid: 43e35c50-6631-40f3-98f7-a9b8dc63ad59\nspec:\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    ports:\n    - port: 9555\n      protocol: TCP\n  podSelector:\n    matchLabels:\n      app: adservice\n  policyTypes:\n  - Ingress\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy deny-shipping-to-ad -n adservice -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"deny-shipping-to-ad\",\"namespace\":\"adservice\"},\"spec\":{\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"shippingservice\"}}}],\"ports\":[{\"port\":9555,\"protocol\":\"TCP\"}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"adservice\"}}}}\n  creationTimestamp: \"2025-04-26T12:56:16Z\"\n  generation: 5\n  name: deny-shipping-to-ad\n  namespace: adservice\n  resourceVersion: \"52687\"\n  uid: e64119ce-a9f7-4394-b106-195527e0fd2f\nspec:\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    ports:\n    - port: 9555\n      protocol: TCP\n  podSelector:\n    matchLabels:\n      app: adservice\n  policyTypes:\n  - Ingress\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy deny-shipping-to-ad -n adservice --type=json -p='[{\"op\": \"remove\", \"path\": \"/spec/ingress/0/from/0\"}]'",
+        "output": "networkpolicy.networking.k8s.io/deny-shipping-to-ad patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n shippingservice",
+        "output": "NAME                                  POD-SELECTOR          AGE\nallow-frontend-to-shippingservice     app=shippingservice   4h50m\ndeny-checkout-access                  app=shippingservice   8h\ndeny-checkout-currency                <none>                9h\ndeny-egress-to-checkout-and-payment   app=shippingservice   131m\ndeny-payment-access                   app=shippingservice   8h\ndeny-shippingservice-egress           app=shippingservice   9h\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy deny-shipping-to-ad -n adservice --type=json -p='[{\"op\": \"replace\", \"path\": \"/spec/ingress/0/from\", \"value\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"shippingservice\"}}}]}]'",
+        "output": "networkpolicy.networking.k8s.io/deny-shipping-to-ad patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    }
+]

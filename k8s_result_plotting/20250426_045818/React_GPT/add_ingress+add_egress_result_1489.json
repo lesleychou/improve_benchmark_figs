@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: productcatalogservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n productcatalogservice -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: productcatalogservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n currencyservice -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: productcatalogservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy deny-productcatalog-to-currency -n currencyservice --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec\", \"value\": {\"podSelector\": {}, \"policyTypes\": [\"Ingress\"], \"ingress\": [{\"from\": [{\"namespaceSelector\": {\"matchLabels\": {\"name\": \"productcatalogservice\"}}}]}]}}]'",
+        "output": "Error from server (NotFound): namespaces \"currencyservice\" not found\n",
+        "mismatch_summary": "Mismatch: productcatalogservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\ndefault              Active   46m\nkube-node-lease      Active   46m\nkube-public          Active   46m\nkube-system          Active   46m\nlocal-path-storage   Active   46m\n",
+        "mismatch_summary": "Mismatch: productcatalogservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get pods --all-namespaces",
+        "output": "NAMESPACE            NAME                                         READY   STATUS    RESTARTS   AGE\ndefault              adservice-597dc59b77-q8dfh                   1/1     Running   0          43m\ndefault              cartservice-577f8d8c75-5lfjl                 1/1     Running   0          43m\ndefault              checkoutservice-55698bfcc5-hrjtk             1/1     Running   0          43m\ndefault              currencyservice-c5968f8f5-dx7rq              1/1     Running   0          43m\ndefault              emailservice-6c56b65f6d-fkhwd                1/1     Running   0          43m\ndefault              frontend-797c8f7758-fkv9r                    1/1     Running   0          43m\ndefault              loadgenerator-6c5b65b44b-wp4z7               1/1     Running   0          42m\ndefault              paymentservice-76948fc564-dlnrz              1/1     Running   0          43m\ndefault              productcatalogservice-5f9d5c689b-x9sdp       1/1     Running   0          43m\ndefault              recommendationservice-67cbb84b7b-c2src       1/1     Running   0          43m\ndefault              redis-cart-866688457f-zsqdb                  1/1     Running   0          43m\ndefault              shippingservice-9ddf878c7-gr8bc              1/1     Running   0          43m\nkube-system          coredns-668d6bf9bc-2gvnv                     1/1     Running   0          46m\nkube-system          coredns-668d6bf9bc-kwdwg                     1/1     Running   0          46m\nkube-system          etcd-kind-control-plane                      1/1     Running   0          46m\nkube-system          kindnet-8b9cs                                1/1     Running   0          46m\nkube-system          kube-apiserver-kind-control-plane            1/1     Running   0          46m\nkube-system          kube-controller-manager-kind-control-plane   1/1     Running   0          46m\nkube-system          kube-proxy-fj5w5                             1/1     Running   0          46m\nkube-system          kube-scheduler-kind-control-plane            1/1     Running   0          46m\nlocal-path-storage   local-path-provisioner-58cc7856b6-mhn49      1/1     Running   0          46m\n",
+        "mismatch_summary": "Mismatch: productcatalogservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy deny-productcatalog-to-currency -n default --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"currencyservice\"}}, \"policyTypes\": [\"Ingress\"], \"ingress\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"productcatalogservice\"}}}], \"ports\": [{\"port\": 7000, \"protocol\": \"TCP\"}]}]}}]'",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"deny-productcatalog-to-currency\" not found\n",
+        "mismatch_summary": "Mismatch: productcatalogservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl apply -n default -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: deny-productcatalog-to-currency\n  namespace: default\nspec:\n  podSelector:\n    matchLabels:\n      app: currencyservice\n  policyTypes:\n  - Ingress\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: productcatalogservice\n    ports:\n    - port: 7000\n      protocol: TCP\nEOF",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"deny-productcatalog-to-currency\" not found\n",
+        "mismatch_summary": "Mismatch: productcatalogservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl apply -n default -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: deny-productcatalog-to-currency\n  namespace: default\nspec:\n  podSelector:\n    matchLabels:\n      app: currencyservice\n  policyTypes:\n  - Ingress\n  ingress: []\nEOF",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"deny-productcatalog-to-currency\" not found\n",
+        "mismatch_summary": "Mismatch: productcatalogservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    }
+]

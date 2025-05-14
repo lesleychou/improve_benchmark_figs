@@ -1,0 +1,110 @@
+LLM Command: kubectl get networkpolicy frontend -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"frontend","namespace":"default"},"spec":{"egress":[{}],"ingress":[{}],"podSelector":{"matchLabels":{"app":"frontend"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-04-29T16:15:24Z"
+  generation: 3
+  name: frontend
+  namespace: default
+  resourceVersion: "5510"
+  uid: 8d0deebf-c29d-4122-90ea-0561f7a2bb4e
+spec:
+  egress:
+  - {}
+  ingress:
+  - {}
+  podSelector:
+    matchLabels:
+      app: frontend
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: cartservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: loadgenerator → emailservice:5000 (Expected: False, Actual: True)
+
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: cartservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: loadgenerator → emailservice:5000 (Expected: False, Actual: True)
+
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: cartservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: loadgenerator → emailservice:5000 (Expected: False, Actual: True)
+
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: cartservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: loadgenerator → emailservice:5000 (Expected: False, Actual: True)
+
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: cartservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: loadgenerator → emailservice:5000 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy emailservice -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"emailservice","namespace":"default"},"spec":{"egress":[{}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}],"ports":[{"port":8080,"protocol":"TCP"}]},{"from":[{"podSelector":{"matchLabels":{"app":"loadgenerator"}}}]},{"from":[{"podSelector":{"matchLabels":{"app":"cartservice"}}}]}],"podSelector":{"matchLabels":{"app":"emailservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-04-29T16:15:24Z"
+  generation: 16
+  name: emailservice
+  namespace: default
+  resourceVersion: "17465"
+  uid: d81e9b66-d6b9-49e3-b652-92025f9f91cd
+spec:
+  egress:
+  - {}
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+    ports:
+    - port: 8080
+      protocol: TCP
+  - from:
+    - podSelector:
+        matchLabels:
+          app: loadgenerator
+  - from:
+    - podSelector:
+        matchLabels:
+          app: cartservice
+  podSelector:
+    matchLabels:
+      app: emailservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: cartservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: loadgenerator → emailservice:5000 (Expected: False, Actual: True)
+
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: cartservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: loadgenerator → emailservice:5000 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy emailservice --type=merge -p $'
+spec:
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+    ports:
+    - port: 8080
+      protocol: TCP
+'
+Output: networkpolicy.networking.k8s.io/emailservice patched
+
+Mismatch Summary: No mismatches found.
+

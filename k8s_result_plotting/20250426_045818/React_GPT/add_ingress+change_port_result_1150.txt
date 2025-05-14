@@ -1,0 +1,88 @@
+LLM Command: kubectl get networkpolicy -n frontend
+Output: 
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: recommendationservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: shippingservice → cartservice:7070 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n cartservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: recommendationservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: shippingservice → cartservice:7070 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy -n cartservice --type='json' -p='[{"op": "add", "path": "/spec", "value": {"podSelector": {}, "ingress": [{"from": [{"namespaceSelector": {"matchLabels": {"name": "redis-cart"}}}], "ports": [{"port": 6379, "protocol": "TCP"}]}]}}]'
+Output: error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: recommendationservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: shippingservice → cartservice:7070 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -n cartservice -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-redis-cart
+  namespace: cartservice
+spec:
+  podSelector:
+    matchLabels: {}
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: redis-cart
+    ports:
+    - port: 6379
+      protocol: TCP
+EOF
+Output: error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: recommendationservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: shippingservice → cartservice:7070 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy allow-redis-cart -n cartservice --type='merge' -p='{"spec": {"podSelector": {}, "ingress": [{"from": [{"namespaceSelector": {"matchLabels": {"name": "redis-cart"}}}], "ports": [{"port": 6379, "protocol": "TCP"}]}]}}'
+Output: Error from server (NotFound): namespaces "cartservice" not found
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: recommendationservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: shippingservice → cartservice:7070 (Expected: False, Actual: True)
+
+LLM Command: kubectl get namespaces
+Output: NAME                 STATUS   AGE
+default              Active   18h
+kube-node-lease      Active   18h
+kube-public          Active   18h
+kube-system          Active   18h
+local-path-storage   Active   18h
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: recommendationservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: shippingservice → cartservice:7070 (Expected: False, Actual: True)
+
+LLM Command: kubernetes cartservice namespace
+Output: /bin/bash: line 1: kubernetes: command not found
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: recommendationservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: shippingservice → cartservice:7070 (Expected: False, Actual: True)
+
+LLM Command: kubernetes how to find namespace of a service
+Output: /bin/bash: line 1: kubernetes: command not found
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: recommendationservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: shippingservice → cartservice:7070 (Expected: False, Actual: True)
+
+LLM Command: kubernetes how to find the namespace of a service
+Output: /bin/bash: line 1: kubernetes: command not found
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: recommendationservice → cartservice:7070 (Expected: False, Actual: True)
+Mismatch: shippingservice → cartservice:7070 (Expected: False, Actual: True)
+

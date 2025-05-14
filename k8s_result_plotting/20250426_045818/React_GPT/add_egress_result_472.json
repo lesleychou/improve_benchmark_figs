@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "kubectl get networkpolicy --all-namespaces",
+        "output": "NAMESPACE   NAME                    POD-SELECTOR                AGE\ndefault     adservice               app=adservice               6h40m\ndefault     cartservice             app=cartservice             6h40m\ndefault     checkoutservice         app=checkoutservice         6h40m\ndefault     currencyservice         app=currencyservice         6h40m\ndefault     emailservice            app=emailservice            6h40m\ndefault     frontend                app=frontend                6h40m\ndefault     loadgenerator           app=loadgenerator           6h40m\ndefault     paymentservice          app=paymentservice          6h40m\ndefault     productcatalogservice   app=productcatalogservice   6h40m\ndefault     recommendationservice   app=recommendationservice   6h40m\ndefault     redis-cart              app=redis-cart              6h40m\ndefault     shippingservice         app=shippingservice         6h40m\n",
+        "mismatch_summary": "Mismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy recommendationservice -n default --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"productcatalogservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 3550, \"protocol\": \"TCP\"}}]'",
+        "output": "networkpolicy.networking.k8s.io/recommendationservice patched\n",
+        "mismatch_summary": "Mismatch: productcatalogservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy recommendationservice -n default --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"productcatalogservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 3550, \"protocol\": \"TCP\"}}, {\"op\": \"remove\", \"path\": \"/spec/ingress/0/from/0\"}]'",
+        "output": "networkpolicy.networking.k8s.io/recommendationservice patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)\nMismatch: productcatalogservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy recommendationservice -n default --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 8080, \"protocol\": \"TCP\"}}]'",
+        "output": "networkpolicy.networking.k8s.io/recommendationservice patched\n",
+        "mismatch_summary": "Mismatch: productcatalogservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy productcatalogservice -n default --type='json' -p='[{\"op\": \"remove\", \"path\": \"/spec/ingress/0/from/0\"}]'",
+        "output": "networkpolicy.networking.k8s.io/productcatalogservice patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: productcatalogservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy productcatalogservice -n default --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 3550, \"protocol\": \"TCP\"}}]'",
+        "output": "networkpolicy.networking.k8s.io/productcatalogservice patched\n",
+        "mismatch_summary": "Mismatch: productcatalogservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy productcatalogservice -n default --type='json' -p='[{\"op\": \"remove\", \"path\": \"/spec/ingress/0/from/0\"}]'",
+        "output": "networkpolicy.networking.k8s.io/productcatalogservice patched\n",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: productcatalogservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy productcatalogservice -n default --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"checkoutservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 3550, \"protocol\": \"TCP\"}}]'",
+        "output": "networkpolicy.networking.k8s.io/productcatalogservice patched\n",
+        "mismatch_summary": "Mismatch: productcatalogservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy productcatalogservice -n default --type='json' -p='[{\"op\": \"remove\", \"path\": \"/spec/ingress/0/from/0\"}]'",
+        "output": "networkpolicy.networking.k8s.io/productcatalogservice patched\n",
+        "mismatch_summary": "Mismatch: productcatalogservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    }
+]

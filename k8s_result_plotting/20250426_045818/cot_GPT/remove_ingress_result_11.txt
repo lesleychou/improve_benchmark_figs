@@ -1,0 +1,112 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n currencyservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy allow-frontend-checkout -n currencyservice --type='merge' -p '{"apiVersion": "networking.k8s.io/v1", "kind": "NetworkPolicy", "metadata": {"name": "allow-frontend-checkout"}, "spec": {"podSelector": {}, "policyTypes": ["Ingress"], "ingress": [{"from": [{"namespaceSelector": {"matchLabels": {"name": "frontend"}}, {"namespaceSelector": {"matchLabels": {"name": "checkout"}}}], "ports": [{"protocol": "TCP", "port": 7000}]}]}}'
+Output: Error from server (NotFound): namespaces "currencyservice" not found
+
+Mismatch Summary: Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+
+LLM Command: kubectl get namespaces
+Output: NAME                 STATUS   AGE
+default              Active   8m19s
+kube-node-lease      Active   8m19s
+kube-public          Active   8m19s
+kube-system          Active   8m19s
+local-path-storage   Active   8m12s
+
+Mismatch Summary: Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+
+LLM Command: kubectl get pods --all-namespaces
+Output: NAMESPACE            NAME                                         READY   STATUS    RESTARTS   AGE
+default              adservice-76f594d56f-2prlg                   1/1     Running   0          5m27s
+default              cartservice-5958849bb7-49tjm                 1/1     Running   0          5m27s
+default              checkoutservice-55d99bbf75-z49bp             1/1     Running   0          5m27s
+default              currencyservice-649964f87f-nxj9q             1/1     Running   0          5m27s
+default              emailservice-6d85f47b76-rdnmb                1/1     Running   0          5m27s
+default              frontend-fc4bf5fdb-rmj59                     1/1     Running   0          5m27s
+default              loadgenerator-6d98cc6686-4m4tn               1/1     Running   0          4m52s
+default              paymentservice-7dc8859fb8-vnwl8              1/1     Running   0          5m27s
+default              productcatalogservice-5bd4cb4488-7m8zm       1/1     Running   0          5m27s
+default              recommendationservice-c64454f56-4k2kx        1/1     Running   0          5m27s
+default              redis-cart-799f8fc4c-p9wps                   1/1     Running   0          5m26s
+default              shippingservice-5dd466d969-ppcwn             1/1     Running   0          5m26s
+kube-system          coredns-668d6bf9bc-7vskf                     1/1     Running   0          8m11s
+kube-system          coredns-668d6bf9bc-vhtsb                     1/1     Running   0          8m11s
+kube-system          etcd-kind-control-plane                      1/1     Running   0          8m21s
+kube-system          kindnet-kf59t                                1/1     Running   0          8m12s
+kube-system          kube-apiserver-kind-control-plane            1/1     Running   0          8m22s
+kube-system          kube-controller-manager-kind-control-plane   1/1     Running   0          8m20s
+kube-system          kube-proxy-t9chz                             1/1     Running   0          8m12s
+kube-system          kube-scheduler-kind-control-plane            1/1     Running   0          8m18s
+local-path-storage   local-path-provisioner-58cc7856b6-czqc8      1/1     Running   0          8m11s
+
+Mismatch Summary: Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy allow-frontend-checkout -n default --type='merge' -p '{"apiVersion": "networking.k8s.io/v1", "kind": "NetworkPolicy", "metadata": {"name": "allow-frontend-checkout"}, "spec": {"podSelector": {"matchLabels": {"app": "currencyservice"}}, "policyTypes": ["Ingress"], "ingress": [{"from": [{"podSelector": {"matchLabels": {"app": "frontend"}}, {"podSelector": {"matchLabels": {"app": "checkoutservice"}}}], "ports": [{"protocol": "TCP", "port": 7000}]}]}}'
+Output: Error from server (BadRequest): error decoding patch: invalid character '{' looking for beginning of object key string
+
+Mismatch Summary: Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy allow-frontend-checkout -n default --type='merge' -p '{"spec": {"podSelector": {"matchLabels": {"app": "currencyservice"}}, "policyTypes": ["Ingress"], "ingress": [{"from": [{"podSelector": {"matchLabels": {"app": "frontend"}}, {"podSelector": {"matchLabels": {"app": "checkoutservice"}}}], "ports": [{"protocol": "TCP", "port": 7000}]}]}}'
+Output: Error from server (BadRequest): error decoding patch: invalid character '{' looking for beginning of object key string
+
+Mismatch Summary: Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy allow-frontend-checkout -n default
+Output: NAME                      POD-SELECTOR          AGE
+allow-frontend-checkout   app=shippingservice   2m19s
+
+Mismatch Summary: Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy allow-currency-ingress -n default --type='merge' -p '{"apiVersion": "networking.k8s.io/v1", "kind": "NetworkPolicy", "metadata": {"name": "allow-currency-ingress"}, "spec": {"podSelector": {"matchLabels": {"app": "currencyservice"}}, "policyTypes": ["Ingress"], "ingress": [{"from": [{"podSelector": {"matchLabels": {"app": "frontend"}}, {"podSelector": {"matchLabels": {"app": "checkoutservice"}}}], "ports": [{"protocol": "TCP", "port": 7000}]}]}}'
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "allow-currency-ingress" not found
+
+Mismatch Summary: Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+
+LLM Command: kubectl apply -n default -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-currency-ingress
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: currencyservice
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+    ports:
+    - protocol: TCP
+      port: 7000
+EOF
+Output: networkpolicy.networking.k8s.io/allow-currency-ingress created
+
+Mismatch Summary: No mismatches found.
+

@@ -1,0 +1,81 @@
+LLM Command: kubectl get networkpolicy --all-namespaces
+Output: NAMESPACE   NAME                    POD-SELECTOR                AGE
+default     adservice               app=adservice               120m
+default     cartservice             app=cartservice             120m
+default     checkoutservice         app=checkoutservice         120m
+default     currencyservice         app=currencyservice         120m
+default     emailservice            app=emailservice            120m
+default     frontend                app=frontend                120m
+default     loadgenerator           app=loadgenerator           120m
+default     paymentservice          app=paymentservice          120m
+default     productcatalogservice   app=productcatalogservice   120m
+default     recommendationservice   app=recommendationservice   120m
+default     redis-cart              app=redis-cart              120m
+default     shippingservice         app=shippingservice         120m
+
+Mismatch Summary: Mismatch: shippingservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: emailservice → recommendationservice:8080 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy shippingservice -n default --type='json' -p='[{"op": "add", "path": "/spec/egress/0/to/-", "value": {"podSelector": {"matchLabels": {"app": "recommendationservice"}}, "ports": [{"port": 8080}]}},{"op": "remove", "path": "/spec/egress/0/to"}]'
+Output: The request is invalid: the server rejected our request due to an error in our request
+
+Mismatch Summary: Mismatch: shippingservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: emailservice → recommendationservice:8080 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy shippingservice -n default --type='json' -p='[{"op": "remove", "path": "/spec/egress/0/to"}]'
+Output: The request is invalid: the server rejected our request due to an error in our request
+
+Mismatch Summary: Mismatch: shippingservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: emailservice → recommendationservice:8080 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy shippingservice -n default --type='json' -p='[{"op": "remove", "path": "/spec/egress/0/to/0"}]'
+Output: The request is invalid: the server rejected our request due to an error in our request
+
+Mismatch Summary: Mismatch: shippingservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: emailservice → recommendationservice:8080 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy shippingservice -n default --type='json' -p='[{"op": "remove", "path": "/spec/egress/0/to/0"}]'
+Output: The request is invalid: the server rejected our request due to an error in our request
+
+Mismatch Summary: Mismatch: shippingservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: emailservice → recommendationservice:8080 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy shippingservice -n default --type='json' -p='[{"op": "remove", "path": "/spec/egress/0/to"}]'
+Output: The request is invalid: the server rejected our request due to an error in our request
+
+Mismatch Summary: Mismatch: shippingservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: emailservice → recommendationservice:8080 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy shippingservice -n default --type='json' -p='[{"op": "remove", "path": "/spec/egress/0/to/0"}]'
+Output: The request is invalid: the server rejected our request due to an error in our request
+
+Mismatch Summary: Mismatch: shippingservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: emailservice → recommendationservice:8080 (Expected: False, Actual: True)
+
+LLM Command: kubectl describe networkpolicy shippingservice -n default
+Output: Name:         shippingservice
+Namespace:    default
+Created on:   2025-05-07 16:33:47 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=shippingservice
+  Allowing ingress traffic:
+    To Port: 50051/TCP
+    From:
+      PodSelector: app=frontend
+    From:
+      PodSelector: app=checkoutservice
+  Allowing egress traffic:
+    To Port: <any> (traffic allowed to all ports)
+    To: <any> (traffic not restricted by destination)
+  Policy Types: Ingress, Egress
+
+Mismatch Summary: Mismatch: shippingservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: emailservice → recommendationservice:8080 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy shippingservice -n default --type='json' -p='[{"op": "replace", "path": "/spec/egress", "value": [{"to": [{"podSelector": {"matchLabels": {"app": "checkoutservice"}}}], "ports": [{"port": 50051}]}, {"to": [{"podSelector": {"matchLabels": {"app": "paymentservice"}}}], "ports": [{"port": 50051}]}, {"to": [{"podSelector": {"matchLabels": {"app": "emailservice"}}}], "ports": [{"port": 50051}]}, {"to": [{"podSelector": {"matchLabels": {"app": "currencyservice"}}}], "ports": [{"port": 50051}]}]}]'
+Output: networkpolicy.networking.k8s.io/shippingservice patched
+
+Mismatch Summary: Mismatch: emailservice → recommendationservice:8080 (Expected: False, Actual: True)
+

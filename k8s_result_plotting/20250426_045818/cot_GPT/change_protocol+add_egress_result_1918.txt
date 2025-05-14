@@ -1,0 +1,157 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy allow-recommendation-to-productcatalog -n productcatalogservice --type=json -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "recommendationservice"}}}}]'
+Output: Error from server (NotFound): namespaces "productcatalogservice" not found
+
+Mismatch Summary: Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get namespaces
+Output: NAME                    STATUS   AGE
+adservice               Active   105m
+cartservice             Active   82m
+default                 Active   110m
+frontend                Active   105m
+kube-node-lease         Active   110m
+kube-public             Active   110m
+kube-system             Active   110m
+local-path-storage      Active   110m
+paymentservice          Active   44m
+recommendationservice   Active   99m
+redis-cart              Active   17m
+shippingservice         Active   101m
+
+Mismatch Summary: Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods -A | grep productcatalogservice
+Output: default              productcatalogservice-697ff888cf-k7x58       1/1     Running   0          107m
+
+Mismatch Summary: Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy allow-recommendation-to-productcatalog -n default --type=json -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "recommendationservice"}}}}]'
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "allow-recommendation-to-productcatalog" not found
+
+Mismatch Summary: Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n default
+Output: NAME                                POD-SELECTOR                AGE
+adservice                           app=adservice               106m
+allow-cart-to-redis                 app=cartservice             103m
+allow-checkout-to-currency          app=currencyservice         42m
+allow-checkout-to-email             app=checkoutservice         102m
+allow-frontend-to-currencyservice   app=currencyservice         90m
+allow-paymentservice                <none>                      45m
+cartservice                         app=cartservice             106m
+cartservice-network-policy          app=cartservice             97m
+cartservice-policy                  app=cartservice             85m
+checkout-policy                     app=checkoutservice         97m
+checkoutservice                     app=checkoutservice         106m
+checkoutservice-policy              app=checkoutservice         90m
+currencyservice                     app=currencyservice         106m
+emailservice                        app=emailservice            106m
+frontend                            app=frontend                106m
+loadgenerator                       app=loadgenerator           106m
+paymentservice                      app=paymentservice          106m
+productcatalogservice               app=productcatalogservice   106m
+productcatalogservice-policy        app=productcatalogservice   88m
+recommendationservice               app=recommendationservice   106m
+redis-cart                          app=redis-cart              106m
+redis-cart-policy                   app=redis-cart              88m
+shippingservice                     app=shippingservice         106m
+
+Mismatch Summary: Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-recommendation-to-productcatalog
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: productcatalogservice
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: recommendationservice
+    ports:
+    - protocol: TCP
+      port: 3550
+EOF
+Output: networkpolicy.networking.k8s.io/allow-recommendation-to-productcatalog created
+
+Mismatch Summary: Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl describe networkpolicy allow-recommendation-to-productcatalog -n default
+Output: Name:         allow-recommendation-to-productcatalog
+Namespace:    default
+Created on:   2025-04-27 17:22:40 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=productcatalogservice
+  Allowing ingress traffic:
+    To Port: 3550/TCP
+    From:
+      PodSelector: app=recommendationservice
+  Not affecting egress traffic
+  Policy Types: Ingress
+
+Mismatch Summary: Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods -n default --show-labels
+Output: NAME                                     READY   STATUS    RESTARTS   AGE    LABELS
+adservice-589cc8b8f6-669tp               1/1     Running   0          107m   app=adservice,pod-template-hash=589cc8b8f6,skaffold.dev/run-id=0f0dc272-5a75-49dc-969b-a258f785482a
+cartservice-58878fc594-tc2lj             1/1     Running   0          107m   app=cartservice,pod-template-hash=58878fc594,skaffold.dev/run-id=0f0dc272-5a75-49dc-969b-a258f785482a
+checkoutservice-5784b78cf6-qnw2z         1/1     Running   0          107m   app=checkoutservice,pod-template-hash=5784b78cf6,skaffold.dev/run-id=0f0dc272-5a75-49dc-969b-a258f785482a
+currencyservice-6cf48b5fbd-5zt6g         1/1     Running   0          107m   app=currencyservice,pod-template-hash=6cf48b5fbd,skaffold.dev/run-id=0f0dc272-5a75-49dc-969b-a258f785482a
+emailservice-54644d947c-d7rc2            1/1     Running   0          107m   app=emailservice,pod-template-hash=54644d947c,skaffold.dev/run-id=0f0dc272-5a75-49dc-969b-a258f785482a
+frontend-556fdd9fd5-jgcjw                1/1     Running   0          107m   app=frontend,pod-template-hash=556fdd9fd5,skaffold.dev/run-id=0f0dc272-5a75-49dc-969b-a258f785482a
+loadgenerator-cfb66cf49-r4g6f            1/1     Running   0          107m   app=loadgenerator,pod-template-hash=cfb66cf49,skaffold.dev/run-id=0f0dc272-5a75-49dc-969b-a258f785482a
+paymentservice-69cffc78d9-pg6g5          1/1     Running   0          107m   app=paymentservice,pod-template-hash=69cffc78d9,skaffold.dev/run-id=0f0dc272-5a75-49dc-969b-a258f785482a
+productcatalogservice-697ff888cf-k7x58   1/1     Running   0          107m   app=productcatalogservice,pod-template-hash=697ff888cf,skaffold.dev/run-id=0f0dc272-5a75-49dc-969b-a258f785482a
+recommendationservice-697d6dbcf5-mzfv2   1/1     Running   0          107m   app=recommendationservice,pod-template-hash=697d6dbcf5,skaffold.dev/run-id=0f0dc272-5a75-49dc-969b-a258f785482a
+redis-cart-c56696bc6-lqkvl               1/1     Running   0          107m   app=redis-cart,pod-template-hash=c56696bc6,skaffold.dev/run-id=0f0dc272-5a75-49dc-969b-a258f785482a
+shippingservice-85968d94b6-5t9ls         1/1     Running   0          107m   app=shippingservice,pod-template-hash=85968d94b6,skaffold.dev/run-id=0f0dc272-5a75-49dc-969b-a258f785482a
+
+Mismatch Summary: Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+

@@ -1,0 +1,108 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n cartservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy -n cartservice --type='json' -p='[{"op": "add", "path": "/spec", "value": {"podSelector": {}, "ingress": [{"from": [{"namespaceSelector": {"matchLabels": {"name": "frontend"}}}, {"namespaceSelector": {"matchLabels": {"name": "checkoutservice"}}}], "ports": [{"port": 7070, "protocol": "TCP"}]}]}}]'
+Output: error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n frontend -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n recommendationservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl apply -n cartservice -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-frontend-checkout-to-cart
+spec:
+  podSelector: {}
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: frontend
+    - namespaceSelector:
+        matchLabels:
+          name: checkoutservice
+    ports:
+    - protocol: TCP
+      port: 7070
+EOF
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: bash
+kubectl patch networkpolicy allow-frontend-checkout-to-cart -n cartservice --type='merge' -p='{"spec": {"podSelector": {}, "ingress": [{"from": [{"namespaceSelector": {"matchLabels": {"name": "frontend"}}}, {"namespaceSelector": {"matchLabels": {"name": "checkoutservice"}}}], "ports": [{"port": 7070, "protocol": "TCP"}]}}}'
+Output: bash: error reading input file: Bad file descriptor
+Error from server (NotFound): namespaces "cartservice" not found
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get namespaces --show-labels
+Output: NAME                 STATUS   AGE   LABELS
+default              Active   13h   kubernetes.io/metadata.name=default
+kube-node-lease      Active   13h   kubernetes.io/metadata.name=kube-node-lease
+kube-public          Active   13h   kubernetes.io/metadata.name=kube-public
+kube-system          Active   13h   kubernetes.io/metadata.name=kube-system
+local-path-storage   Active   13h   kubernetes.io/metadata.name=local-path-storage
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get namespaces --show-labels
+Output: NAME                 STATUS   AGE   LABELS
+default              Active   13h   kubernetes.io/metadata.name=default
+kube-node-lease      Active   13h   kubernetes.io/metadata.name=kube-node-lease
+kube-public          Active   13h   kubernetes.io/metadata.name=kube-public
+kube-system          Active   13h   kubernetes.io/metadata.name=kube-system
+local-path-storage   Active   13h   kubernetes.io/metadata.name=local-path-storage
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+

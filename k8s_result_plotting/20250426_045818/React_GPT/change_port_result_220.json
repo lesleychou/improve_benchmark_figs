@@ -1,0 +1,12 @@
+[
+    {
+        "llm_command": "kubectl get networkpolicy -A",
+        "output": "NAMESPACE   NAME                    POD-SELECTOR                AGE\ndefault     adservice               app=adservice               173m\ndefault     cartservice             app=cartservice             173m\ndefault     checkoutservice         app=checkoutservice         173m\ndefault     currencyservice         app=currencyservice         173m\ndefault     emailservice            app=emailservice            173m\ndefault     frontend                app=frontend                173m\ndefault     loadgenerator           app=loadgenerator           173m\ndefault     paymentservice          app=paymentservice          173m\ndefault     productcatalogservice   app=productcatalogservice   173m\ndefault     recommendationservice   app=recommendationservice   173m\ndefault     redis-cart              app=redis-cart              173m\ndefault     shippingservice         app=shippingservice         173m\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy recommendationservice -n default --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 8080, \"protocol\": \"TCP\"}}]'",
+        "output": "networkpolicy.networking.k8s.io/recommendationservice patched\n",
+        "mismatch_summary": "No mismatches found."
+    }
+]

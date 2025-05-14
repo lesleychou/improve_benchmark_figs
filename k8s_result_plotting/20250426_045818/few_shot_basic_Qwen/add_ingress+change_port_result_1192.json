@@ -1,0 +1,42 @@
+[
+    {
+        "llm_command": "kubectl get networkpolicy frontend -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"frontend\",\"namespace\":\"default\"},\"spec\":{\"egress\":[{}],\"ingress\":[{}],\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n  creationTimestamp: \"2025-05-01T18:24:50Z\"\n  generation: 242\n  name: frontend\n  namespace: default\n  resourceVersion: \"67684\"\n  uid: 0974a7ff-3d5d-4ffa-8171-0baa60fe9a18\nspec:\n  egress:\n  - {}\n  ingress:\n  - {}\n  podSelector:\n    matchLabels:\n      app: frontend\n  policyTypes:\n  - Ingress\n  - Egress\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy cartservice -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"cartservice\",\"namespace\":\"default\"},\"spec\":{\"egress\":[{}],\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"checkoutservice\"}}}],\"ports\":[{\"port\":21498,\"protocol\":\"TCP\"}]},{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"recommendationservice\"}}}]},{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"shippingservice\"}}}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"cartservice\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n  creationTimestamp: \"2025-05-01T18:24:50Z\"\n  generation: 150\n  name: cartservice\n  namespace: default\n  resourceVersion: \"68429\"\n  uid: f1651a6f-87e6-4160-83e9-96aeab6aa113\nspec:\n  egress:\n  - {}\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    - podSelector:\n        matchLabels:\n          app: checkoutservice\n    ports:\n    - port: 21498\n      protocol: TCP\n  - from:\n    - podSelector:\n        matchLabels:\n          app: recommendationservice\n  - from:\n    - podSelector:\n        matchLabels:\n          app: shippingservice\n  podSelector:\n    matchLabels:\n      app: cartservice\n  policyTypes:\n  - Ingress\n  - Egress\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy cartservice --type=merge -p $'\nspec:\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    - podSelector:\n        matchLabels:\n          app: checkoutservice\n    ports:\n    - port: 7070\n      protocol: TCP\n  - from:\n    - podSelector:\n        matchLabels:\n          app: recommendationservice\n  - from:\n    - podSelector:\n        matchLabels:\n          app: shippingservice\n'",
+        "output": "networkpolicy.networking.k8s.io/cartservice patched\n",
+        "mismatch_summary": "Mismatch: recommendationservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: recommendationservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy cartservice --type=merge -p $'\nspec:\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    - podSelector:\n        matchLabels:\n          app: checkoutservice\n    ports:\n    - port: 7070\n      protocol: TCP\n'",
+        "output": "networkpolicy.networking.k8s.io/cartservice patched\n",
+        "mismatch_summary": "No mismatches found."
+    }
+]

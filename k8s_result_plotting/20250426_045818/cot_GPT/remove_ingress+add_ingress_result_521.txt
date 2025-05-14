@@ -1,0 +1,146 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: productcatalogservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: recommendationservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy <network-policy-name> -n productcatalogservice --type=json -p '[{"op": "remove", "path": "/spec/ingress/0/from"}]'
+Output: /bin/bash: line 1: network-policy-name: No such file or directory
+
+Mismatch Summary: Mismatch: productcatalogservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: recommendationservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy <network-policy-name> -n productcatalogservice --type=json -p '[{"op": "remove", "path": "/spec/ingress/0/from"}]'
+Output: /bin/bash: line 1: network-policy-name: No such file or directory
+
+Mismatch Summary: Mismatch: productcatalogservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: recommendationservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n productcatalogservice
+Output: NAME                                      POD-SELECTOR                AGE
+allow-frontend-to-productcatalogservice   app=productcatalogservice   64m
+allow-recommendation-to-productcatalog    app=productcatalogservice   134m
+deny-adservice                            app=productcatalogservice   6h4m
+productcatalog-network-policy             app=productcatalogservice   103m
+productcatalogservice-policy              app=productcatalogservice   5h26m
+restrict-egress-to-redis-cart             app=productcatalogservice   5h3m
+
+Mismatch Summary: Mismatch: productcatalogservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: recommendationservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy productcatalog-network-policy -n productcatalogservice --type=json -p '[{"op": "remove", "path": "/spec/ingress/0/from"}]'
+Output: networkpolicy.networking.k8s.io/productcatalog-network-policy patched
+
+Mismatch Summary: Mismatch: productcatalogservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: recommendationservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n recommendationservice
+Output: NAME                                         POD-SELECTOR                AGE
+allow-frontend-to-recommendationservice      app=recommendationservice   64m
+allow-productcatalog-to-recommendation       app=recommendationservice   71m
+deny-checkout-access                         <none>                      4h42m
+recommendationservice                        app=recommendationservice   5h11m
+recommendationservice-allow-productcatalog   app=recommendationservice   69m
+recommendationservice-policy                 app=recommendationservice   69m
+
+Mismatch Summary: Mismatch: productcatalogservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: recommendationservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl describe networkpolicy -n recommendationservice allow-frontend-to-recommendationservice
+Output: Name:         allow-frontend-to-recommendationservice
+Namespace:    recommendationservice
+Created on:   2025-04-26 10:34:25 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=recommendationservice
+  Allowing ingress traffic:
+    To Port: 8080/TCP
+    From:
+      PodSelector: app=frontend
+    From:
+      PodSelector: app=frontend
+    ----------
+    To Port: 8080/TCP
+    From:
+      PodSelector: app=adservice
+    ----------
+    To Port: 8080/TCP
+    From:
+      PodSelector: app=adservice
+    ----------
+    To Port: 8080/TCP
+    From:
+      PodSelector: app=adservice
+  Not affecting egress traffic
+  Policy Types: Ingress
+
+Mismatch Summary: Mismatch: productcatalogservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: recommendationservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: bash
+kubectl get networkpolicy -n emailservice
+Output: NAME                           POD-SELECTOR       AGE
+allow-checkout-to-email        app=emailservice   3h8m
+deny-all                       <none>             6h15m
+emailservice                   app=emailservice   5h28m
+emailservice-deny-frontend     app=emailservice   5h40m
+emailservice-deny-unexpected   app=emailservice   5h40m
+emailservice-policy            app=emailservice   3h25m
+
+Mismatch Summary: Mismatch: productcatalogservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: recommendationservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: bash
+kubectl describe networkpolicy -n productcatalogservice productcatalogservice-policy
+Output: Name:         productcatalogservice-policy
+Namespace:    productcatalogservice
+Created on:   2025-04-26 06:12:21 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=productcatalogservice
+  Allowing ingress traffic:
+    <none> (Selected pods are isolated for ingress connectivity)
+  Allowing egress traffic:
+    <none> (Selected pods are isolated for egress connectivity)
+  Policy Types: Ingress, Egress
+
+Mismatch Summary: Mismatch: productcatalogservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: recommendationservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+

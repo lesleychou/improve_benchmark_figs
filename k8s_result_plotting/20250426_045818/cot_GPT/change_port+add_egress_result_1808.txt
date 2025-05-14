@@ -1,0 +1,136 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy cartservice-policy -n cartservice --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "redis-cart"}}}}, {"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 6379, "protocol": "TCP"}}]'
+Output: Error from server (NotFound): namespaces "cartservice" not found
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+
+LLM Command: kubectl get pods --all-namespaces -o wide
+Output: NAMESPACE            NAME                                         READY   STATUS    RESTARTS   AGE   IP            NODE                 NOMINATED NODE   READINESS GATES
+default              adservice-589cc8b8f6-669tp                   1/1     Running   0          21m   10.244.0.5    kind-control-plane   <none>           <none>
+default              cartservice-58878fc594-tc2lj                 1/1     Running   0          21m   10.244.0.6    kind-control-plane   <none>           <none>
+default              checkoutservice-5784b78cf6-qnw2z             1/1     Running   0          21m   10.244.0.7    kind-control-plane   <none>           <none>
+default              currencyservice-6cf48b5fbd-5zt6g             1/1     Running   0          21m   10.244.0.8    kind-control-plane   <none>           <none>
+default              emailservice-54644d947c-d7rc2                1/1     Running   0          21m   10.244.0.9    kind-control-plane   <none>           <none>
+default              frontend-556fdd9fd5-jgcjw                    1/1     Running   0          21m   10.244.0.10   kind-control-plane   <none>           <none>
+default              loadgenerator-cfb66cf49-r4g6f                1/1     Running   0          20m   10.244.0.16   kind-control-plane   <none>           <none>
+default              paymentservice-69cffc78d9-pg6g5              1/1     Running   0          21m   10.244.0.11   kind-control-plane   <none>           <none>
+default              productcatalogservice-697ff888cf-k7x58       1/1     Running   0          21m   10.244.0.12   kind-control-plane   <none>           <none>
+default              recommendationservice-697d6dbcf5-mzfv2       1/1     Running   0          21m   10.244.0.13   kind-control-plane   <none>           <none>
+default              redis-cart-c56696bc6-lqkvl                   1/1     Running   0          21m   10.244.0.14   kind-control-plane   <none>           <none>
+default              shippingservice-85968d94b6-5t9ls             1/1     Running   0          21m   10.244.0.15   kind-control-plane   <none>           <none>
+kube-system          coredns-668d6bf9bc-8m6v4                     1/1     Running   0          24m   10.244.0.3    kind-control-plane   <none>           <none>
+kube-system          coredns-668d6bf9bc-klmhz                     1/1     Running   0          24m   10.244.0.4    kind-control-plane   <none>           <none>
+kube-system          etcd-kind-control-plane                      1/1     Running   0          24m   172.18.0.2    kind-control-plane   <none>           <none>
+kube-system          kindnet-hhhzm                                1/1     Running   0          24m   172.18.0.2    kind-control-plane   <none>           <none>
+kube-system          kube-apiserver-kind-control-plane            1/1     Running   0          24m   172.18.0.2    kind-control-plane   <none>           <none>
+kube-system          kube-controller-manager-kind-control-plane   1/1     Running   0          24m   172.18.0.2    kind-control-plane   <none>           <none>
+kube-system          kube-proxy-n5t6f                             1/1     Running   0          24m   172.18.0.2    kind-control-plane   <none>           <none>
+kube-system          kube-scheduler-kind-control-plane            1/1     Running   0          24m   172.18.0.2    kind-control-plane   <none>           <none>
+local-path-storage   local-path-provisioner-58cc7856b6-sn76m      1/1     Running   0          24m   10.244.0.2    kind-control-plane   <none>           <none>
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy cartservice-policy -n default --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "redis-cart"}}}}, {"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 6379, "protocol": "TCP"}}]'
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "cartservice-policy" not found
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+
+LLM Command: kubectl apply -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: cartservice-policy
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: cartservice
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: redis-cart
+    ports:
+    - protocol: TCP
+      port: 6379
+EOF
+Output: networkpolicy.networking.k8s.io/cartservice-policy created
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+
+LLM Command: `
+kubectl get networkpolicy -n default -o yaml
+Output: /bin/bash: -c: line 1: unexpected EOF while looking for matching ``'
+/bin/bash: -c: line 3: syntax error: unexpected end of file
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+
+LLM Command: kubectl get pods -n default --show-labels
+Output: NAME                                     READY   STATUS    RESTARTS   AGE   LABELS
+adservice-589cc8b8f6-669tp               1/1     Running   0          21m   app=adservice,pod-template-hash=589cc8b8f6,skaffold.dev/run-id=0f0dc272-5a75-49dc-969b-a258f785482a
+cartservice-58878fc594-tc2lj             1/1     Running   0          21m   app=cartservice,pod-template-hash=58878fc594,skaffold.dev/run-id=0f0dc272-5a75-49dc-969b-a258f785482a
+checkoutservice-5784b78cf6-qnw2z         1/1     Running   0          21m   app=checkoutservice,pod-template-hash=5784b78cf6,skaffold.dev/run-id=0f0dc272-5a75-49dc-969b-a258f785482a
+currencyservice-6cf48b5fbd-5zt6g         1/1     Running   0          21m   app=currencyservice,pod-template-hash=6cf48b5fbd,skaffold.dev/run-id=0f0dc272-5a75-49dc-969b-a258f785482a
+emailservice-54644d947c-d7rc2            1/1     Running   0          21m   app=emailservice,pod-template-hash=54644d947c,skaffold.dev/run-id=0f0dc272-5a75-49dc-969b-a258f785482a
+frontend-556fdd9fd5-jgcjw                1/1     Running   0          21m   app=frontend,pod-template-hash=556fdd9fd5,skaffold.dev/run-id=0f0dc272-5a75-49dc-969b-a258f785482a
+loadgenerator-cfb66cf49-r4g6f            1/1     Running   0          21m   app=loadgenerator,pod-template-hash=cfb66cf49,skaffold.dev/run-id=0f0dc272-5a75-49dc-969b-a258f785482a
+paymentservice-69cffc78d9-pg6g5          1/1     Running   0          21m   app=paymentservice,pod-template-hash=69cffc78d9,skaffold.dev/run-id=0f0dc272-5a75-49dc-969b-a258f785482a
+productcatalogservice-697ff888cf-k7x58   1/1     Running   0          21m   app=productcatalogservice,pod-template-hash=697ff888cf,skaffold.dev/run-id=0f0dc272-5a75-49dc-969b-a258f785482a
+recommendationservice-697d6dbcf5-mzfv2   1/1     Running   0          21m   app=recommendationservice,pod-template-hash=697d6dbcf5,skaffold.dev/run-id=0f0dc272-5a75-49dc-969b-a258f785482a
+redis-cart-c56696bc6-lqkvl               1/1     Running   0          21m   app=redis-cart,pod-template-hash=c56696bc6,skaffold.dev/run-id=0f0dc272-5a75-49dc-969b-a258f785482a
+shippingservice-85968d94b6-5t9ls         1/1     Running   0          21m   app=shippingservice,pod-template-hash=85968d94b6,skaffold.dev/run-id=0f0dc272-5a75-49dc-969b-a258f785482a
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+
+LLM Command: bash
+kubectl get networkpolicy cartservice-policy -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"cartservice-policy","namespace":"default"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"redis-cart"}}}],"ports":[{"port":6379,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"cartservice"}}}}
+  creationTimestamp: "2025-04-27T15:56:46Z"
+  generation: 1
+  name: cartservice-policy
+  namespace: default
+  resourceVersion: "2891"
+  uid: cbb0d303-ccd3-4ce5-9cd2-4507f71540fd
+spec:
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: redis-cart
+    ports:
+    - port: 6379
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: cartservice
+  policyTypes:
+  - Ingress
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+
+LLM Command: kubectl get svc -n default
+Output: NAME                    TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+adservice               ClusterIP      10.96.15.191    <none>        9555/TCP       21m
+cartservice             ClusterIP      10.96.194.122   <none>        7070/TCP       21m
+checkoutservice         ClusterIP      10.96.38.78     <none>        5050/TCP       21m
+currencyservice         ClusterIP      10.96.109.145   <none>        7000/TCP       21m
+emailservice            ClusterIP      10.96.54.52     <none>        5000/TCP       21m
+frontend                ClusterIP      10.96.129.229   <none>        80/TCP         21m
+frontend-external       LoadBalancer   10.96.112.235   <pending>     80:31614/TCP   21m
+kubernetes              ClusterIP      10.96.0.1       <none>        443/TCP        24m
+paymentservice          ClusterIP      10.96.174.142   <none>        50051/TCP      21m
+productcatalogservice   ClusterIP      10.96.9.160     <none>        3550/TCP       21m
+recommendationservice   ClusterIP      10.96.68.219    <none>        8080/TCP       21m
+redis-cart              ClusterIP      10.96.131.91    <none>        6379/TCP       21m
+shippingservice         ClusterIP      10.96.99.183    <none>        50051/TCP      21m
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+

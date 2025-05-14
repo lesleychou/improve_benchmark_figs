@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "kubectl get networkpolicy --all-namespaces",
+        "output": "NAMESPACE   NAME                    POD-SELECTOR                AGE\ndefault     adservice               app=adservice               8h\ndefault     cartservice             app=cartservice             8h\ndefault     checkoutservice         app=checkoutservice         8h\ndefault     currencyservice         app=currencyservice         8h\ndefault     emailservice            app=emailservice            8h\ndefault     frontend                app=frontend                8h\ndefault     loadgenerator           app=loadgenerator           8h\ndefault     paymentservice          app=paymentservice          8h\ndefault     productcatalogservice   app=productcatalogservice   8h\ndefault     recommendationservice   app=recommendationservice   8h\ndefault     redis-cart              app=redis-cart              8h\ndefault     shippingservice         app=shippingservice         8h\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: adservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy frontend -n default --type=json -p '[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"adservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 9555, \"protocol\": \"TCP\"}}]'",
+        "output": "The request is invalid: the server rejected our request due to an error in our request\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: adservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy frontend -n default --type=json -p '[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from\", \"value\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"adservice\"}}}]}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports\", \"value\": [{\"port\": 9555, \"protocol\": \"TCP\"}]}]'",
+        "output": "networkpolicy.networking.k8s.io/frontend patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: adservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy frontend -n default -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"frontend\",\"namespace\":\"default\"},\"spec\":{\"egress\":[{}],\"ingress\":[{}],\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n  creationTimestamp: \"2025-05-07T16:33:46Z\"\n  generation: 399\n  name: frontend\n  namespace: default\n  resourceVersion: \"40912\"\n  uid: 65f1a6bc-bb5a-471a-b427-281a3d426ea1\nspec:\n  egress:\n  - {}\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: adservice\n    ports:\n    - port: 9555\n      protocol: TCP\n  podSelector:\n    matchLabels:\n      app: frontend\n  policyTypes:\n  - Ingress\n  - Egress\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: adservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy adservice -n default -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"adservice\",\"namespace\":\"default\"},\"spec\":{\"egress\":[{}],\"ingress\":[],\"podSelector\":{\"matchLabels\":{\"app\":\"adservice\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n  creationTimestamp: \"2025-05-07T16:33:45Z\"\n  generation: 180\n  name: adservice\n  namespace: default\n  resourceVersion: \"40884\"\n  uid: 2acfba7a-0315-464e-9e9a-2eb9d717536e\nspec:\n  egress:\n  - {}\n  podSelector:\n    matchLabels:\n      app: adservice\n  policyTypes:\n  - Ingress\n  - Egress\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: adservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy adservice -n default --type=json -p '[{\"op\": \"add\", \"path\": \"/spec/ingress\", \"value\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}}], \"ports\": [{\"port\": 9555, \"protocol\": \"TCP\"}]}]}]'",
+        "output": "networkpolicy.networking.k8s.io/adservice patched\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy currencyservice -n default -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"currencyservice\",\"namespace\":\"default\"},\"spec\":{\"egress\":[{}],\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"checkoutservice\"}}}],\"ports\":[{\"port\":7000,\"protocol\":\"TCP\"}]},{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"adservice\"}}}]},{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"recommendationservice\"}}}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"currencyservice\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n  creationTimestamp: \"2025-05-07T16:33:46Z\"\n  generation: 122\n  name: currencyservice\n  namespace: default\n  resourceVersion: \"40889\"\n  uid: e094ccae-3529-4645-bd3a-556e3fff098f\nspec:\n  egress:\n  - {}\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    - podSelector:\n        matchLabels:\n          app: checkoutservice\n    ports:\n    - port: 7000\n      protocol: TCP\n  - from:\n    - podSelector:\n        matchLabels:\n          app: adservice\n  - from:\n    - podSelector:\n        matchLabels:\n          app: recommendationservice\n  podSelector:\n    matchLabels:\n      app: currencyservice\n  policyTypes:\n  - Ingress\n  - Egress\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy currencyservice -n default --type=json -p '[{\"op\": \"remove\", \"path\": \"/spec/ingress/2\"}, {\"op\": \"remove\", \"path\": \"/spec/ingress/3\"}]'",
+        "output": "The request is invalid: the server rejected our request due to an error in our request\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy currencyservice -n default --type=json -p '[{\"op\": \"remove\", \"path\": \"/spec/ingress/2\"}]'",
+        "output": "networkpolicy.networking.k8s.io/currencyservice patched\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    }
+]

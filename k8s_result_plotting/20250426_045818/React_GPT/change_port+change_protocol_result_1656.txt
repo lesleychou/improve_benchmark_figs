@@ -1,0 +1,101 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+
+LLM Command: bash
+kubectl get networkpolicy -n frontend -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n cartservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+
+LLM Command: bash
+kubectl patch networkpolicy -n frontend --type='json' -p='[{"op": "add", "path": "/spec", "value": {"podSelector": {}, "ingress": [{"from": [{"namespaceSelector": {"matchLabels": {"name": "frontend"}}}], "ports": [{"protocol": "TCP", "port": 5050}]}]}}]'
+Output: bash: error reading input file: Bad file descriptor
+error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+
+LLM Command: bash
+kubectl apply -n frontend -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-frontend-to-checkout
+spec:
+  podSelector:
+    matchLabels: {}
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: frontend
+    ports:
+    - protocol: TCP
+      port: 5050
+EOF
+Output: bash: error reading input file: Bad file descriptor
+error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy allow-frontend-to-checkout -n frontend --type='merge' -p='{"spec": {"podSelector": {}, "ingress": [{"from": [{"namespaceSelector": {"matchLabels": {"name": "frontend"}}}], "ports": [{"protocol": "TCP", "port": 5050}]}]}}'
+Output: Error from server (NotFound): namespaces "frontend" not found
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+
+LLM Command: bash
+kubectl apply -n frontend -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-frontend-to-checkout
+spec:
+  podSelector:
+    matchLabels: {}
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector: {}
+    ports:
+    - protocol: TCP
+      port: 5050
+EOF
+Output: 
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+
+LLM Command: bash
+kubectl patch networkpolicy allow-frontend-to-checkout -n frontend --type='merge' -p='{"spec": {"podSelector": {}, "ingress": [{"from": [{"podSelector": {}}], "ports": [{"protocol": "TCP", "port": 5050}]}]}}'
+Output: bash: error reading input file: Bad file descriptor
+Error from server (NotFound): namespaces "frontend" not found
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+

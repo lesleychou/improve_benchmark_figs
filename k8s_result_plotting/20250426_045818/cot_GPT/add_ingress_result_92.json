@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: productcatalogservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy productcatalogservice-policy -n productcatalogservice --type=json -p '[{\"op\": \"remove\", \"path\": \"/spec/ingress/0/from/0/podSelector/matchLabels/adservice\"}]'",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"productcatalogservice-policy\" not found\n",
+        "mismatch_summary": "Mismatch: productcatalogservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n productcatalogservice",
+        "output": "NAME             POD-SELECTOR   AGE\ndeny-adservice   <none>         32m\n",
+        "mismatch_summary": "Mismatch: productcatalogservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy deny-adservice -n productcatalogservice --type=json -p '[{\"op\": \"add\", \"path\": \"/spec\", \"value\": {\"podSelector\": {}, \"ingress\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"adservice\"}}}]}]}}]'",
+        "output": "networkpolicy.networking.k8s.io/deny-adservice patched\n",
+        "mismatch_summary": "Mismatch: productcatalogservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy deny-adservice -n productcatalogservice --type=json -p '[{\"op\": \"replace\", \"path\": \"/spec\", \"value\": {\"podSelector\": {}, \"ingress\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"adservice\"}}}]}], \"policyTypes\": [\"Ingress\"]}}]'",
+        "output": "networkpolicy.networking.k8s.io/deny-adservice patched (no change)\n",
+        "mismatch_summary": "Mismatch: productcatalogservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "bash\nkubectl patch networkpolicy deny-adservice -n productcatalogservice --type=json -p '[{\"op\": \"replace\", \"path\": \"/spec\", \"value\": {\"podSelector\": {}, \"ingress\": [], \"policyTypes\": [\"Ingress\"]}}]'",
+        "output": "networkpolicy.networking.k8s.io/deny-adservice patched\n",
+        "mismatch_summary": "Mismatch: productcatalogservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy deny-adservice -n productcatalogservice --type=json -p '[{\"op\": \"replace\", \"path\": \"/spec\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"productcatalogservice\"}}, \"ingress\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"adservice\"}}}]}], \"policyTypes\": [\"Ingress\"]}}]'",
+        "output": "networkpolicy.networking.k8s.io/deny-adservice patched\n",
+        "mismatch_summary": "Mismatch: productcatalogservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n shippingservice",
+        "output": "NAME                     POD-SELECTOR          AGE\ndeny-checkout-currency   <none>                12m\nshippingservice-policy   app=shippingservice   7m44s\n",
+        "mismatch_summary": "Mismatch: productcatalogservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy deny-adservice -n productcatalogservice --type=json -p '[{\"op\": \"replace\", \"path\": \"/spec\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"productcatalogservice\"}}, \"ingress\": [], \"policyTypes\": [\"Ingress\"]}}]'",
+        "output": "networkpolicy.networking.k8s.io/deny-adservice patched\n",
+        "mismatch_summary": "Mismatch: productcatalogservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 adservice:9555 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    }
+]

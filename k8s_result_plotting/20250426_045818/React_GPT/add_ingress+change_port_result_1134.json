@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy <networkpolicy_name> -n frontend --type=json -p '[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"checkoutservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 5050, \"protocol\": \"TCP\"}}]'",
+        "output": "/bin/bash: line 1: networkpolicy_name: No such file or directory\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend -o jsonpath='{.items[*].metadata.name}'",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend -o jsonpath='{.items[*].metadata.name}'",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy frontend-policy -n frontend --type=json -p '[{\"op\": \"add\", \"path\": \"/spec\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}, \"ingress\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"checkoutservice\"}}}], \"ports\": [{\"port\": 5050, \"protocol\": \"TCP\"}]}]}}]'",
+        "output": "Error from server (NotFound): namespaces \"frontend\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\ndefault              Active   17h\nkube-node-lease      Active   17h\nkube-public          Active   17h\nkube-system          Active   17h\nlocal-path-storage   Active   17h\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get pods -n default -o jsonpath='{.items[*].metadata.labels}'",
+        "output": "{\"app\":\"adservice\",\"pod-template-hash\":\"7c7687ff5b\",\"skaffold.dev/run-id\":\"d9aabfde-b7ab-4584-b757-8c80f6c37263\"} {\"app\":\"cartservice\",\"pod-template-hash\":\"7c8966d6fd\",\"skaffold.dev/run-id\":\"d9aabfde-b7ab-4584-b757-8c80f6c37263\"} {\"app\":\"checkoutservice\",\"pod-template-hash\":\"769b8ff7b8\",\"skaffold.dev/run-id\":\"d9aabfde-b7ab-4584-b757-8c80f6c37263\"} {\"app\":\"currencyservice\",\"pod-template-hash\":\"578dcb55f6\",\"skaffold.dev/run-id\":\"d9aabfde-b7ab-4584-b757-8c80f6c37263\"} {\"app\":\"emailservice\",\"pod-template-hash\":\"d5d54d4fc\",\"skaffold.dev/run-id\":\"d9aabfde-b7ab-4584-b757-8c80f6c37263\"} {\"app\":\"frontend\",\"pod-template-hash\":\"7ffbffc6f7\",\"skaffold.dev/run-id\":\"d9aabfde-b7ab-4584-b757-8c80f6c37263\"} {\"app\":\"loadgenerator\",\"pod-template-hash\":\"7d9cfb7cb9\",\"skaffold.dev/run-id\":\"d9aabfde-b7ab-4584-b757-8c80f6c37263\"} {\"app\":\"paymentservice\",\"pod-template-hash\":\"b67c65d9c\",\"skaffold.dev/run-id\":\"d9aabfde-b7ab-4584-b757-8c80f6c37263\"} {\"app\":\"productcatalogservice\",\"pod-template-hash\":\"5f94b6cd47\",\"skaffold.dev/run-id\":\"d9aabfde-b7ab-4584-b757-8c80f6c37263\"} {\"app\":\"recommendationservice\",\"pod-template-hash\":\"c468b6867\",\"skaffold.dev/run-id\":\"d9aabfde-b7ab-4584-b757-8c80f6c37263\"} {\"app\":\"redis-cart\",\"pod-template-hash\":\"5b6f47b748\",\"skaffold.dev/run-id\":\"d9aabfde-b7ab-4584-b757-8c80f6c37263\"} {\"app\":\"shippingservice\",\"pod-template-hash\":\"f6bc4cd5d\",\"skaffold.dev/run-id\":\"d9aabfde-b7ab-4584-b757-8c80f6c37263\"}",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    }
+]

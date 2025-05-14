@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy cartservice -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"cartservice\",\"namespace\":\"default\"},\"spec\":{\"egress\":[{}],\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"checkoutservice\"}}}],\"ports\":[{\"port\":7070,\"protocol\":\"TCP\"}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"cartservice\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n  creationTimestamp: \"2025-04-26T05:21:06Z\"\n  generation: 1125\n  name: cartservice\n  namespace: default\n  resourceVersion: \"77957\"\n  uid: fa1f8101-29b0-4426-87a2-3d23516b47b1\nspec:\n  egress:\n  - {}\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    - podSelector:\n        matchLabels:\n          app: checkoutservice\n    ports:\n    - port: 7070\n      protocol: TCP\n  podSelector:\n    matchLabels:\n      app: cartservice\n  policyTypes:\n  - Ingress\n  - Egress\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy cartservice --type=merge -p $'\nspec:\n  egress:\n  - to:\n    - podSelector:\n        matchLabels:\n          app: redis-cart\n  ports:\n    - port: 6379\n      protocol: TCP\n'",
+        "output": "networkpolicy.networking.k8s.io/cartservice patched\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy redis-cart -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"redis-cart\",\"namespace\":\"default\"},\"spec\":{\"egress\":[{}],\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"cartservice\"}}}],\"ports\":[{\"port\":35789,\"protocol\":\"UDP\"}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"redis-cart\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n  creationTimestamp: \"2025-04-26T05:21:07Z\"\n  generation: 408\n  name: redis-cart\n  namespace: default\n  resourceVersion: \"78203\"\n  uid: 0e56ab84-8410-4f6d-898c-7e5ff1451e6d\nspec:\n  egress:\n  - {}\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: cartservice\n    ports:\n    - port: 35789\n      protocol: UDP\n  podSelector:\n    matchLabels:\n      app: redis-cart\n  policyTypes:\n  - Ingress\n  - Egress\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy redis-cart --type=merge -p $'\nspec:\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: cartservice\n  ports:\n    - port: 6379\n      protocol: TCP\n'",
+        "output": "networkpolicy.networking.k8s.io/redis-cart patched\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "`\nkubectl get pods -l app=cartservice -o wide",
+        "output": "/bin/bash: -c: line 1: unexpected EOF while looking for matching ``'\n/bin/bash: -c: line 3: syntax error: unexpected end of file\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get pods -l app=redis-cart -o wide",
+        "output": "NAME                        READY   STATUS    RESTARTS   AGE   IP            NODE                 NOMINATED NODE   READINESS GATES\nredis-cart-897cb46d-g69dd   1/1     Running   0          14h   10.244.0.13   kind-control-plane   <none>           <none>\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get svc -l app=redis-cart -o yaml",
+        "output": "apiVersion: v1\nitems:\n- apiVersion: v1\n  kind: Service\n  metadata:\n    annotations:\n      kubectl.kubernetes.io/last-applied-configuration: |\n        {\"apiVersion\":\"v1\",\"kind\":\"Service\",\"metadata\":{\"annotations\":{},\"labels\":{\"app\":\"redis-cart\",\"skaffold.dev/run-id\":\"74139e59-b472-4183-b244-3471d720de64\"},\"name\":\"redis-cart\",\"namespace\":\"default\"},\"spec\":{\"ports\":[{\"name\":\"tcp-redis\",\"port\":6379,\"targetPort\":6379}],\"selector\":{\"app\":\"redis-cart\"},\"type\":\"ClusterIP\"}}\n    creationTimestamp: \"2025-04-26T05:19:57Z\"\n    labels:\n      app: redis-cart\n      skaffold.dev/run-id: 74139e59-b472-4183-b244-3471d720de64\n    name: redis-cart\n    namespace: default\n    resourceVersion: \"644\"\n    uid: f39b0f78-49cc-4c69-91bc-c7e432055f86\n  spec:\n    clusterIP: 10.96.54.11\n    clusterIPs:\n    - 10.96.54.11\n    internalTrafficPolicy: Cluster\n    ipFamilies:\n    - IPv4\n    ipFamilyPolicy: SingleStack\n    ports:\n    - name: tcp-redis\n      port: 6379\n      protocol: TCP\n      targetPort: 6379\n    selector:\n      app: redis-cart\n    sessionAffinity: None\n    type: ClusterIP\n  status:\n    loadBalancer: {}\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get pods -l app=cartservice -o wide",
+        "output": "NAME                           READY   STATUS    RESTARTS   AGE   IP           NODE                 NOMINATED NODE   READINESS GATES\ncartservice-76588f7644-tz86b   1/1     Running   0          14h   10.244.0.6   kind-control-plane   <none>           <none>\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)"
+    }
+]

@@ -1,0 +1,164 @@
+LLM Command: kubectl get networkpolicy -n frontend
+Output: 
+Mismatch Summary: Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n frontend -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy allow-productcatalog-access -n frontend --type='json' -p='[{"op": "add", "path": "/spec", "value": {"podSelector": {}, "ingress": [{"from": [{"namespaceSelector": {"matchLabels": {"name": "frontend"}}}, {"namespaceSelector": {"matchLabels": {"name": "checkoutservice"}}}, {"namespaceSelector": {"matchLabels": {"name": "recommendationservice"}}}], "ports": [{"port": 3550, "protocol": "TCP"}]}]}}]'
+Output: Error from server (NotFound): namespaces "frontend" not found
+
+Mismatch Summary: Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get namespaces
+Output: NAME                 STATUS   AGE
+default              Active   7m35s
+kube-node-lease      Active   7m35s
+kube-public          Active   7m35s
+kube-system          Active   7m35s
+local-path-storage   Active   7m30s
+
+Mismatch Summary: Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get pods --all-namespaces
+Output: NAMESPACE            NAME                                         READY   STATUS    RESTARTS   AGE
+default              adservice-7c7687ff5b-fbq2s                   1/1     Running   0          4m34s
+default              cartservice-7c8966d6fd-c8rb4                 1/1     Running   0          4m34s
+default              checkoutservice-769b8ff7b8-jxzrv             1/1     Running   0          4m34s
+default              currencyservice-578dcb55f6-bdvtr             1/1     Running   0          4m34s
+default              emailservice-d5d54d4fc-lksfn                 1/1     Running   0          4m34s
+default              frontend-7ffbffc6f7-9hb4b                    1/1     Running   0          4m33s
+default              loadgenerator-7d9cfb7cb9-9zjhk               1/1     Running   0          3m59s
+default              paymentservice-b67c65d9c-ztkqg               1/1     Running   0          4m33s
+default              productcatalogservice-5f94b6cd47-lk6vh       1/1     Running   0          4m33s
+default              recommendationservice-c468b6867-pcbbn        1/1     Running   0          4m33s
+default              redis-cart-5b6f47b748-9rgzw                  1/1     Running   0          4m33s
+default              shippingservice-f6bc4cd5d-69r7d              1/1     Running   0          4m33s
+kube-system          coredns-668d6bf9bc-g5z8v                     1/1     Running   0          7m27s
+kube-system          coredns-668d6bf9bc-l2w7d                     1/1     Running   0          7m27s
+kube-system          etcd-kind-control-plane                      1/1     Running   0          7m35s
+kube-system          kindnet-g596l                                1/1     Running   0          7m27s
+kube-system          kube-apiserver-kind-control-plane            1/1     Running   0          7m35s
+kube-system          kube-controller-manager-kind-control-plane   1/1     Running   0          7m35s
+kube-system          kube-proxy-48f5g                             1/1     Running   0          7m27s
+kube-system          kube-scheduler-kind-control-plane            1/1     Running   0          7m35s
+local-path-storage   local-path-provisioner-58cc7856b6-nfdzv      1/1     Running   0          7m27s
+
+Mismatch Summary: Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy allow-productcatalog-access -n default --type='json' -p='[{"op": "add", "path": "/spec", "value": {"podSelector": {"matchLabels": {"app": "productcatalogservice"}}, "ingress": [{"from": [{"podSelector": {"matchLabels": {"app": "frontend"}}}, {"podSelector": {"matchLabels": {"app": "checkoutservice"}}}, {"podSelector": {"matchLabels": {"app": "recommendationservice"}}}], "ports": [{"port": 3550, "protocol": "TCP"}]}]}}]'
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "allow-productcatalog-access" not found
+
+Mismatch Summary: Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl apply -n default -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-productcatalog-access
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: productcatalogservice
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+    - podSelector:
+        matchLabels:
+          app: recommendationservice
+    ports:
+    - port: 3550
+      protocol: TCP
+EOF
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "allow-productcatalog-access" not found
+
+Mismatch Summary: Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl apply -n default -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-productcatalog-access
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: productcatalogservice
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+    - podSelector:
+        matchLabels:
+          app: recommendationservice
+    ports:
+    - port: 3550
+      protocol: TCP
+EOF
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "allow-productcatalog-access" not found
+
+Mismatch Summary: Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl apply -n default -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-productcatalog-access
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: productcatalogservice
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+    - podSelector:
+        matchLabels:
+          app: recommendationservice
+    ports:
+    - port: 3550
+      protocol: TCP
+EOF
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "allow-productcatalog-access" not found
+
+Mismatch Summary: Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+

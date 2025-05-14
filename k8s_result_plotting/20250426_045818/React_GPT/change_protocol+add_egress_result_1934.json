@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n checkoutservice -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy allow-payment-access -n checkoutservice --type='merge' -p '{\"spec\":{\"podSelector\":{},\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"paymentservice\"}}}],\"ports\":[{\"protocol\":\"TCP\",\"port\":50051}]}]}}'",
+        "output": "Error from server (NotFound): namespaces \"checkoutservice\" not found\n",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\ndefault              Active   17h\nkube-node-lease      Active   17h\nkube-public          Active   17h\nkube-system          Active   17h\nlocal-path-storage   Active   17h\n",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get pods --all-namespaces -o wide | grep checkoutservice",
+        "output": "default              checkoutservice-55698bfcc5-hrjtk             1/1     Running   0              17h   10.244.0.7    kind-control-plane   <none>           <none>\n",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "bash\nkubectl patch networkpolicy allow-payment-access -n default --type='merge' -p '{\"spec\":{\"podSelector\":{\"matchLabels\":{\"app\":\"checkoutservice\"}},\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"paymentservice\"}}}],\"ports\":[{\"protocol\":\"TCP\",\"port\":50051}]}]}}'",
+        "output": "bash: error reading input file: Bad file descriptor\nError from server (NotFound): networkpolicies.networking.k8s.io \"allow-payment-access\" not found\n",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl apply -n default -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-payment-access\n  namespace: default\nspec:\n  podSelector:\n    matchLabels:\n      app: checkoutservice\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: paymentservice\n    ports:\n    - protocol: TCP\n      port: 50051\nEOF",
+        "output": "bash: error reading input file: Bad file descriptor\nError from server (NotFound): networkpolicies.networking.k8s.io \"allow-payment-access\" not found\n",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl apply -n default -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-payment-access\n  namespace: default\nspec:\n  podSelector:\n    matchLabels:\n      app: checkoutservice\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: paymentservice\n    ports:\n    - protocol: TCP\n      port: 50051\nEOF",
+        "output": "bash: error reading input file: Bad file descriptor\nError from server (NotFound): networkpolicies.networking.k8s.io \"allow-payment-access\" not found\n",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl create -n default -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-payment-access\n  namespace: default\nspec:\n  podSelector:\n    matchLabels:\n      app: checkoutservice\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: paymentservice\n    ports:\n    - protocol: TCP\n      port: 50051\nEOF",
+        "output": "bash: error reading input file: Bad file descriptor\nError from server (NotFound): networkpolicies.networking.k8s.io \"allow-payment-access\" not found\n",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    }
+]

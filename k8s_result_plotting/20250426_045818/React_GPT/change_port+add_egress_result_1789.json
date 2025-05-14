@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n recommendationservice -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy allow-frontend -n recommendationservice --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/-\", \"value\": {\"from\": [{\"namespaceSelector\": {\"matchLabels\": {\"name\": \"frontend\"}}}], \"ports\": [{\"protocol\": \"TCP\", \"port\": 8080}]}}]'",
+        "output": "Error from server (NotFound): namespaces \"recommendationservice\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\ndefault              Active   11h\nkube-node-lease      Active   11h\nkube-public          Active   11h\nkube-system          Active   11h\nlocal-path-storage   Active   11h\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get services -n default",
+        "output": "NAME                    TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE\nadservice               ClusterIP      10.96.166.202   <none>        9555/TCP       11h\ncartservice             ClusterIP      10.96.253.148   <none>        7070/TCP       11h\ncheckoutservice         ClusterIP      10.96.10.29     <none>        5050/TCP       11h\ncurrencyservice         ClusterIP      10.96.127.218   <none>        7000/TCP       11h\nemailservice            ClusterIP      10.96.221.70    <none>        5000/TCP       11h\nfrontend                ClusterIP      10.96.233.109   <none>        80/TCP         11h\nfrontend-external       LoadBalancer   10.96.239.12    <pending>     80:30628/TCP   11h\nkubernetes              ClusterIP      10.96.0.1       <none>        443/TCP        11h\npaymentservice          ClusterIP      10.96.48.118    <none>        50051/TCP      11h\nproductcatalogservice   ClusterIP      10.96.54.49     <none>        3550/TCP       11h\nrecommendationservice   ClusterIP      10.96.245.215   <none>        8080/TCP       11h\nredis-cart              ClusterIP      10.96.115.155   <none>        6379/TCP       11h\nshippingservice         ClusterIP      10.96.220.200   <none>        50051/TCP      11h\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy allow-frontend-to-recommendation -n default --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"recommendationservice\"}}, \"ingress\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}}], \"ports\": [{\"protocol\": \"TCP\", \"port\": 8080}]}]}}]'",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"allow-frontend-to-recommendation\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl apply -n default -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-frontend-to-recommendation\n  namespace: default\nspec:\n  podSelector:\n    matchLabels:\n      app: recommendationservice\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    ports:\n    - protocol: TCP\n      port: 8080\nEOF",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"allow-frontend-to-recommendation\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl apply -n default -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-frontend-to-recommendation\n  namespace: default\nspec:\n  podSelector:\n    matchLabels:\n      app: recommendationservice\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    ports:\n    - protocol: TCP\n      port: 8080\nEOF",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"allow-frontend-to-recommendation\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 recommendationservice:8080 (Expected: True, Actual: False)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    }
+]

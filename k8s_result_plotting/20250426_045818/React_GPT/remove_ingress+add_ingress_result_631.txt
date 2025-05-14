@@ -1,0 +1,97 @@
+LLM Command: kubectl get networkpolicy -n frontend
+Output: 
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy checkoutservice-policy -n checkoutservice --type=json -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "emailservice"}}}}, {"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 5000, "protocol": "TCP"}}]'
+Output: Error from server (NotFound): namespaces "checkoutservice" not found
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+
+LLM Command: kubectl get namespaces
+Output: NAME                 STATUS   AGE
+default              Active   9h
+kube-node-lease      Active   9h
+kube-public          Active   9h
+kube-system          Active   9h
+local-path-storage   Active   9h
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+
+LLM Command: kubernetes how to find the namespace of a specific service
+Output: /bin/bash: line 1: kubernetes: command not found
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+
+LLM Command: kubectl get services --all-namespaces
+Output: NAMESPACE     NAME                    TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)                  AGE
+default       adservice               ClusterIP      10.96.182.150   <none>        9555/TCP                 9h
+default       cartservice             ClusterIP      10.96.134.110   <none>        7070/TCP                 9h
+default       checkoutservice         ClusterIP      10.96.50.97     <none>        5050/TCP                 9h
+default       currencyservice         ClusterIP      10.96.113.81    <none>        7000/TCP                 9h
+default       emailservice            ClusterIP      10.96.164.48    <none>        5000/TCP                 9h
+default       frontend                ClusterIP      10.96.210.18    <none>        80/TCP                   9h
+default       frontend-external       LoadBalancer   10.96.205.66    <pending>     80:32110/TCP             9h
+default       kubernetes              ClusterIP      10.96.0.1       <none>        443/TCP                  9h
+default       paymentservice          ClusterIP      10.96.159.123   <none>        50051/TCP                9h
+default       productcatalogservice   ClusterIP      10.96.239.23    <none>        3550/TCP                 9h
+default       recommendationservice   ClusterIP      10.96.134.174   <none>        8080/TCP                 9h
+default       redis-cart              ClusterIP      10.96.111.32    <none>        6379/TCP                 9h
+default       shippingservice         ClusterIP      10.96.206.53    <none>        50051/TCP                9h
+kube-system   kube-dns                ClusterIP      10.96.0.10      <none>        53/UDP,53/TCP,9153/TCP   9h
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy checkoutservice-policy -n default --type=json -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "emailservice"}}}}, {"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 5000, "protocol": "TCP"}}]'
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "checkoutservice-policy" not found
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n default
+Output: NAME                    POD-SELECTOR                AGE
+adservice               app=adservice               9h
+cartservice             app=cartservice             9h
+checkoutservice         app=checkoutservice         9h
+currencyservice         app=currencyservice         9h
+emailservice            app=emailservice            9h
+frontend                app=frontend                9h
+loadgenerator           app=loadgenerator           9h
+paymentservice          app=paymentservice          9h
+productcatalogservice   app=productcatalogservice   9h
+recommendationservice   app=recommendationservice   9h
+redis-cart              app=redis-cart              9h
+shippingservice         app=shippingservice         9h
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy checkoutservice -n default --type=json -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "emailservice"}}}}, {"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 5000, "protocol": "TCP"}}]'
+Output: networkpolicy.networking.k8s.io/checkoutservice patched
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy emailservice -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"emailservice","namespace":"default"},"spec":{"egress":[{}],"ingress":[],"podSelector":{"matchLabels":{"app":"emailservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-05-07T16:33:46Z"
+  generation: 204
+  name: emailservice
+  namespace: default
+  resourceVersion: "45025"
+  uid: 05ece103-7c5e-4d43-9c08-891431a9e0c5
+spec:
+  egress:
+  - {}
+  podSelector:
+    matchLabels:
+      app: emailservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+

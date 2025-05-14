@@ -1,0 +1,34 @@
+LLM Command: kubectl get networkpolicy -A
+Output: NAMESPACE   NAME                    POD-SELECTOR                AGE
+default     adservice               app=adservice               89m
+default     cartservice             app=cartservice             89m
+default     checkoutservice         app=checkoutservice         89m
+default     currencyservice         app=currencyservice         89m
+default     emailservice            app=emailservice            89m
+default     frontend                app=frontend                89m
+default     loadgenerator           app=loadgenerator           89m
+default     paymentservice          app=paymentservice          89m
+default     productcatalogservice   app=productcatalogservice   89m
+default     recommendationservice   app=recommendationservice   89m
+default     redis-cart              app=redis-cart              89m
+default     shippingservice         app=shippingservice         89m
+
+Mismatch Summary: Mismatch: adservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy adservice -n default --type='json' -p='[{"op": "add", "path": "/spec/egress/-", "value": {"to": [{"podSelector": {"matchLabels": {"app": "paymentservice"}}}], "ports": [{"port": 50051, "protocol": "TCP"}]}}]'
+Output: networkpolicy.networking.k8s.io/adservice patched
+
+Mismatch Summary: Mismatch: adservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy shippingservice -n default --type='json' -p='[{"op": "remove", "path": "/spec/egress"}]'
+Output: networkpolicy.networking.k8s.io/shippingservice patched
+
+Mismatch Summary: Mismatch: adservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy adservice -n default --type='json' -p='[{"op": "remove", "path": "/spec/egress"}]'
+Output: networkpolicy.networking.k8s.io/adservice patched
+
+Mismatch Summary: No mismatches found.
+

@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: adservice \u2192 emailservice:5000 (Expected: False, Actual: True)\nMismatch: cartservice \u2192 emailservice:5000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: adservice \u2192 emailservice:5000 (Expected: False, Actual: True)\nMismatch: cartservice \u2192 emailservice:5000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy allow-frontend-to-adservice -n frontend --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}, \"ingress\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"adservice\"}}}], \"ports\": [{\"protocol\": \"TCP\", \"port\": 9555}]}]}}]'",
+        "output": "Error from server (NotFound): namespaces \"frontend\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: adservice \u2192 emailservice:5000 (Expected: False, Actual: True)\nMismatch: cartservice \u2192 emailservice:5000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\ndefault              Active   7h5m\nkube-node-lease      Active   7h5m\nkube-public          Active   7h5m\nkube-system          Active   7h5m\nlocal-path-storage   Active   7h5m\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: adservice \u2192 emailservice:5000 (Expected: False, Actual: True)\nMismatch: cartservice \u2192 emailservice:5000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get pods --all-namespaces",
+        "output": "NAMESPACE            NAME                                         READY   STATUS    RESTARTS       AGE\ndefault              adservice-7c7687ff5b-fbq2s                   1/1     Running   0              7h2m\ndefault              cartservice-7c8966d6fd-c8rb4                 1/1     Running   0              7h2m\ndefault              checkoutservice-769b8ff7b8-jxzrv             1/1     Running   0              7h2m\ndefault              currencyservice-578dcb55f6-bdvtr             1/1     Running   1 (170m ago)   7h2m\ndefault              emailservice-d5d54d4fc-lksfn                 1/1     Running   0              7h2m\ndefault              frontend-7ffbffc6f7-9hb4b                    1/1     Running   0              7h2m\ndefault              loadgenerator-7d9cfb7cb9-9zjhk               1/1     Running   0              7h1m\ndefault              paymentservice-b67c65d9c-ztkqg               1/1     Running   1 (144m ago)   7h2m\ndefault              productcatalogservice-5f94b6cd47-lk6vh       1/1     Running   0              7h2m\ndefault              recommendationservice-c468b6867-pcbbn        1/1     Running   0              7h2m\ndefault              redis-cart-5b6f47b748-9rgzw                  1/1     Running   0              7h2m\ndefault              shippingservice-f6bc4cd5d-69r7d              1/1     Running   0              7h2m\nkube-system          coredns-668d6bf9bc-g5z8v                     1/1     Running   0              7h5m\nkube-system          coredns-668d6bf9bc-l2w7d                     1/1     Running   0              7h5m\nkube-system          etcd-kind-control-plane                      1/1     Running   0              7h5m\nkube-system          kindnet-g596l                                1/1     Running   0              7h5m\nkube-system          kube-apiserver-kind-control-plane            1/1     Running   0              7h5m\nkube-system          kube-controller-manager-kind-control-plane   1/1     Running   0              7h5m\nkube-system          kube-proxy-48f5g                             1/1     Running   0              7h5m\nkube-system          kube-scheduler-kind-control-plane            1/1     Running   0              7h5m\nlocal-path-storage   local-path-provisioner-58cc7856b6-nfdzv      1/1     Running   0              7h5m\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: adservice \u2192 emailservice:5000 (Expected: False, Actual: True)\nMismatch: cartservice \u2192 emailservice:5000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n default",
+        "output": "NAME                    POD-SELECTOR                AGE\nadservice               app=adservice               7h1m\ncartservice             app=cartservice             7h1m\ncheckoutservice         app=checkoutservice         7h1m\ncurrencyservice         app=currencyservice         7h1m\nemailservice            app=emailservice            7h1m\nfrontend                app=frontend                7h1m\nloadgenerator           app=loadgenerator           7h1m\npaymentservice          app=paymentservice          7h1m\nproductcatalogservice   app=productcatalogservice   7h1m\nrecommendationservice   app=recommendationservice   7h1m\nredis-cart              app=redis-cart              7h1m\nshippingservice         app=shippingservice         7h1m\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: adservice \u2192 emailservice:5000 (Expected: False, Actual: True)\nMismatch: cartservice \u2192 emailservice:5000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy frontend -n default --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/-\", \"value\": {\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"adservice\"}}}], \"ports\": [{\"protocol\": \"TCP\", \"port\": 9555}]}}]'",
+        "output": "networkpolicy.networking.k8s.io/frontend patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: adservice \u2192 emailservice:5000 (Expected: False, Actual: True)\nMismatch: cartservice \u2192 emailservice:5000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy frontend -n default -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"frontend\",\"namespace\":\"default\"},\"spec\":{\"egress\":[{}],\"ingress\":[{}],\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n  creationTimestamp: \"2025-05-07T16:33:46Z\"\n  generation: 270\n  name: frontend\n  namespace: default\n  resourceVersion: \"34998\"\n  uid: 65f1a6bc-bb5a-471a-b427-281a3d426ea1\nspec:\n  egress:\n  - {}\n  ingress:\n  - {}\n  - from:\n    - podSelector:\n        matchLabels:\n          app: adservice\n    ports:\n    - port: 9555\n      protocol: TCP\n  podSelector:\n    matchLabels:\n      app: frontend\n  policyTypes:\n  - Ingress\n  - Egress\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: adservice \u2192 emailservice:5000 (Expected: False, Actual: True)\nMismatch: cartservice \u2192 emailservice:5000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy adservice -n default -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"adservice\",\"namespace\":\"default\"},\"spec\":{\"egress\":[{}],\"ingress\":[],\"podSelector\":{\"matchLabels\":{\"app\":\"adservice\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n  creationTimestamp: \"2025-05-07T16:33:45Z\"\n  generation: 151\n  name: adservice\n  namespace: default\n  resourceVersion: \"34952\"\n  uid: 2acfba7a-0315-464e-9e9a-2eb9d717536e\nspec:\n  egress:\n  - {}\n  podSelector:\n    matchLabels:\n      app: adservice\n  policyTypes:\n  - Ingress\n  - Egress\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: adservice \u2192 emailservice:5000 (Expected: False, Actual: True)\nMismatch: cartservice \u2192 emailservice:5000 (Expected: False, Actual: True)"
+    }
+]

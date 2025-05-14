@@ -1,0 +1,164 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n shippingservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: bash
+kubectl patch networkpolicy allow-frontend-checkout-to-shipping -n shippingservice --type='merge' -p '{"apiVersion": "networking.k8s.io/v1", "kind": "NetworkPolicy", "metadata": {"name": "allow-frontend-checkout-to-shipping"}, "spec": {"podSelector": {}, "policyTypes": ["Ingress"], "ingress": [{"from": [{"namespaceSelector": {"matchLabels": {"name": "frontend"}}, {"namespaceSelector": {"matchLabels": {"name": "checkoutservice"}}}], "ports": [{"protocol": "TCP", "port": 50051}]}]}}'
+Output: bash: error reading input file: Bad file descriptor
+Error from server (NotFound): namespaces "shippingservice" not found
+
+Mismatch Summary: Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get namespaces
+Output: NAME                 STATUS   AGE
+default              Active   14h
+kube-node-lease      Active   14h
+kube-public          Active   14h
+kube-system          Active   14h
+local-path-storage   Active   14h
+
+Mismatch Summary: Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get pods --all-namespaces
+Output: NAMESPACE            NAME                                         READY   STATUS    RESTARTS       AGE
+default              adservice-597dc59b77-q8dfh                   1/1     Running   0              14h
+default              cartservice-577f8d8c75-5lfjl                 1/1     Running   0              14h
+default              checkoutservice-55698bfcc5-hrjtk             1/1     Running   0              14h
+default              currencyservice-c5968f8f5-dx7rq              1/1     Running   3 (137m ago)   14h
+default              emailservice-6c56b65f6d-fkhwd                1/1     Running   0              14h
+default              frontend-797c8f7758-fkv9r                    1/1     Running   0              14h
+default              loadgenerator-6c5b65b44b-wp4z7               1/1     Running   0              14h
+default              paymentservice-76948fc564-dlnrz              1/1     Running   3 (80m ago)    14h
+default              productcatalogservice-5f9d5c689b-x9sdp       1/1     Running   0              14h
+default              recommendationservice-67cbb84b7b-c2src       1/1     Running   0              14h
+default              redis-cart-866688457f-zsqdb                  1/1     Running   0              14h
+default              shippingservice-9ddf878c7-gr8bc              1/1     Running   0              14h
+kube-system          coredns-668d6bf9bc-2gvnv                     1/1     Running   0              14h
+kube-system          coredns-668d6bf9bc-kwdwg                     1/1     Running   0              14h
+kube-system          etcd-kind-control-plane                      1/1     Running   0              14h
+kube-system          kindnet-8b9cs                                1/1     Running   0              14h
+kube-system          kube-apiserver-kind-control-plane            1/1     Running   0              14h
+kube-system          kube-controller-manager-kind-control-plane   1/1     Running   0              14h
+kube-system          kube-proxy-fj5w5                             1/1     Running   0              14h
+kube-system          kube-scheduler-kind-control-plane            1/1     Running   0              14h
+local-path-storage   local-path-provisioner-58cc7856b6-mhn49      1/1     Running   0              14h
+
+Mismatch Summary: Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy allow-frontend-checkout-to-shipping -n default --type='merge' -p '{"apiVersion": "networking.k8s.io/v1", "kind": "NetworkPolicy", "metadata": {"name": "allow-frontend-checkout-to-shipping"}, "spec": {"podSelector": {"matchLabels": {"app": "shippingservice"}}, "policyTypes": ["Ingress"], "ingress": [{"from": [{"podSelector": {"matchLabels": {"app": "frontend"}}}, {"podSelector": {"matchLabels": {"app": "checkoutservice"}}}], "ports": [{"protocol": "TCP", "port": 50051}]}]}}'
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "allow-frontend-checkout-to-shipping" not found
+
+Mismatch Summary: Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: bash
+kubectl apply -n default -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-frontend-checkout-to-shipping
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: shippingservice
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+    ports:
+    - protocol: TCP
+      port: 50051
+EOF
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "allow-frontend-checkout-to-shipping" not found
+
+Mismatch Summary: Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl apply -n default -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-frontend-checkout-to-shipping
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: shippingservice
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+    ports:
+    - protocol: TCP
+      port: 50051
+EOF
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "allow-frontend-checkout-to-shipping" not found
+
+Mismatch Summary: Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl create -n default -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-frontend-checkout-to-shipping
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: shippingservice
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+    ports:
+    - protocol: TCP
+      port: 50051
+EOF
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "allow-frontend-checkout-to-shipping" not found
+
+Mismatch Summary: Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+

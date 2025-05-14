@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n checkoutservice -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy allow-frontend-to-checkout -n frontend --type='merge' -p '{\"apiVersion\": \"networking.k8s.io/v1\", \"kind\": \"NetworkPolicy\", \"metadata\": {\"name\": \"allow-frontend-to-checkout\"}, \"spec\": {\"podSelector\": {}, \"policyTypes\": [\"Egress\"], \"egress\": [{\"to\": [{\"namespaceSelector\": {\"matchLabels\": {\"name\": \"checkoutservice\"}}}], \"ports\": [{\"protocol\": \"TCP\", \"port\": 5050}]}]}}'",
+        "output": "Error from server (NotFound): namespaces \"frontend\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\ndefault              Active   5h23m\nkube-node-lease      Active   5h23m\nkube-public          Active   5h23m\nkube-system          Active   5h23m\nlocal-path-storage   Active   5h23m\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get pods --all-namespaces",
+        "output": "NAMESPACE            NAME                                         READY   STATUS    RESTARTS      AGE\ndefault              adservice-597dc59b77-q8dfh                   1/1     Running   0             5h20m\ndefault              cartservice-577f8d8c75-5lfjl                 1/1     Running   0             5h20m\ndefault              checkoutservice-55698bfcc5-hrjtk             1/1     Running   0             5h20m\ndefault              currencyservice-c5968f8f5-dx7rq              1/1     Running   1 (63m ago)   5h20m\ndefault              emailservice-6c56b65f6d-fkhwd                1/1     Running   0             5h20m\ndefault              frontend-797c8f7758-fkv9r                    1/1     Running   0             5h20m\ndefault              loadgenerator-6c5b65b44b-wp4z7               1/1     Running   0             5h19m\ndefault              paymentservice-76948fc564-dlnrz              1/1     Running   1 (48m ago)   5h20m\ndefault              productcatalogservice-5f9d5c689b-x9sdp       1/1     Running   0             5h20m\ndefault              recommendationservice-67cbb84b7b-c2src       1/1     Running   0             5h20m\ndefault              redis-cart-866688457f-zsqdb                  1/1     Running   0             5h20m\ndefault              shippingservice-9ddf878c7-gr8bc              1/1     Running   0             5h20m\nkube-system          coredns-668d6bf9bc-2gvnv                     1/1     Running   0             5h23m\nkube-system          coredns-668d6bf9bc-kwdwg                     1/1     Running   0             5h23m\nkube-system          etcd-kind-control-plane                      1/1     Running   0             5h23m\nkube-system          kindnet-8b9cs                                1/1     Running   0             5h23m\nkube-system          kube-apiserver-kind-control-plane            1/1     Running   0             5h23m\nkube-system          kube-controller-manager-kind-control-plane   1/1     Running   0             5h23m\nkube-system          kube-proxy-fj5w5                             1/1     Running   0             5h23m\nkube-system          kube-scheduler-kind-control-plane            1/1     Running   0             5h23m\nlocal-path-storage   local-path-provisioner-58cc7856b6-mhn49      1/1     Running   0             5h23m\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "bash\nkubectl patch networkpolicy allow-frontend-to-checkout -n default --type='merge' -p '{\"apiVersion\": \"networking.k8s.io/v1\", \"kind\": \"NetworkPolicy\", \"metadata\": {\"name\": \"allow-frontend-to-checkout\"}, \"spec\": {\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}, \"policyTypes\": [\"Egress\"], \"egress\": [{\"to\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"checkoutservice\"}}}], \"ports\": [{\"protocol\": \"TCP\", \"port\": 5050}]}]}}'",
+        "output": "bash: error reading input file: Bad file descriptor\nError from server (NotFound): networkpolicies.networking.k8s.io \"allow-frontend-to-checkout\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl apply -n default -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-frontend-to-checkout\n  namespace: default\nspec:\n  podSelector:\n    matchLabels:\n      app: frontend\n  policyTypes:\n  - Egress\n  egress:\n  - to:\n    - podSelector:\n        matchLabels:\n          app: checkoutservice\n    ports:\n    - protocol: TCP\n      port: 5050\nEOF",
+        "output": "bash: error reading input file: Bad file descriptor\nError from server (NotFound): networkpolicies.networking.k8s.io \"allow-frontend-to-checkout\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl apply -n default -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-frontend-to-checkout\nspec:\n  podSelector:\n    matchLabels:\n      app: frontend\n  policyTypes:\n  - Egress\n  egress:\n  - to:\n    - podSelector:\n        matchLabels:\n          app: checkoutservice\n    ports:\n    - protocol: TCP\n      port: 5050\nEOF",
+        "output": "bash: error reading input file: Bad file descriptor\nError from server (NotFound): networkpolicies.networking.k8s.io \"allow-frontend-to-checkout\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)"
+    }
+]

@@ -1,0 +1,142 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: frontend → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n frontend -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy deny-emailservice-access -n frontend --type='merge' -p '{"spec":{"podSelector":{},"policyTypes":["Egress"],"egress":[{"to":[{"namespaceSelector":{"matchLabels":{"name":"emailservice"}},"ports":[{"port":5000,"protocol":"TCP"}]}],"except":[{"namespaceSelector":{"matchLabels":{"name":"frontend"}}}]}}}'
+Output: Error from server (NotFound): namespaces "frontend" not found
+
+Mismatch Summary: Mismatch: frontend → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy deny-emailservice-access -n frontend --type='merge' -p '{"spec":{"podSelector":{},"policyTypes":["Egress"],"egress":[{"to":[{"namespaceSelector":{"matchLabels":{"name":"emailservice"}},"ports":[{"port":5000,"protocol":"TCP"}]}]}]}}'
+Output: Error from server (NotFound): namespaces "frontend" not found
+
+Mismatch Summary: Mismatch: frontend → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get namespaces
+Output: NAME                    STATUS   AGE
+adservice               Active   53m
+cartservice             Active   44m
+checkoutservice         Active   49m
+currencyservice         Active   32m
+default                 Active   64m
+emailservice            Active   49m
+kube-node-lease         Active   64m
+kube-public             Active   64m
+kube-system             Active   64m
+local-path-storage      Active   64m
+productcatalogservice   Active   33m
+recommendationservice   Active   22m
+redis-cart              Active   19m
+shippingservice         Active   9m28s
+
+Mismatch Summary: Mismatch: frontend → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods --all-namespaces
+Output: NAMESPACE            NAME                                         READY   STATUS    RESTARTS   AGE
+default              adservice-76f594d56f-2prlg                   1/1     Running   0          61m
+default              cartservice-5958849bb7-49tjm                 1/1     Running   0          61m
+default              checkoutservice-55d99bbf75-z49bp             1/1     Running   0          61m
+default              currencyservice-649964f87f-nxj9q             1/1     Running   0          61m
+default              emailservice-6d85f47b76-rdnmb                1/1     Running   0          61m
+default              frontend-fc4bf5fdb-rmj59                     1/1     Running   0          61m
+default              loadgenerator-6d98cc6686-4m4tn               1/1     Running   0          61m
+default              paymentservice-7dc8859fb8-vnwl8              1/1     Running   0          61m
+default              productcatalogservice-5bd4cb4488-7m8zm       1/1     Running   0          61m
+default              recommendationservice-c64454f56-4k2kx        1/1     Running   0          61m
+default              redis-cart-799f8fc4c-p9wps                   1/1     Running   0          61m
+default              shippingservice-5dd466d969-ppcwn             1/1     Running   0          61m
+kube-system          coredns-668d6bf9bc-7vskf                     1/1     Running   0          64m
+kube-system          coredns-668d6bf9bc-vhtsb                     1/1     Running   0          64m
+kube-system          etcd-kind-control-plane                      1/1     Running   0          64m
+kube-system          kindnet-kf59t                                1/1     Running   0          64m
+kube-system          kube-apiserver-kind-control-plane            1/1     Running   0          64m
+kube-system          kube-controller-manager-kind-control-plane   1/1     Running   0          64m
+kube-system          kube-proxy-t9chz                             1/1     Running   0          64m
+kube-system          kube-scheduler-kind-control-plane            1/1     Running   0          64m
+local-path-storage   local-path-provisioner-58cc7856b6-czqc8      1/1     Running   0          64m
+
+Mismatch Summary: Mismatch: frontend → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy deny-frontend-to-emailservice -n default --type='merge' -p '{"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"name":"deny-frontend-to-emailservice"},"spec":{"podSelector":{"matchLabels":{"app":"frontend"}},"policyTypes":["Egress"],"egress":[{"to":[{"podSelector":{"matchLabels":{"app":"emailservice"}}}],"ports":[{"port":5000,"protocol":"TCP"}]}]}}'
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "deny-frontend-to-emailservice" not found
+
+Mismatch Summary: Mismatch: frontend → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-frontend-to-emailservice
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: frontend
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: emailservice
+    ports:
+    - port: 5000
+      protocol: TCP
+EOF
+Output: networkpolicy.networking.k8s.io/deny-frontend-to-emailservice created
+
+Mismatch Summary: Mismatch: frontend → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods -n default --show-labels
+Output: NAME                                     READY   STATUS    RESTARTS   AGE   LABELS
+adservice-76f594d56f-2prlg               1/1     Running   0          61m   app=adservice,pod-template-hash=76f594d56f,skaffold.dev/run-id=00adce13-6ae0-4db6-9ff3-9bd0af686efb
+cartservice-5958849bb7-49tjm             1/1     Running   0          61m   app=cartservice,pod-template-hash=5958849bb7,skaffold.dev/run-id=00adce13-6ae0-4db6-9ff3-9bd0af686efb
+checkoutservice-55d99bbf75-z49bp         1/1     Running   0          61m   app=checkoutservice,pod-template-hash=55d99bbf75,skaffold.dev/run-id=00adce13-6ae0-4db6-9ff3-9bd0af686efb
+currencyservice-649964f87f-nxj9q         1/1     Running   0          61m   app=currencyservice,pod-template-hash=649964f87f,skaffold.dev/run-id=00adce13-6ae0-4db6-9ff3-9bd0af686efb
+emailservice-6d85f47b76-rdnmb            1/1     Running   0          61m   app=emailservice,pod-template-hash=6d85f47b76,skaffold.dev/run-id=00adce13-6ae0-4db6-9ff3-9bd0af686efb
+frontend-fc4bf5fdb-rmj59                 1/1     Running   0          61m   app=frontend,pod-template-hash=fc4bf5fdb,skaffold.dev/run-id=00adce13-6ae0-4db6-9ff3-9bd0af686efb
+loadgenerator-6d98cc6686-4m4tn           1/1     Running   0          61m   app=loadgenerator,pod-template-hash=6d98cc6686,skaffold.dev/run-id=00adce13-6ae0-4db6-9ff3-9bd0af686efb
+paymentservice-7dc8859fb8-vnwl8          1/1     Running   0          61m   app=paymentservice,pod-template-hash=7dc8859fb8,skaffold.dev/run-id=00adce13-6ae0-4db6-9ff3-9bd0af686efb
+productcatalogservice-5bd4cb4488-7m8zm   1/1     Running   0          61m   app=productcatalogservice,pod-template-hash=5bd4cb4488,skaffold.dev/run-id=00adce13-6ae0-4db6-9ff3-9bd0af686efb
+recommendationservice-c64454f56-4k2kx    1/1     Running   0          61m   app=recommendationservice,pod-template-hash=c64454f56,skaffold.dev/run-id=00adce13-6ae0-4db6-9ff3-9bd0af686efb
+redis-cart-799f8fc4c-p9wps               1/1     Running   0          61m   app=redis-cart,pod-template-hash=799f8fc4c,skaffold.dev/run-id=00adce13-6ae0-4db6-9ff3-9bd0af686efb
+shippingservice-5dd466d969-ppcwn         1/1     Running   0          61m   app=shippingservice,pod-template-hash=5dd466d969,skaffold.dev/run-id=00adce13-6ae0-4db6-9ff3-9bd0af686efb
+
+Mismatch Summary: Mismatch: frontend → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+

@@ -1,0 +1,257 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy recommendationservice-allow-productcatalog -n recommendationservice --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "productcatalogservice"}}}}]'
+Output: networkpolicy.networking.k8s.io/recommendationservice-allow-productcatalog patched
+
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy recommendationservice-allow-productcatalog -n recommendationservice --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"protocol": "TCP", "port": 3550}}]'
+Output: networkpolicy.networking.k8s.io/recommendationservice-allow-productcatalog patched
+
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl describe networkpolicy recommendationservice-allow-productcatalog -n recommendationservice
+Output: Name:         recommendationservice-allow-productcatalog
+Namespace:    recommendationservice
+Created on:   2025-04-26 17:45:37 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=recommendationservice
+  Allowing ingress traffic:
+    To Port: 3550/TCP
+    To Port: 3550/TCP
+    From:
+      PodSelector: app=productcatalogservice
+    From:
+      PodSelector: app=productcatalogservice
+  Not affecting egress traffic
+  Policy Types: Ingress
+
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n recommendationservice
+Output: NAME                                         POD-SELECTOR                AGE
+allow-frontend-to-recommendationservice      app=recommendationservice   8h
+allow-productcatalog-access                  app=recommendationservice   3m16s
+allow-productcatalog-to-recommendation       app=recommendationservice   8h
+deny-cart-access                             app=recommendationservice   5h55m
+deny-checkout-access                         <none>                      11h
+deny-checkout-to-recommendation              app=recommendationservice   5h46m
+recommendationservice                        app=recommendationservice   12h
+recommendationservice-allow-productcatalog   app=recommendationservice   61m
+recommendationservice-policy                 app=recommendationservice   8h
+
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl describe networkpolicy -n recommendationservice
+Output: Name:         allow-frontend-to-recommendationservice
+Namespace:    recommendationservice
+Created on:   2025-04-26 10:34:25 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=recommendationservice
+  Allowing ingress traffic:
+    To Port: 8080/TCP
+    From:
+      PodSelector: app=frontend
+    From:
+      PodSelector: app=frontend
+  Not affecting egress traffic
+  Policy Types: Ingress
+
+
+Name:         allow-productcatalog-access
+Namespace:    recommendationservice
+Created on:   2025-04-26 18:44:07 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=recommendationservice
+  Allowing ingress traffic:
+    To Port: 3550/TCP
+    From:
+      PodSelector: app=productcatalogservice
+  Not affecting egress traffic
+  Policy Types: Ingress
+
+
+Name:         allow-productcatalog-to-recommendation
+Namespace:    recommendationservice
+Created on:   2025-04-26 10:26:37 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=recommendationservice
+  Allowing ingress traffic:
+    To Port: 3550/TCP
+    From:
+      PodSelector: app=productcatalogservice
+  Not affecting egress traffic
+  Policy Types: Ingress
+
+
+Name:         deny-cart-access
+Namespace:    recommendationservice
+Created on:   2025-04-26 12:51:57 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=recommendationservice
+  Not affecting ingress traffic
+  Allowing egress traffic:
+    To Port: 7070/TCP
+    To:
+      PodSelector: app=cartservice
+  Policy Types: Egress
+
+
+Name:         deny-checkout-access
+Namespace:    recommendationservice
+Created on:   2025-04-26 06:55:56 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     <none> (Allowing the specific traffic to all pods in this namespace)
+  Not affecting ingress traffic
+  Allowing egress traffic:
+    To Port: 5050/TCP
+    To:
+      NamespaceSelector: name=checkoutservice
+    To:
+      PodSelector: app=checkoutservice
+  Policy Types: Egress
+
+
+Name:         deny-checkout-to-recommendation
+Namespace:    recommendationservice
+Created on:   2025-04-26 13:01:11 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=recommendationservice
+  Allowing ingress traffic:
+    To Port: 8080/TCP
+    From:
+      PodSelector: app=checkoutservice
+  Not affecting egress traffic
+  Policy Types: Ingress
+
+
+Name:         recommendationservice
+Namespace:    recommendationservice
+Created on:   2025-04-26 06:26:36 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=recommendationservice
+  Allowing ingress traffic:
+    To Port: 8080/TCP
+    From:
+      PodSelector: app=frontend
+  Allowing egress traffic:
+    To Port: 3550/TCP
+    To:
+      PodSelector: app=productcatalogservice
+  Policy Types: Ingress, Egress
+
+
+Name:         recommendationservice-allow-productcatalog
+Namespace:    recommendationservice
+Created on:   2025-04-26 17:45:37 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=recommendationservice
+  Allowing ingress traffic:
+    To Port: 3550/TCP
+    To Port: 3550/TCP
+    From:
+      PodSelector: app=productcatalogservice
+    From:
+      PodSelector: app=productcatalogservice
+  Not affecting egress traffic
+  Policy Types: Ingress
+
+
+Name:         recommendationservice-policy
+Namespace:    recommendationservice
+Created on:   2025-04-26 10:29:15 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=recommendationservice
+  Allowing ingress traffic:
+    To Port: 3550/TCP
+    To Port: 3550/TCP
+    From:
+      PodSelector: app=productcatalogservice
+    From:
+      PodSelector: app=productcatalogservice
+  Not affecting egress traffic
+  Policy Types: Ingress
+
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl delete networkpolicy recommendationservice-allow-productcatalog -n recommendationservice
+Output: networkpolicy.networking.k8s.io "recommendationservice-allow-productcatalog" deleted
+
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy recommendationservice -n recommendationservice --type='json' -p='[{"op": "add", "path": "/spec/egress/0/to/-", "value": {"podSelector": {"matchLabels": {"app": "productcatalogservice"}}, "ports": [{"protocol": "TCP", "port": 3550}]}}]'
+Output: networkpolicy.networking.k8s.io/recommendationservice patched
+
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n productcatalogservice
+Output: NAME                                      POD-SELECTOR                AGE
+allow-checkout-to-productcatalog          app=productcatalogservice   85m
+allow-frontend-to-productcatalogservice   app=productcatalogservice   8h
+allow-recommendation-to-productcatalog    app=productcatalogservice   9h
+deny-adservice                            app=productcatalogservice   13h
+productcatalog-network-policy             app=productcatalogservice   8h
+productcatalogservice                     app=productcatalogservice   11m
+productcatalogservice-policy              app=productcatalogservice   12h
+restrict-egress-to-redis-cart             app=productcatalogservice   12h
+
+Mismatch Summary: Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+

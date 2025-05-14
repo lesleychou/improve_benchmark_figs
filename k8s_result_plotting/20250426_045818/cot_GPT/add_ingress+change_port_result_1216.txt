@@ -1,0 +1,399 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: recommendationservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy recommendationservice-deny-payment -n recommendationservice --type='json' -p='[{"op": "add", "path": "/spec/egress/-", "value": {"to": [{"podSelector": {"matchLabels": {"app": "paymentservice"}}}], "ports": [{"port": 50051, "protocol": "TCP"}]}}]'
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "recommendationservice-deny-payment" not found
+
+Mismatch Summary: Mismatch: recommendationservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl
+kubectl apply -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: recommendationservice-deny-payment
+  namespace: recommendationservice
+spec:
+  podSelector:
+    matchLabels:
+      app: recommendationservice
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: paymentservice
+    ports:
+    - port: 50051
+      protocol: TCP
+EOF
+Output: kubectl controls the Kubernetes cluster manager.
+
+ Find more information at: https://kubernetes.io/docs/reference/kubectl/
+
+Basic Commands (Beginner):
+  create          Create a resource from a file or from stdin
+  expose          Take a replication controller, service, deployment or pod and expose it as a new Kubernetes service
+  run             Run a particular image on the cluster
+  set             Set specific features on objects
+
+Basic Commands (Intermediate):
+  explain         Get documentation for a resource
+  get             Display one or many resources
+  edit            Edit a resource on the server
+  delete          Delete resources by file names, stdin, resources and names, or by resources and label selector
+
+Deploy Commands:
+  rollout         Manage the rollout of a resource
+  scale           Set a new size for a deployment, replica set, or replication controller
+  autoscale       Auto-scale a deployment, replica set, stateful set, or replication controller
+
+Cluster Management Commands:
+  certificate     Modify certificate resources
+  cluster-info    Display cluster information
+  top             Display resource (CPU/memory) usage
+  cordon          Mark node as unschedulable
+  uncordon        Mark node as schedulable
+  drain           Drain node in preparation for maintenance
+  taint           Update the taints on one or more nodes
+
+Troubleshooting and Debugging Commands:
+  describe        Show details of a specific resource or group of resources
+  logs            Print the logs for a container in a pod
+  attach          Attach to a running container
+  exec            Execute a command in a container
+  port-forward    Forward one or more local ports to a pod
+  proxy           Run a proxy to the Kubernetes API server
+  cp              Copy files and directories to and from containers
+  auth            Inspect authorization
+  debug           Create debugging sessions for troubleshooting workloads and nodes
+  events          List events
+
+Advanced Commands:
+  diff            Diff the live version against a would-be applied version
+  apply           Apply a configuration to a resource by file name or stdin
+  patch           Update fields of a resource
+  replace         Replace a resource by file name or stdin
+  wait            Experimental: Wait for a specific condition on one or many resources
+  kustomize       Build a kustomization target from a directory or URL
+
+Settings Commands:
+  label           Update the labels on a resource
+  annotate        Update the annotations on a resource
+  completion      Output shell completion code for the specified shell (bash, zsh, fish, or powershell)
+
+Subcommands provided by plugins:
+
+Other Commands:
+  api-resources   Print the supported API resources on the server
+  api-versions    Print the supported API versions on the server, in the form of "group/version"
+  config          Modify kubeconfig files
+  plugin          Provides utilities for interacting with plugins
+  version         Print the client and server version information
+
+Usage:
+  kubectl [flags] [options]
+
+Use "kubectl <command> --help" for more information about a given command.
+Use "kubectl options" for a list of global command-line options (applies to all commands).
+networkpolicy.networking.k8s.io/recommendationservice-deny-payment created
+
+Mismatch Summary: Mismatch: recommendationservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n recommendationservice
+Output: NAME                                         POD-SELECTOR                AGE
+allow-frontend-to-recommendationservice      app=recommendationservice   10h
+allow-productcatalog-to-recommendation       app=recommendationservice   133m
+deny-cart-access                             app=recommendationservice   8h
+deny-checkout-access                         <none>                      14h
+deny-checkout-to-recommendation              app=recommendationservice   8h
+recommendationservice                        app=recommendationservice   14h
+recommendationservice-allow-productcatalog   app=recommendationservice   133m
+recommendationservice-deny-payment           app=recommendationservice   4s
+recommendationservice-policy                 app=recommendationservice   40m
+
+Mismatch Summary: Mismatch: recommendationservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n shippingservice
+Output: NAME                                      POD-SELECTOR          AGE
+allow-checkout-to-shipping                app=shippingservice   3h47m
+allow-frontend-to-shipping                app=shipping          41m
+allow-frontend-to-shippingservice         app=shippingservice   10h
+deny-egress-to-checkout-and-payment       app=shippingservice   7h56m
+deny-payment-access                       app=shippingservice   14h
+deny-productcatalog-to-shipping           app=shippingservice   107m
+deny-shipping-to-checkout                 app=shippingservice   52m
+deny-shippingservice-egress               app=shippingservice   15h
+deny-shippingservice-to-checkoutservice   app=shippingservice   75m
+shippingservice                           app=shippingservice   4h5m
+shippingservice-deny-productcatalog       app=shippingservice   107m
+shippingservice-policy                    app=shippingservice   95m
+
+Mismatch Summary: Mismatch: recommendationservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl describe networkpolicy recommendationservice-deny-payment -n recommendationservice
+Output: Name:         recommendationservice-deny-payment
+Namespace:    recommendationservice
+Created on:   2025-04-26 21:09:32 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=recommendationservice
+  Not affecting ingress traffic
+  Allowing egress traffic:
+    To Port: 50051/TCP
+    To:
+      PodSelector: app=paymentservice
+  Policy Types: Egress
+
+Mismatch Summary: Mismatch: recommendationservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy recommendationservice-deny-payment -n recommendationservice --type='json' -p='[{"op": "remove", "path": "/spec/egress"}]'
+Output: networkpolicy.networking.k8s.io/recommendationservice-deny-payment patched
+
+Mismatch Summary: Mismatch: recommendationservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: recommendationservice-block-payment
+  namespace: recommendationservice
+spec:
+  podSelector:
+    matchLabels:
+      app: recommendationservice
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: paymentservice
+    ports:
+    - port: 50051
+      protocol: TCP
+EOF
+Output: networkpolicy.networking.k8s.io/recommendationservice-block-payment created
+
+Mismatch Summary: Mismatch: recommendationservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl describe networkpolicy -n recommendationservice
+Output: Name:         allow-frontend-to-recommendationservice
+Namespace:    recommendationservice
+Created on:   2025-04-26 10:34:25 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=recommendationservice
+  Allowing ingress traffic:
+    To Port: 8080/TCP
+    From:
+      PodSelector: app=frontend
+    From:
+      PodSelector: app=cartservice
+    ----------
+    To Port: 8080/TCP
+    From:
+      PodSelector: app=adservice
+  Not affecting egress traffic
+  Policy Types: Ingress
+
+
+Name:         allow-productcatalog-to-recommendation
+Namespace:    recommendationservice
+Created on:   2025-04-26 18:56:35 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=recommendationservice
+  Allowing ingress traffic:
+    To Port: 3550/TCP
+    From:
+      PodSelector: app=productcatalogservice
+  Not affecting egress traffic
+  Policy Types: Ingress
+
+
+Name:         deny-cart-access
+Namespace:    recommendationservice
+Created on:   2025-04-26 12:51:57 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=recommendationservice
+  Not affecting ingress traffic
+  Allowing egress traffic:
+    To Port: 7070/TCP
+    To:
+      PodSelector: app=cartservice
+  Policy Types: Egress
+
+
+Name:         deny-checkout-access
+Namespace:    recommendationservice
+Created on:   2025-04-26 06:55:56 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     <none> (Allowing the specific traffic to all pods in this namespace)
+  Not affecting ingress traffic
+  Allowing egress traffic:
+    To Port: 5050/TCP
+    To:
+      NamespaceSelector: name=checkoutservice
+  Policy Types: Egress
+
+
+Name:         deny-checkout-to-recommendation
+Namespace:    recommendationservice
+Created on:   2025-04-26 13:01:11 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=recommendationservice
+  Allowing ingress traffic:
+    To Port: 8080/TCP
+    From:
+      PodSelector: app=checkoutservice
+  Not affecting egress traffic
+  Policy Types: Ingress
+
+
+Name:         recommendationservice
+Namespace:    recommendationservice
+Created on:   2025-04-26 06:26:36 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=recommendationservice
+  Allowing ingress traffic:
+    To Port: <any> (traffic allowed to all ports)
+    From:
+      PodSelector: app=frontend
+    From:
+      PodSelector: app=productcatalogservice
+  Allowing egress traffic:
+    To Port: 3550/TCP
+    To:
+      PodSelector: app=productcatalogservice
+    To:
+      PodSelector: app=productcatalogservice
+    To:
+      PodSelector: app=productcatalogservice
+    ----------
+    To Port: 3550/TCP
+    To:
+      PodSelector: app=productcatalogservice
+    ----------
+    To Port: 3550/TCP
+    To:
+      PodSelector: app=productcatalogservice
+  Policy Types: Ingress, Egress
+
+
+Name:         recommendationservice-allow-productcatalog
+Namespace:    recommendationservice
+Created on:   2025-04-26 18:56:09 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=recommendationservice
+  Allowing ingress traffic:
+    To Port: 3550/TCP
+    From:
+      PodSelector: app=productcatalogservice
+  Allowing egress traffic:
+    To Port: 3550/TCP
+    To:
+      PodSelector: app=productcatalogservice
+  Policy Types: Ingress, Egress
+
+
+Name:         recommendationservice-block-payment
+Namespace:    recommendationservice
+Created on:   2025-04-26 21:09:53 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=recommendationservice
+  Not affecting ingress traffic
+  Allowing egress traffic:
+    To Port: 50051/TCP
+    To:
+      PodSelector: app=paymentservice
+  Policy Types: Egress
+
+
+Name:         recommendationservice-deny-payment
+Namespace:    recommendationservice
+Created on:   2025-04-26 21:09:32 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=recommendationservice
+  Not affecting ingress traffic
+  Allowing egress traffic:
+    <none> (Selected pods are isolated for egress connectivity)
+  Policy Types: Egress
+
+
+Name:         recommendationservice-policy
+Namespace:    recommendationservice
+Created on:   2025-04-26 20:28:38 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=recommendationservice
+  Allowing ingress traffic:
+    To Port: 8080/TCP
+    From: <any> (traffic not restricted by source)
+    ----------
+    To Port: 8080/TCP
+    From:
+      PodSelector: app=frontend
+    From:
+      PodSelector: app=productcatalog
+  Not affecting egress traffic
+  Policy Types: Ingress
+
+Mismatch Summary: Mismatch: recommendationservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+

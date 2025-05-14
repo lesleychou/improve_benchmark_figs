@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend",
+        "output": "",
+        "mismatch_summary": "Mismatch: cartservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n currencyservice -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy -n currencyservice --type='merge' -p '{\n  \"apiVersion\": \"networking.k8s.io/v1\",\n  \"kind\": \"NetworkPolicy\",\n  \"metadata\": {\n    \"name\": \"currencyservice-allow-specific\"\n  },\n  \"spec\": {\n    \"podSelector\": {},\n    \"policyTypes\": [\"Ingress\"],\n    \"ingress\": [\n      {\n        \"from\": [\n          {\n            \"namespaceSelector\": {\n              \"matchLabels\": {\n                \"name\": \"frontend\"\n              }\n            }\n          },\n          {\n            \"namespaceSelector\": {\n              \"matchLabels\": {\n                \"name\": \"checkout\"\n              }\n            }\n          }\n        ],\n        \"ports\": [\n          {\n            \"port\": 7000,\n            \"protocol\": \"TCP\"\n          }\n        ]\n      }\n    ]\n  }\n}'",
+        "output": "error: resource(s) were provided, but no name was specified\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy currencyservice-allow-specific -n currencyservice --type='merge' -p '{\n  \"apiVersion\": \"networking.k8s.io/v1\",\n  \"kind\": \"NetworkPolicy\",\n  \"metadata\": {\n    \"name\": \"currencyservice-allow-specific\"\n  },\n  \"spec\": {\n    \"podSelector\": {},\n    \"policyTypes\": [\"Ingress\"],\n    \"ingress\": [\n      {\n        \"from\": [\n          {\n            \"namespaceSelector\": {\n              \"matchLabels\": {\n                \"name\": \"frontend\"\n              }\n            }\n          },\n          {\n            \"namespaceSelector\": {\n              \"matchLabels\": {\n                \"name\": \"checkout\"\n              }\n            }\n          }\n        ],\n        \"ports\": [\n          {\n            \"port\": 7000,\n            \"protocol\": \"TCP\"\n          }\n        ]\n      }\n    ]\n  }\n}'",
+        "output": "Error from server (NotFound): namespaces \"currencyservice\" not found\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\ndefault              Active   108m\nkube-node-lease      Active   108m\nkube-public          Active   108m\nkube-system          Active   108m\nlocal-path-storage   Active   108m\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\ndefault              Active   108m\nkube-node-lease      Active   108m\nkube-public          Active   108m\nkube-system          Active   108m\nlocal-path-storage   Active   108m\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\ndefault              Active   108m\nkube-node-lease      Active   108m\nkube-public          Active   108m\nkube-system          Active   108m\nlocal-path-storage   Active   108m\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "DuckDuckGo Search: \"currencyservice namespace Kubernetes\"",
+        "output": "/bin/bash: line 1: DuckDuckGo: command not found\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "currencyservice namespace Kubernetes microservices architecture",
+        "output": "/bin/bash: line 1: currencyservice: command not found\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    }
+]

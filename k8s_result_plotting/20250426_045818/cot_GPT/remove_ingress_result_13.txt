@@ -1,0 +1,102 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy <network-policy-name> -n checkoutservice --type=json -p '[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "emailservice"}}}}, {"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 5000, "protocol": "TCP"}}]'
+Output: /bin/bash: line 1: network-policy-name: No such file or directory
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy checkoutservice-policy -n checkoutservice --type=json -p '[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "emailservice"}}}}, {"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 5000, "protocol": "TCP"}}]'
+Output: Error from server (NotFound): namespaces "checkoutservice" not found
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+
+LLM Command: kubectl get namespaces
+Output: NAME                 STATUS   AGE
+default              Active   9m35s
+kube-node-lease      Active   9m35s
+kube-public          Active   9m35s
+kube-system          Active   9m35s
+local-path-storage   Active   9m28s
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+
+LLM Command: kubectl get pods --all-namespaces
+Output: NAMESPACE            NAME                                         READY   STATUS    RESTARTS   AGE
+default              adservice-76f594d56f-2prlg                   1/1     Running   0          6m42s
+default              cartservice-5958849bb7-49tjm                 1/1     Running   0          6m42s
+default              checkoutservice-55d99bbf75-z49bp             1/1     Running   0          6m42s
+default              currencyservice-649964f87f-nxj9q             1/1     Running   0          6m42s
+default              emailservice-6d85f47b76-rdnmb                1/1     Running   0          6m42s
+default              frontend-fc4bf5fdb-rmj59                     1/1     Running   0          6m42s
+default              loadgenerator-6d98cc6686-4m4tn               1/1     Running   0          6m7s
+default              paymentservice-7dc8859fb8-vnwl8              1/1     Running   0          6m42s
+default              productcatalogservice-5bd4cb4488-7m8zm       1/1     Running   0          6m42s
+default              recommendationservice-c64454f56-4k2kx        1/1     Running   0          6m42s
+default              redis-cart-799f8fc4c-p9wps                   1/1     Running   0          6m41s
+default              shippingservice-5dd466d969-ppcwn             1/1     Running   0          6m41s
+kube-system          coredns-668d6bf9bc-7vskf                     1/1     Running   0          9m26s
+kube-system          coredns-668d6bf9bc-vhtsb                     1/1     Running   0          9m26s
+kube-system          etcd-kind-control-plane                      1/1     Running   0          9m36s
+kube-system          kindnet-kf59t                                1/1     Running   0          9m27s
+kube-system          kube-apiserver-kind-control-plane            1/1     Running   0          9m37s
+kube-system          kube-controller-manager-kind-control-plane   1/1     Running   0          9m35s
+kube-system          kube-proxy-t9chz                             1/1     Running   0          9m27s
+kube-system          kube-scheduler-kind-control-plane            1/1     Running   0          9m33s
+local-path-storage   local-path-provisioner-58cc7856b6-czqc8      1/1     Running   0          9m26s
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy checkoutservice-policy -n default --type=json -p '[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "emailservice"}}}}, {"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 5000, "protocol": "TCP"}}]'
+Output: networkpolicy.networking.k8s.io/checkoutservice-policy patched
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy checkoutservice-policy -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"checkoutservice-policy","namespace":"default"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"paymentservice"}}}],"ports":[{"port":50051,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"checkoutservice"}},"policyTypes":["Ingress"]}}
+  creationTimestamp: "2025-04-26T05:07:54Z"
+  generation: 2
+  name: checkoutservice-policy
+  namespace: default
+  resourceVersion: "1625"
+  uid: 62190730-ca5c-4eb2-a95f-e0ade7a1b28b
+spec:
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: paymentservice
+    - podSelector:
+        matchLabels:
+          app: emailservice
+    ports:
+    - port: 50051
+      protocol: TCP
+    - port: 5000
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: checkoutservice
+  policyTypes:
+  - Ingress
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+
+LLM Command: kubectl get pod emailservice-6d85f47b76-rdnmb -n default --show-labels
+Output: NAME                            READY   STATUS    RESTARTS   AGE     LABELS
+emailservice-6d85f47b76-rdnmb   1/1     Running   0          6m52s   app=emailservice,pod-template-hash=6d85f47b76,skaffold.dev/run-id=00adce13-6ae0-4db6-9ff3-9bd0af686efb
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+
+LLM Command: bash
+kubectl patch networkpolicy checkoutservice-policy -n default --type=json -p '[{"op": "replace", "path": "/spec/ingress/0/from/1/podSelector/matchLabels", "value": {"app": "emailservice", "skaffold.dev/run-id": "00adce13-6ae0-4db6-9ff3-9bd0af686efb"}}]'
+Output: networkpolicy.networking.k8s.io/checkoutservice-policy patched
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+

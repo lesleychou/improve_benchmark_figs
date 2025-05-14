@@ -1,0 +1,117 @@
+LLM Command: kubectl get networkpolicy -n frontend
+Output: 
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: adservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: recommendationservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy <networkpolicy-name> -n frontend --type=json -p '[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "cartservice"}}}}, {"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 7070, "protocol": "TCP"}}]'
+Output: /bin/bash: line 1: networkpolicy-name: No such file or directory
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: adservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: recommendationservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n frontend -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: adservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: recommendationservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n cartservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: adservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: recommendationservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -n frontend -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-frontend-to-cartservice
+spec:
+  podSelector:
+    matchLabels:
+      app: frontend
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: cartservice
+    ports:
+    - protocol: TCP
+      port: 7070
+EOF
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: adservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: recommendationservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy allow-frontend-to-cartservice -n frontend --type=json -p '[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "cartservice"}}}}, {"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 7070, "protocol": "TCP"}}]'
+Output: Error from server (NotFound): namespaces "frontend" not found
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: adservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: recommendationservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get namespaces
+Output: NAME                 STATUS   AGE
+default              Active   19h
+kube-node-lease      Active   19h
+kube-public          Active   19h
+kube-system          Active   19h
+local-path-storage   Active   19h
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: adservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: recommendationservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods -n default -o wide
+Output: NAME                                     READY   STATUS    RESTARTS       AGE   IP            NODE                 NOMINATED NODE   READINESS GATES
+adservice-7c7687ff5b-fbq2s               1/1     Running   0              19h   10.244.0.5    kind-control-plane   <none>           <none>
+cartservice-7c8966d6fd-c8rb4             1/1     Running   0              19h   10.244.0.6    kind-control-plane   <none>           <none>
+checkoutservice-769b8ff7b8-jxzrv         1/1     Running   0              19h   10.244.0.7    kind-control-plane   <none>           <none>
+currencyservice-578dcb55f6-bdvtr         1/1     Running   4 (3h7m ago)   19h   10.244.0.9    kind-control-plane   <none>           <none>
+emailservice-d5d54d4fc-lksfn             1/1     Running   0              19h   10.244.0.8    kind-control-plane   <none>           <none>
+frontend-7ffbffc6f7-9hb4b                1/1     Running   0              19h   10.244.0.10   kind-control-plane   <none>           <none>
+loadgenerator-7d9cfb7cb9-9zjhk           1/1     Running   0              19h   10.244.0.16   kind-control-plane   <none>           <none>
+paymentservice-b67c65d9c-ztkqg           1/1     Running   4 (103m ago)   19h   10.244.0.11   kind-control-plane   <none>           <none>
+productcatalogservice-5f94b6cd47-lk6vh   1/1     Running   0              19h   10.244.0.15   kind-control-plane   <none>           <none>
+recommendationservice-c468b6867-pcbbn    1/1     Running   0              19h   10.244.0.12   kind-control-plane   <none>           <none>
+redis-cart-5b6f47b748-9rgzw              1/1     Running   0              19h   10.244.0.13   kind-control-plane   <none>           <none>
+shippingservice-f6bc4cd5d-69r7d          1/1     Running   0              19h   10.244.0.14   kind-control-plane   <none>           <none>
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: adservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: recommendationservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy allow-frontend-to-cartservice -n default --type=json -p '[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "cartservice"}}}}, {"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 7070, "protocol": "TCP"}}]'
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "allow-frontend-to-cartservice" not found
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: adservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: recommendationservice → shippingservice:50051 (Expected: False, Actual: True)
+

@@ -1,0 +1,148 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n shippingservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy -n shippingservice --type='merge' -p '{
+  "apiVersion": "networking.k8s.io/v1",
+  "kind": "NetworkPolicy",
+  "metadata": {
+    "name": "allow-frontend-checkout"
+  },
+  "spec": {
+    "podSelector": {},
+    "policyTypes": ["Ingress"],
+    "ingress": [
+      {
+        "from": [
+          {
+            "podSelector": {
+              "matchLabels": {
+                "app": "frontend"
+              }
+            }
+          },
+          {
+            "podSelector": {
+              "matchLabels": {
+                "app": "checkoutservice"
+              }
+            }
+          }
+        ],
+        "ports": [
+          {
+            "protocol": "TCP",
+            "port": 50051
+          }
+        ]
+      }
+    ]
+  }
+}'
+Output: error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl apply -n shippingservice -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-frontend-checkout
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+    ports:
+    - protocol: TCP
+      port: 50051
+EOF
+Output: Error from server (NotFound): error when creating "STDIN": namespaces "shippingservice" not found
+
+Mismatch Summary: Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl get namespaces
+Output: NAME                 STATUS   AGE
+default              Active   7m14s
+kube-node-lease      Active   7m14s
+kube-public          Active   7m14s
+kube-system          Active   7m14s
+local-path-storage   Active   7m7s
+
+Mismatch Summary: Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl get pods --all-namespaces -o wide
+Output: NAMESPACE            NAME                                         READY   STATUS    RESTARTS   AGE     IP            NODE                 NOMINATED NODE   READINESS GATES
+default              adservice-76f594d56f-2prlg                   1/1     Running   0          4m22s   10.244.0.5    kind-control-plane   <none>           <none>
+default              cartservice-5958849bb7-49tjm                 1/1     Running   0          4m22s   10.244.0.6    kind-control-plane   <none>           <none>
+default              checkoutservice-55d99bbf75-z49bp             1/1     Running   0          4m22s   10.244.0.7    kind-control-plane   <none>           <none>
+default              currencyservice-649964f87f-nxj9q             1/1     Running   0          4m22s   10.244.0.8    kind-control-plane   <none>           <none>
+default              emailservice-6d85f47b76-rdnmb                1/1     Running   0          4m22s   10.244.0.9    kind-control-plane   <none>           <none>
+default              frontend-fc4bf5fdb-rmj59                     1/1     Running   0          4m22s   10.244.0.10   kind-control-plane   <none>           <none>
+default              loadgenerator-6d98cc6686-4m4tn               1/1     Running   0          3m47s   10.244.0.16   kind-control-plane   <none>           <none>
+default              paymentservice-7dc8859fb8-vnwl8              1/1     Running   0          4m22s   10.244.0.11   kind-control-plane   <none>           <none>
+default              productcatalogservice-5bd4cb4488-7m8zm       1/1     Running   0          4m22s   10.244.0.12   kind-control-plane   <none>           <none>
+default              recommendationservice-c64454f56-4k2kx        1/1     Running   0          4m22s   10.244.0.13   kind-control-plane   <none>           <none>
+default              redis-cart-799f8fc4c-p9wps                   1/1     Running   0          4m21s   10.244.0.14   kind-control-plane   <none>           <none>
+default              shippingservice-5dd466d969-ppcwn             1/1     Running   0          4m21s   10.244.0.15   kind-control-plane   <none>           <none>
+kube-system          coredns-668d6bf9bc-7vskf                     1/1     Running   0          7m6s    10.244.0.3    kind-control-plane   <none>           <none>
+kube-system          coredns-668d6bf9bc-vhtsb                     1/1     Running   0          7m6s    10.244.0.4    kind-control-plane   <none>           <none>
+kube-system          etcd-kind-control-plane                      1/1     Running   0          7m16s   172.18.0.2    kind-control-plane   <none>           <none>
+kube-system          kindnet-kf59t                                1/1     Running   0          7m7s    172.18.0.2    kind-control-plane   <none>           <none>
+kube-system          kube-apiserver-kind-control-plane            1/1     Running   0          7m17s   172.18.0.2    kind-control-plane   <none>           <none>
+kube-system          kube-controller-manager-kind-control-plane   1/1     Running   0          7m15s   172.18.0.2    kind-control-plane   <none>           <none>
+kube-system          kube-proxy-t9chz                             1/1     Running   0          7m7s    172.18.0.2    kind-control-plane   <none>           <none>
+kube-system          kube-scheduler-kind-control-plane            1/1     Running   0          7m13s   172.18.0.2    kind-control-plane   <none>           <none>
+local-path-storage   local-path-provisioner-58cc7856b6-czqc8      1/1     Running   0          7m6s    10.244.0.2    kind-control-plane   <none>           <none>
+
+Mismatch Summary: Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl apply -n default -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-frontend-checkout
+spec:
+  podSelector:
+    matchLabels:
+      app: shippingservice
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+    ports:
+    - protocol: TCP
+      port: 50051
+EOF
+Output: networkpolicy.networking.k8s.io/allow-frontend-checkout configured
+
+Mismatch Summary: No mismatches found.
+

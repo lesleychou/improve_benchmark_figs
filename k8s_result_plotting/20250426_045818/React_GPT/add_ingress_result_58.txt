@@ -1,0 +1,126 @@
+LLM Command: kubectl get networkpolicy -n frontend
+Output: 
+Mismatch Summary: Mismatch: cartservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: shippingservice → adservice:9555 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n adservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: cartservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: shippingservice → adservice:9555 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy -n adservice --type='merge' -p '{
+  "apiVersion": "networking.k8s.io/v1",
+  "kind": "NetworkPolicy",
+  "metadata": {
+    "name": "deny-unwanted-traffic"
+  },
+  "spec": {
+    "podSelector": {},
+    "policyTypes": ["Ingress"],
+    "ingress": [
+      {
+        "from": [
+          {
+            "namespaceSelector": {
+              "matchLabels": {
+                "name": "cartservice"
+              }
+            }
+          },
+          {
+            "namespaceSelector": {
+              "matchLabels": {
+                "name": "shippingservice"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}'
+Output: error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: cartservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: shippingservice → adservice:9555 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -n adservice -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-unwanted-traffic
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: cartservice
+    - namespaceSelector:
+        matchLabels:
+          name: shippingservice
+EOF
+Output: error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: cartservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: shippingservice → adservice:9555 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -n adservice -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-unwanted-traffic
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: cartservice
+    - namespaceSelector:
+        matchLabels:
+          name: shippingservice
+EOF
+Output: error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: cartservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: shippingservice → adservice:9555 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy deny-unwanted-traffic -n adservice --type='merge' -p '{"spec": {"ingress": [{"from": []}]}}'
+Output: Error from server (NotFound): namespaces "adservice" not found
+
+Mismatch Summary: Mismatch: cartservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: shippingservice → adservice:9555 (Expected: False, Actual: True)
+
+LLM Command: kubectl get namespaces
+Output: NAME                 STATUS   AGE
+default              Active   50m
+kube-node-lease      Active   50m
+kube-public          Active   50m
+kube-system          Active   50m
+local-path-storage   Active   50m
+
+Mismatch Summary: Mismatch: cartservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: shippingservice → adservice:9555 (Expected: False, Actual: True)
+
+LLM Command: kubernetes microservices architecture adservice namespace
+Output: /bin/bash: line 1: kubernetes: command not found
+
+Mismatch Summary: Mismatch: cartservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: shippingservice → adservice:9555 (Expected: False, Actual: True)
+
+LLM Command: kubernetes microservices architecture adservice namespace
+Output: /bin/bash: line 1: kubernetes: command not found
+
+Mismatch Summary: Mismatch: cartservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: shippingservice → adservice:9555 (Expected: False, Actual: True)
+

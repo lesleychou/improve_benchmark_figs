@@ -1,0 +1,165 @@
+LLM Command: kubectl get networkpolicy -n frontend
+Output: 
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: productcatalogservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: shippingservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n checkout -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: productcatalogservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: shippingservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy -n checkout --type='json' -p='[{"op": "add", "path": "/spec/ingress", "value": [{"from": [{"podSelector": {"matchLabels": {"app": "emailservice"}}}], "ports": [{"port": 5000, "protocol": "TCP"}]}]}]'
+Output: error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: productcatalogservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: shippingservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n frontend -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: productcatalogservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: shippingservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -n checkout -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-emailservice
+  namespace: checkout
+spec:
+  podSelector:
+    matchLabels: {}
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: emailservice
+    ports:
+    - protocol: TCP
+      port: 5000
+EOF
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: productcatalogservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: shippingservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: `
+kubectl apply -n checkout -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-emailservice
+  namespace: checkout
+spec:
+  podSelector:
+    matchLabels:
+      app: checkoutservice
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: emailservice
+    ports:
+    - protocol: TCP
+      port: 5000
+EOF
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: productcatalogservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: shippingservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: `
+kubectl apply -n checkout -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-emailservice
+  namespace: checkout
+spec:
+  podSelector:
+    matchLabels:
+      app: checkoutservice
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: emailservice
+    ports:
+    - protocol: TCP
+      port: 5000
+EOF
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: productcatalogservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: shippingservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: `
+kubectl create networkpolicy allow-emailservice -n checkout --dry-run=client -o yaml > allow-emailservice.yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: productcatalogservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: shippingservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: `
+kubectl apply -n checkout -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-emailservice
+  namespace: checkout
+spec:
+  podSelector:
+    matchLabels:
+      app: checkoutservice
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: emailservice
+    ports:
+    - protocol: TCP
+      port: 5000
+EOF
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: productcatalogservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: shippingservice → redis-cart:6379 (Expected: False, Actual: True)
+

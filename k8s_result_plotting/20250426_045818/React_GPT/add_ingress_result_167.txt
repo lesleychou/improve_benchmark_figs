@@ -1,0 +1,28 @@
+LLM Command: kubectl get networkpolicy --all-namespaces
+Output: NAMESPACE   NAME                    POD-SELECTOR                AGE
+default     adservice               app=adservice               132m
+default     cartservice             app=cartservice             132m
+default     checkoutservice         app=checkoutservice         132m
+default     currencyservice         app=currencyservice         132m
+default     emailservice            app=emailservice            132m
+default     frontend                app=frontend                132m
+default     loadgenerator           app=loadgenerator           132m
+default     paymentservice          app=paymentservice          132m
+default     productcatalogservice   app=productcatalogservice   132m
+default     recommendationservice   app=recommendationservice   132m
+default     redis-cart              app=redis-cart              132m
+default     shippingservice         app=shippingservice         132m
+
+Mismatch Summary: Mismatch: adservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: shippingservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy adservice -n default --type=json -p='[{"op": "add", "path": "/spec/egress", "value": [{"to": [{"podSelector": {"matchLabels": {"app": "redis-cart"}}}], "ports": [{"port": 6379, "protocol": "TCP"}]}]}]'
+Output: networkpolicy.networking.k8s.io/adservice patched
+
+Mismatch Summary: Mismatch: shippingservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy shippingservice -n default --type=json -p='[{"op": "remove", "path": "/spec/egress"}]'
+Output: networkpolicy.networking.k8s.io/shippingservice patched
+
+Mismatch Summary: No mismatches found.
+

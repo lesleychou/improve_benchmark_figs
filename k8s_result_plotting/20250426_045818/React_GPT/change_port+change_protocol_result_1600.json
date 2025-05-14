@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n adservice -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy -n frontend --type='json' -p '[{\n  \"op\": \"add\",\n  \"path\": \"/spec\",\n  \"value\": {\n    \"podSelector\": {},\n    \"ingress\": [\n      {\n        \"from\": [\n          {\n            \"namespaceSelector\": {\n              \"matchLabels\": {\n                \"name\": \"adservice\"\n              }\n            }\n          }\n        ],\n        \"ports\": [\n          {\n            \"protocol\": \"TCP\",\n            \"port\": 9555\n          }\n        ]\n      },\n      {\n        \"from\": [\n          {\n            \"namespaceSelector\": {\n              \"matchLabels\": {\n                \"name\": \"checkoutservice\"\n              }\n            }\n          }\n        ],\n        \"ports\": [\n          {\n            \"protocol\": \"TCP\",\n            \"port\": 5050\n          }\n        ]\n      }\n    ]\n  }\n}]",
+        "output": "/bin/bash: -c: line 1: unexpected EOF while looking for matching `''\n/bin/bash: -c: line 44: syntax error: unexpected end of file\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy -n frontend --type='json' -p '[{\"op\": \"add\", \"path\": \"/spec\", \"value\": {\"podSelector\": {}, \"ingress\": [{\"from\": [{\"namespaceSelector\": {\"matchLabels\": {\"name\": \"adservice\"}}}], \"ports\": [{\"protocol\": \"TCP\", \"port\": 9555}]}, {\"from\": [{\"namespaceSelector\": {\"matchLabels\": {\"name\": \"checkoutservice\"}}}], \"ports\": [{\"protocol\": \"TCP\", \"port\": 5050}]}]}}]'",
+        "output": "error: resource(s) were provided, but no name was specified\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl apply -n frontend -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-frontend-ingress\nspec:\n  podSelector: {}\n  ingress:\n  - from:\n    - namespaceSelector:\n        matchLabels:\n          name: adservice\n    ports:\n    - protocol: TCP\n      port: 9555\n  - from:\n    - namespaceSelector:\n        matchLabels:\n          name: checkoutservice\n    ports:\n    - protocol: TCP\n      port: 5050\nEOF",
+        "output": "error: resource(s) were provided, but no name was specified\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl apply -n frontend -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-frontend-ingress\nspec:\n  podSelector: {}\n  ingress:\n  - from:\n    - namespaceSelector:\n        matchLabels:\n          name: adservice\n    ports:\n    - protocol: TCP\n      port: 9555\n  - from:\n    - namespaceSelector:\n        matchLabels:\n          name: checkoutservice\n    ports:\n    - protocol: TCP\n      port: 5050\nEOF",
+        "output": "error: resource(s) were provided, but no name was specified\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy allow-frontend-ingress -n frontend --type='merge' -p '{\"spec\":{\"podSelector\":{},\"ingress\":[{\"from\":[{\"namespaceSelector\":{\"matchLabels\":{\"name\":\"adservice\"}}}],\"ports\":[{\"protocol\":\"TCP\",\"port\":9555}]},{\"from\":[{\"namespaceSelector\":{\"matchLabels\":{\"name\":\"checkoutservice\"}}}],\"ports\":[{\"protocol\":\"TCP\",\"port\":5050}]}]}}'",
+        "output": "Error from server (NotFound): namespaces \"frontend\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "bash\nkubectl patch networkpolicy -n frontend --type='merge' -p '{\"metadata\":{\"name\":\"allow-frontend-ingress\"},\"spec\":{\"podSelector\":{},\"ingress\":[{\"from\":[{\"namespaceSelector\":{\"matchLabels\":{\"name\":\"adservice\"}}}],\"ports\":[{\"protocol\":\"TCP\",\"port\":9555}]},{\"from\":[{\"namespaceSelector\":{\"matchLabels\":{\"name\":\"checkoutservice\"}}}],\"ports\":[{\"protocol\":\"TCP\",\"port\":5050}]}]}}'",
+        "output": "bash: error reading input file: Bad file descriptor\nerror: resource(s) were provided, but no name was specified\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)"
+    }
+]

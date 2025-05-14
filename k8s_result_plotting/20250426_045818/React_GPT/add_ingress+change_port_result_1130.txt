@@ -1,0 +1,157 @@
+LLM Command: kubectl get networkpolicy -n frontend
+Output: 
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n frontend -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy -n frontend --type='merge' -p '{"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"adservice"}}}],"ports":[{"port":9555,"protocol":"TCP"}]}]}}'
+Output: error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n frontend
+Output: 
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n frontend -o name
+Output: 
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -n frontend -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: frontend-policy
+  namespace: frontend
+spec:
+  podSelector:
+    matchLabels:
+      app: frontend
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: adservice
+    ports:
+    - protocol: TCP
+      port: 9555
+  - from:
+    - podSelector:
+        matchLabels:
+          app: loadgenerator
+    ports:
+    - protocol: TCP
+      port: 80
+  - from:
+    - podSelector:
+        matchLabels:
+          app: user
+    ports:
+    - protocol: TCP
+      port: 80
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: checkout
+    ports:
+    - protocol: TCP
+      port: 50051
+  - to:
+    - podSelector:
+        matchLabels:
+          app: adservice
+    ports:
+    - protocol: TCP
+      port: 9555
+  - to:
+    - podSelector:
+        matchLabels:
+          app: recommendation
+    ports:
+    - protocol: TCP
+      port: 50051
+  - to:
+    - podSelector:
+        matchLabels:
+          app: productcatalog
+    ports:
+    - protocol: TCP
+      port: 50051
+  - to:
+    - podSelector:
+        matchLabels:
+          app: cart
+    ports:
+    - protocol: TCP
+      port: 50051
+  - to:
+    - podSelector:
+        matchLabels:
+          app: shipping
+    ports:
+    - protocol: TCP
+      port: 50051
+  - to:
+    - podSelector:
+        matchLabels:
+          app: currency
+    ports:
+    - protocol: TCP
+      port: 50051
+  - to:
+    - podSelector:
+        matchLabels:
+          app: email
+    ports:
+    - protocol: TCP
+      port: 50051
+EOF
+Output: 
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy frontend-policy -n frontend --type='merge' -p '{"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"adservice"}}}],"ports":[{"port":9555,"protocol":"TCP"}]}]}}'
+Output: Error from server (NotFound): namespaces "frontend" not found
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get namespaces
+Output: NAME                 STATUS   AGE
+default              Active   17h
+kube-node-lease      Active   17h
+kube-public          Active   17h
+kube-system          Active   17h
+local-path-storage   Active   17h
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubernetes microservices architecture frontend namespace
+Output: /bin/bash: line 1: kubernetes: command not found
+
+Mismatch Summary: Mismatch: frontend → adservice:9555 (Expected: True, Actual: False)
+Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+

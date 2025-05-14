@@ -1,0 +1,207 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: adservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → productcatalogservice:3550 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n productcatalogservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: adservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → productcatalogservice:3550 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy -n productcatalogservice --type='json' -p='[{
+  "op": "add",
+  "path": "/items",
+  "value": [{
+    "apiVersion": "networking.k8s.io/v1",
+    "kind": "NetworkPolicy",
+    "metadata": {
+      "name": "productcatalogservice-policy"
+    },
+    "spec": {
+      "podSelector": {},
+      "policyTypes": ["Ingress"],
+      "ingress": [{
+        "from": [{
+          "namespaceSelector": {
+            "matchLabels": {
+              "name": "recommendationservice"
+            }
+          }
+        }],
+        "ports": [{
+          "protocol": "TCP",
+          "port": 3550
+        }]
+      }]
+    }
+  }]
+}]'
+Output: error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: adservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → productcatalogservice:3550 (Expected: False, Actual: True)
+
+LLM Command: bash
+kubectl apply -n productcatalogservice -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: productcatalogservice-policy
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: recommendationservice
+    ports:
+    - protocol: TCP
+      port: 3550
+EOF
+Output: error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: adservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → productcatalogservice:3550 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy -n productcatalogservice --type='merge' -p='{
+  "apiVersion": "networking.k8s.io/v1",
+  "kind": "NetworkPolicy",
+  "metadata": {
+    "name": "productcatalogservice-policy"
+  },
+  "spec": {
+    "podSelector": {},
+    "policyTypes": ["Ingress"],
+    "ingress": [
+      {
+        "from": [
+          {
+            "podSelector": {
+              "matchLabels": {
+                "app": "recommendationservice"
+              }
+            }
+          }
+        ],
+        "ports": [
+          {
+            "protocol": "TCP",
+            "port": 3550
+          }
+        ]
+      }
+    ]
+  }
+}'
+Output: error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: adservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → productcatalogservice:3550 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n adservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: adservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → productcatalogservice:3550 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -n productcatalogservice -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: productcatalogservice-policy
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: recommendationservice
+    ports:
+    - protocol: TCP
+      port: 3550
+EOF
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: adservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → productcatalogservice:3550 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -n productcatalogservice -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: productcatalogservice-policy
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: recommendationservice
+    ports:
+    - protocol: TCP
+      port: 3550
+EOF
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: adservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → productcatalogservice:3550 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -n productcatalogservice -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: productcatalogservice-policy
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: recommendationservice
+    ports:
+    - protocol: TCP
+      port: 3550
+EOF
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: adservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: shippingservice → productcatalogservice:3550 (Expected: False, Actual: True)
+

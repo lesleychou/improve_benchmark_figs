@@ -1,0 +1,117 @@
+LLM Command: NAME                  POD-SELECTOR   INGRESS   EGRESS   POLICYTYPES
+          frontend-policy       app=frontend   true      false    Ingress
+          checkout-policy       app=checkout   true      false    Ingress
+          recommendation-policy app=recommendation true   false    Ingress
+          cart-policy           app=cart       true      false    Ingress
+          redis-cache-policy    app=redis-cache true     false    Ingress
+Output: /bin/bash: line 1: NAME: command not found
+/bin/bash: line 2: frontend-policy: command not found
+/bin/bash: line 3: checkout-policy: command not found
+/bin/bash: line 4: recommendation-policy: command not found
+/bin/bash: line 5: cart-policy: command not found
+/bin/bash: line 6: redis-cache-policy: command not found
+
+Mismatch Summary: Mismatch: shippingservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: emailservice → productcatalogservice:3550 (Expected: False, Actual: True)
+
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: shippingservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: emailservice → productcatalogservice:3550 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n default
+Output: NAME                    POD-SELECTOR                AGE
+adservice               app=adservice               4h41m
+cartservice             app=cartservice             4h41m
+checkoutservice         app=checkoutservice         4h41m
+currencyservice         app=currencyservice         4h41m
+emailservice            app=emailservice            4h41m
+frontend                app=frontend                4h41m
+loadgenerator           app=loadgenerator           4h41m
+paymentservice          app=paymentservice          4h41m
+productcatalogservice   app=productcatalogservice   4h41m
+recommendationservice   app=recommendationservice   4h41m
+redis-cart              app=redis-cart              4h41m
+shippingservice         app=shippingservice         4h41m
+
+Mismatch Summary: Mismatch: shippingservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: emailservice → productcatalogservice:3550 (Expected: False, Actual: True)
+
+LLM Command: kubectl describe networkpolicy productcatalogservice -n default
+Output: Name:         productcatalogservice
+Namespace:    default
+Created on:   2025-04-28 05:25:42 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=productcatalogservice
+  Allowing ingress traffic:
+    To Port: 3550/TCP
+    From:
+      PodSelector: app=frontend
+    From:
+      PodSelector: app=checkoutservice
+    From:
+      PodSelector: app=recommendationservice
+    ----------
+    To Port: <any> (traffic allowed to all ports)
+    From:
+      PodSelector: app=shippingservice
+    ----------
+    To Port: <any> (traffic allowed to all ports)
+    From:
+      PodSelector: app=emailservice
+  Allowing egress traffic:
+    To Port: <any> (traffic allowed to all ports)
+    To: <any> (traffic not restricted by destination)
+  Policy Types: Ingress, Egress
+
+Mismatch Summary: Mismatch: shippingservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: emailservice → productcatalogservice:3550 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy productcatalogservice -n default -p '{"spec":{"ingress":[{"from":[{"podSelector":{"app":"frontend"}},{"podSelector":{"app":"checkoutservice"}},{"podSelector":{"app":"recommendationservice"}}]}]}}'
+Output: networkpolicy.networking.k8s.io/productcatalogservice patched
+
+Mismatch Summary: Mismatch: adservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: cartservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: shippingservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: emailservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: redis-cart → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: loadgenerator → productcatalogservice:3550 (Expected: False, Actual: True)
+
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: adservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: cartservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: shippingservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: emailservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: redis-cart → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: loadgenerator → productcatalogservice:3550 (Expected: False, Actual: True)
+
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: adservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: cartservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: shippingservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: emailservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: redis-cart → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: loadgenerator → productcatalogservice:3550 (Expected: False, Actual: True)
+
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: adservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: cartservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: shippingservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: emailservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: redis-cart → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: loadgenerator → productcatalogservice:3550 (Expected: False, Actual: True)
+
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: adservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: cartservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: shippingservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: emailservice → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: redis-cart → productcatalogservice:3550 (Expected: False, Actual: True)
+Mismatch: loadgenerator → productcatalogservice:3550 (Expected: False, Actual: True)
+

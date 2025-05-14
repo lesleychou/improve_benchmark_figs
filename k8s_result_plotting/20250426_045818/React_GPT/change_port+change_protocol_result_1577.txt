@@ -1,0 +1,109 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+
+LLM Command: bash
+kubectl get networkpolicy -n frontend -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n checkoutservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+
+LLM Command: bash
+kubectl patch networkpolicy -n frontend --type='json' -p='[{"op": "add", "path": "/spec", "value": {"podSelector": {}, "ingress": [{"from": [{"namespaceSelector": {"matchLabels": {"name": "cartservice"}}}], "ports": [{"protocol": "TCP", "port": 7070}]}]}}]'
+Output: bash: error reading input file: Bad file descriptor
+error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+
+LLM Command: bash
+kubectl apply -n frontend -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-cartservice
+spec:
+  podSelector: {}
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: cartservice
+    ports:
+    - protocol: TCP
+      port: 7070
+EOF
+Output: bash: error reading input file: Bad file descriptor
+error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy allow-cartservice -n frontend --type='merge' -p='{"spec": {"podSelector": {}, "ingress": [{"from": [{"namespaceSelector": {"matchLabels": {"name": "cartservice"}}}], "ports": [{"protocol": "TCP", "port": 7070}]}]}}'
+Output: Error from server (NotFound): namespaces "frontend" not found
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl get namespaces
+Output: NAME                 STATUS   AGE
+default              Active   4h11m
+kube-node-lease      Active   4h11m
+kube-public          Active   4h11m
+kube-system          Active   4h11m
+local-path-storage   Active   4h11m
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl get pods -n default
+Output: NAME                                     READY   STATUS    RESTARTS   AGE
+adservice-597dc59b77-q8dfh               1/1     Running   0          4h8m
+cartservice-577f8d8c75-5lfjl             1/1     Running   0          4h8m
+checkoutservice-55698bfcc5-hrjtk         1/1     Running   0          4h8m
+currencyservice-c5968f8f5-dx7rq          1/1     Running   0          4h8m
+emailservice-6c56b65f6d-fkhwd            1/1     Running   0          4h8m
+frontend-797c8f7758-fkv9r                1/1     Running   0          4h8m
+loadgenerator-6c5b65b44b-wp4z7           1/1     Running   0          4h7m
+paymentservice-76948fc564-dlnrz          1/1     Running   0          4h8m
+productcatalogservice-5f9d5c689b-x9sdp   1/1     Running   0          4h8m
+recommendationservice-67cbb84b7b-c2src   1/1     Running   0          4h8m
+redis-cart-866688457f-zsqdb              1/1     Running   0          4h8m
+shippingservice-9ddf878c7-gr8bc          1/1     Running   0          4h8m
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+
+LLM Command: bash
+kubectl patch networkpolicy allow-cartservice -n default --type='merge' -p='{"spec": {"podSelector": {"matchLabels": {"app": "frontend"}}, "ingress": [{"from": [{"podSelector": {"matchLabels": {"app": "cartservice"}}}], "ports": [{"protocol": "TCP", "port": 7070}]}]}}'
+Output: bash: error reading input file: Bad file descriptor
+Error from server (NotFound): networkpolicies.networking.k8s.io "allow-cartservice" not found
+
+Mismatch Summary: Mismatch: frontend → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+

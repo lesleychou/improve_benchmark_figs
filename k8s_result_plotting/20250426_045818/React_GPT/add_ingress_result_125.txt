@@ -1,0 +1,88 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: cartservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy <frontend-network-policy-name> -n frontend -p '{"spec":{"egress":[{"to":[{"podSelector":{"matchLabels":{"app":"paymentservice"}}}],"ports":[{"port":50051,"protocol":"TCP"}]}]}}'
+Output: /bin/bash: line 1: frontend-network-policy-name: No such file or directory
+
+Mismatch Summary: Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: cartservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n frontend
+Output: 
+Mismatch Summary: Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: cartservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n frontend -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: cartservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy deny-paymentservice -n frontend --type='merge' -p '{"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"name":"deny-paymentservice"},"spec":{"podSelector":{"matchLabels":{"app":"frontend"}},"policyTypes":["Egress"],"egress":[{"to":[{"podSelector":{"matchLabels":{"app":"paymentservice"}}}],"ports":[{"port":50051,"protocol":"TCP"}]}]}}'
+Output: Error from server (NotFound): namespaces "frontend" not found
+
+Mismatch Summary: Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: cartservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get namespaces
+Output: NAME                 STATUS   AGE
+default              Active   104m
+kube-node-lease      Active   104m
+kube-public          Active   104m
+kube-system          Active   104m
+local-path-storage   Active   104m
+
+Mismatch Summary: Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: cartservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get namespaces
+Output: NAME                 STATUS   AGE
+default              Active   105m
+kube-node-lease      Active   105m
+kube-public          Active   105m
+kube-system          Active   105m
+local-path-storage   Active   104m
+
+Mismatch Summary: Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: cartservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods --all-namespaces
+Output: NAMESPACE            NAME                                         READY   STATUS    RESTARTS   AGE
+default              adservice-7c7687ff5b-fbq2s                   1/1     Running   0          102m
+default              cartservice-7c8966d6fd-c8rb4                 1/1     Running   0          102m
+default              checkoutservice-769b8ff7b8-jxzrv             1/1     Running   0          102m
+default              currencyservice-578dcb55f6-bdvtr             1/1     Running   0          102m
+default              emailservice-d5d54d4fc-lksfn                 1/1     Running   0          102m
+default              frontend-7ffbffc6f7-9hb4b                    1/1     Running   0          102m
+default              loadgenerator-7d9cfb7cb9-9zjhk               1/1     Running   0          101m
+default              paymentservice-b67c65d9c-ztkqg               1/1     Running   0          102m
+default              productcatalogservice-5f94b6cd47-lk6vh       1/1     Running   0          102m
+default              recommendationservice-c468b6867-pcbbn        1/1     Running   0          102m
+default              redis-cart-5b6f47b748-9rgzw                  1/1     Running   0          102m
+default              shippingservice-f6bc4cd5d-69r7d              1/1     Running   0          102m
+kube-system          coredns-668d6bf9bc-g5z8v                     1/1     Running   0          104m
+kube-system          coredns-668d6bf9bc-l2w7d                     1/1     Running   0          104m
+kube-system          etcd-kind-control-plane                      1/1     Running   0          105m
+kube-system          kindnet-g596l                                1/1     Running   0          104m
+kube-system          kube-apiserver-kind-control-plane            1/1     Running   0          105m
+kube-system          kube-controller-manager-kind-control-plane   1/1     Running   0          105m
+kube-system          kube-proxy-48f5g                             1/1     Running   0          104m
+kube-system          kube-scheduler-kind-control-plane            1/1     Running   0          105m
+local-path-storage   local-path-provisioner-58cc7856b6-nfdzv      1/1     Running   0          104m
+
+Mismatch Summary: Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: cartservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy deny-paymentservice -n default --type='merge' -p '{"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"name":"deny-paymentservice"},"spec":{"podSelector":{"matchLabels":{"app":"frontend"}},"policyTypes":["Egress"],"egress":[{"to":[{"podSelector":{"matchLabels":{"app":"paymentservice"}}}],"ports":[{"port":50051,"protocol":"TCP"}]}]}}
+Output: /bin/bash: -c: line 1: unexpected EOF while looking for matching `''
+/bin/bash: -c: line 2: syntax error: unexpected end of file
+
+Mismatch Summary: Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: cartservice → paymentservice:50051 (Expected: False, Actual: True)
+

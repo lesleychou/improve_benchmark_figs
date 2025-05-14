@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "NAME                  POD-SELECTOR   INGRESS   EGRESS   POLICYTYPES\n          frontend-policy       app=frontend   true      false    Ingress\n          checkout-policy       app=checkout   true      false    Ingress\n          recommendation-policy app=recommendation true   false    Ingress\n          cart-policy           app=cart       true      false    Ingress\n          redis-cache-policy    app=redis-cache true     false    Ingress",
+        "output": "/bin/bash: line 1: NAME: command not found\n/bin/bash: line 2: frontend-policy: command not found\n/bin/bash: line 3: checkout-policy: command not found\n/bin/bash: line 4: recommendation-policy: command not found\n/bin/bash: line 5: cart-policy: command not found\n/bin/bash: line 6: redis-cache-policy: command not found\n",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n default",
+        "output": "NAME                    POD-SELECTOR                AGE\nadservice               app=adservice               3d13h\ncart-policy             app=cart                    2d7h\ncartservice             app=cartservice             3d13h\ncheckoutservice         app=checkoutservice         3d13h\ncurrencyservice         app=currencyservice         3d13h\nemailservice            app=emailservice            3d13h\nfrontend                app=frontend                3d13h\nloadgenerator           app=loadgenerator           3d13h\npaymentservice          app=paymentservice          3d13h\nproductcatalogservice   app=productcatalogservice   3d13h\nrecommendationservice   app=recommendationservice   3d13h\nredis-cart              app=redis-cart              3d13h\nshippingservice         app=shippingservice         3d13h\n",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy emailservice -n default -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"emailservice\",\"namespace\":\"default\"},\"spec\":{\"egress\":[{}],\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"checkoutservice\"}}}],\"ports\":[{\"port\":8080,\"protocol\":\"SCTP\"}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"emailservice\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n  creationTimestamp: \"2025-04-28T05:25:42Z\"\n  generation: 412\n  name: emailservice\n  namespace: default\n  resourceVersion: \"401405\"\n  uid: 9053d491-09cd-418c-aa3a-6fc55ecfb217\nspec:\n  egress:\n  - {}\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: checkoutservice\n    ports:\n    - port: 8080\n      protocol: SCTP\n  podSelector:\n    matchLabels:\n      app: emailservice\n  policyTypes:\n  - Ingress\n  - Egress\n",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy emailservice -n default -p '{\"spec\": {\"ingress\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"checkoutservice\"}}}], \"ports\": [{\"port\": 5000, \"protocol\": \"TCP\"}]}]}}'",
+        "output": "networkpolicy.networking.k8s.io/emailservice patched\n",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)"
+    }
+]

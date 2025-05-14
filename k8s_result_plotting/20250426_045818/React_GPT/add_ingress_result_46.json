@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend",
+        "output": "",
+        "mismatch_summary": "Mismatch: cartservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n cartservice -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy deny-currency-access -n cartservice --type='merge' -p '{\"spec\":{\"podSelector\":{},\"policyTypes\":[\"Egress\"],\"egress\":[{\"to\":[{\"namespaceSelector\":{\"matchLabels\":{\"name\":\"currencyservice\"}}}],\"ports\":[{\"port\":7000,\"protocol\":\"TCP\"}]}]}}'",
+        "output": "Error from server (NotFound): namespaces \"cartservice\" not found\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\ndefault              Active   41m\nkube-node-lease      Active   41m\nkube-public          Active   41m\nkube-system          Active   41m\nlocal-path-storage   Active   41m\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get pods --all-namespaces | grep -E 'cartservice|emailservice'",
+        "output": "default              cartservice-7c8966d6fd-c8rb4                 1/1     Running   0          38m\ndefault              emailservice-d5d54d4fc-lksfn                 1/1     Running   0          38m\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n default",
+        "output": "NAME                    POD-SELECTOR                AGE\nadservice               app=adservice               37m\ncartservice             app=cartservice             37m\ncheckoutservice         app=checkoutservice         37m\ncurrencyservice         app=currencyservice         37m\nemailservice            app=emailservice            37m\nfrontend                app=frontend                37m\nloadgenerator           app=loadgenerator           37m\npaymentservice          app=paymentservice          37m\nproductcatalogservice   app=productcatalogservice   37m\nrecommendationservice   app=recommendationservice   37m\nredis-cart              app=redis-cart              37m\nshippingservice         app=shippingservice         37m\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy cartservice -n default -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"cartservice\",\"namespace\":\"default\"},\"spec\":{\"egress\":[{}],\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"checkoutservice\"}}}],\"ports\":[{\"port\":7070,\"protocol\":\"TCP\"}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"cartservice\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n  creationTimestamp: \"2025-05-07T16:33:45Z\"\n  generation: 20\n  name: cartservice\n  namespace: default\n  resourceVersion: \"4103\"\n  uid: 4d84a894-3a45-4049-9e7b-cc68eaff1fc6\nspec:\n  egress:\n  - {}\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    - podSelector:\n        matchLabels:\n          app: checkoutservice\n    ports:\n    - port: 7070\n      protocol: TCP\n  podSelector:\n    matchLabels:\n      app: cartservice\n  policyTypes:\n  - Ingress\n  - Egress\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy cartservice -n default --type='merge' -p '{\"spec\":{\"egress\":[{\"to\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"currencyservice\"}}}],\"ports\":[{\"port\":7000,\"protocol\":\"TCP\"}]}]}}'",
+        "output": "networkpolicy.networking.k8s.io/cartservice patched\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: emailservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy cartservice -n default --type='merge' -p '{\"spec\":{\"egress\":[{\"to\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"redis-cart\"}}}],\"ports\":[{\"port\":6379,\"protocol\":\"TCP\"}]}]}}",
+        "output": "/bin/bash: -c: line 1: unexpected EOF while looking for matching `''\n/bin/bash: -c: line 2: syntax error: unexpected end of file\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)\nMismatch: emailservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    }
+]

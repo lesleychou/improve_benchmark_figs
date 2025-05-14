@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend",
+        "output": "",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy deny-shipping-email-to-cart -n cartservice --type='merge' -p '{\"spec\":{\"podSelector\":{\"matchLabels\":{\"app\":\"cartservice\"}},\"policyTypes\":[\"Ingress\"],\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"shippingservice\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"emailservice\"}}}],\"ports\":[{\"port\":7070,\"protocol\":\"TCP\"}]}]}}'",
+        "output": "Error from server (NotFound): namespaces \"cartservice\" not found\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\ndefault              Active   67m\nkube-node-lease      Active   67m\nkube-public          Active   67m\nkube-system          Active   67m\nlocal-path-storage   Active   67m\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get pods --all-namespaces",
+        "output": "NAMESPACE            NAME                                         READY   STATUS    RESTARTS   AGE\ndefault              adservice-7c7687ff5b-fbq2s                   1/1     Running   0          64m\ndefault              cartservice-7c8966d6fd-c8rb4                 1/1     Running   0          64m\ndefault              checkoutservice-769b8ff7b8-jxzrv             1/1     Running   0          64m\ndefault              currencyservice-578dcb55f6-bdvtr             1/1     Running   0          64m\ndefault              emailservice-d5d54d4fc-lksfn                 1/1     Running   0          64m\ndefault              frontend-7ffbffc6f7-9hb4b                    1/1     Running   0          64m\ndefault              loadgenerator-7d9cfb7cb9-9zjhk               1/1     Running   0          63m\ndefault              paymentservice-b67c65d9c-ztkqg               1/1     Running   0          64m\ndefault              productcatalogservice-5f94b6cd47-lk6vh       1/1     Running   0          64m\ndefault              recommendationservice-c468b6867-pcbbn        1/1     Running   0          64m\ndefault              redis-cart-5b6f47b748-9rgzw                  1/1     Running   0          64m\ndefault              shippingservice-f6bc4cd5d-69r7d              1/1     Running   0          64m\nkube-system          coredns-668d6bf9bc-g5z8v                     1/1     Running   0          67m\nkube-system          coredns-668d6bf9bc-l2w7d                     1/1     Running   0          67m\nkube-system          etcd-kind-control-plane                      1/1     Running   0          67m\nkube-system          kindnet-g596l                                1/1     Running   0          67m\nkube-system          kube-apiserver-kind-control-plane            1/1     Running   0          67m\nkube-system          kube-controller-manager-kind-control-plane   1/1     Running   0          67m\nkube-system          kube-proxy-48f5g                             1/1     Running   0          67m\nkube-system          kube-scheduler-kind-control-plane            1/1     Running   0          67m\nlocal-path-storage   local-path-provisioner-58cc7856b6-nfdzv      1/1     Running   0          67m\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy deny-shipping-email-to-cart -n default --type='merge' -p '{\"spec\":{\"podSelector\":{\"matchLabels\":{\"app\":\"cartservice\"}},\"policyTypes\":[\"Ingress\"],\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"shippingservice\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"emailservice\"}}}],\"ports\":[{\"port\":7070,\"protocol\":\"TCP\"}]}]}}'",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"deny-shipping-email-to-cart\" not found\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl apply -n default -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: deny-shipping-email-to-cart\n  namespace: default\nspec:\n  podSelector:\n    matchLabels:\n      app: cartservice\n  policyTypes:\n  - Ingress\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: shippingservice\n    - podSelector:\n        matchLabels:\n          app: emailservice\n    ports:\n    - port: 7070\n      protocol: TCP\nEOF",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"deny-shipping-email-to-cart\" not found\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl apply -n default -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: deny-shipping-email-to-cart\n  namespace: default\nspec:\n  podSelector:\n    matchLabels:\n      app: cartservice\n  policyTypes:\n  - Ingress\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: shippingservice\n    - podSelector:\n        matchLabels:\n          app: emailservice\n    ports:\n    - port: 7070\n      protocol: TCP\nEOF",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"deny-shipping-email-to-cart\" not found\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl apply -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: deny-shipping-email-to-cart\n  namespace: default\nspec:\n  podSelector:\n    matchLabels:\n      app: cartservice\n  policyTypes:\n  - Ingress\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: shippingservice\n    - podSelector:\n        matchLabels:\n          app: emailservice\n    ports:\n    - port: 7070\n      protocol: TCP\nEOF",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"deny-shipping-email-to-cart\" not found\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 cartservice:7070 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 cartservice:7070 (Expected: False, Actual: True)"
+    }
+]

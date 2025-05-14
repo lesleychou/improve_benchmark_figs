@@ -1,0 +1,88 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: frontend → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: recommendationservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy emailservice-deny-frontend -n emailservice --type='merge' -p '{"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"emailservice"}}}]}]}}'
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "emailservice-deny-frontend" not found
+
+Mismatch Summary: Mismatch: frontend → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: recommendationservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy emailservice-deny-frontend -n emailservice --type='merge' -p '{"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"name":"emailservice-deny-frontend"},"spec":{"podSelector":{"matchLabels":{"app":"emailservice"}},"policyTypes":["Ingress"],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"emailservice"}}}]}]}}'
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "emailservice-deny-frontend" not found
+
+Mismatch Summary: Mismatch: frontend → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: recommendationservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: emailservice-deny-frontend
+  namespace: emailservice
+spec:
+  podSelector:
+    matchLabels:
+      app: emailservice
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: emailservice
+EOF
+Output: networkpolicy.networking.k8s.io/emailservice-deny-frontend created
+
+Mismatch Summary: Mismatch: frontend → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: recommendationservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy emailservice-deny-frontend -n emailservice --type='merge' -p '{"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}]}]}}'
+Output: networkpolicy.networking.k8s.io/emailservice-deny-frontend patched
+
+Mismatch Summary: Mismatch: frontend → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: recommendationservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy emailservice-deny-frontend -n emailservice --type='merge' -p '{"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}},{"podSelector":{"matchLabels":{"app":"recommendationservice"}}}]}]}}'
+Output: networkpolicy.networking.k8s.io/emailservice-deny-frontend patched
+
+Mismatch Summary: Mismatch: frontend → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: recommendationservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy emailservice-deny-frontend -n emailservice --type='merge' -p '{"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"emailservice"}}}]}]}}'
+Output: networkpolicy.networking.k8s.io/emailservice-deny-frontend patched
+
+Mismatch Summary: Mismatch: frontend → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: recommendationservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy emailservice-deny-frontend -n emailservice --type='merge' -p '{"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"emailservice"}}}]}]}}'
+Output: networkpolicy.networking.k8s.io/emailservice-deny-frontend patched (no change)
+
+Mismatch Summary: Mismatch: frontend → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: recommendationservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy emailservice-deny-frontend -n emailservice --type='merge' -p '{"spec":{"ingress":[{"from":[]}]}}'
+Output: networkpolicy.networking.k8s.io/emailservice-deny-frontend patched
+
+Mismatch Summary: Mismatch: frontend → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: recommendationservice → emailservice:5000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+

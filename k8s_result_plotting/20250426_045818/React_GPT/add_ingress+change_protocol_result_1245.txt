@@ -1,0 +1,90 @@
+LLM Command: kubectl get networkpolicy -n user
+Output: 
+Mismatch Summary: Mismatch: adservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n checkoutservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: adservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n adservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: adservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy -n adservice --type='merge' -p '{"spec":{"ingress":[{"from":[{"namespaceSelector":{"matchLabels":{"name":"redis-cart"}}}],"ports":[{"port":6379,"protocol":"TCP"}]}]}}'
+Output: error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: adservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n adservice
+Output: 
+Mismatch Summary: Mismatch: adservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -n adservice -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-redis-cart-access
+spec:
+  podSelector: {}
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          name: redis-cart
+    ports:
+    - port: 6379
+      protocol: TCP
+EOF
+Output: 
+Mismatch Summary: Mismatch: adservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl get namespace redis-cart --show-labels
+Output: Error from server (NotFound): namespaces "redis-cart" not found
+
+Mismatch Summary: Mismatch: adservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl get namespace --show-labels
+Output: NAME                 STATUS   AGE   LABELS
+default              Active   19h   kubernetes.io/metadata.name=default
+kube-node-lease      Active   19h   kubernetes.io/metadata.name=kube-node-lease
+kube-public          Active   19h   kubernetes.io/metadata.name=kube-public
+kube-system          Active   19h   kubernetes.io/metadata.name=kube-system
+local-path-storage   Active   19h   kubernetes.io/metadata.name=local-path-storage
+
+Mismatch Summary: Mismatch: adservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubernetes redis-cart namespace
+Output: /bin/bash: line 1: kubernetes: command not found
+
+Mismatch Summary: Mismatch: adservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → redis-cart:6379 (Expected: False, Actual: True)
+

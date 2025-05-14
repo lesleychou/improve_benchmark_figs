@@ -1,0 +1,150 @@
+LLM Command: kubectl get networkpolicy -n frontend
+Output: 
+Mismatch Summary: Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy <networkpolicy-name> -n checkoutservice --type=json -p '[{"op": "remove", "path": "/spec/ingress/0/from"}]'
+Output: /bin/bash: line 1: networkpolicy-name: No such file or directory
+
+Mismatch Summary: Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n checkoutservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n adservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy deny-ad-shipping -n checkoutservice --type=json -p '[{
+  "op": "add",
+  "path": "/spec",
+  "value": {
+    "podSelector": {},
+    "policyTypes": ["Ingress"],
+    "ingress": [
+      {
+        "from": [
+          {
+            "namespaceSelector": {
+              "matchLabels": {
+                "name": "adservice"
+              }
+            }
+          },
+          {
+            "namespaceSelector": {
+              "matchLabels": {
+                "name": "shippingservice"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}]'
+Output: Error from server (NotFound): namespaces "checkoutservice" not found
+
+Mismatch Summary: Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get namespaces --show-labels
+Output: NAME                 STATUS   AGE    LABELS
+default              Active   103m   kubernetes.io/metadata.name=default
+kube-node-lease      Active   103m   kubernetes.io/metadata.name=kube-node-lease
+kube-public          Active   103m   kubernetes.io/metadata.name=kube-public
+kube-system          Active   103m   kubernetes.io/metadata.name=kube-system
+local-path-storage   Active   103m   kubernetes.io/metadata.name=local-path-storage
+
+Mismatch Summary: Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get namespaces
+Output: NAME                 STATUS   AGE
+default              Active   103m
+kube-node-lease      Active   103m
+kube-public          Active   103m
+kube-system          Active   103m
+local-path-storage   Active   103m
+
+Mismatch Summary: Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods --all-namespaces
+Output: NAMESPACE            NAME                                         READY   STATUS    RESTARTS   AGE
+default              adservice-7c7687ff5b-fbq2s                   1/1     Running   0          100m
+default              cartservice-7c8966d6fd-c8rb4                 1/1     Running   0          100m
+default              checkoutservice-769b8ff7b8-jxzrv             1/1     Running   0          100m
+default              currencyservice-578dcb55f6-bdvtr             1/1     Running   0          100m
+default              emailservice-d5d54d4fc-lksfn                 1/1     Running   0          100m
+default              frontend-7ffbffc6f7-9hb4b                    1/1     Running   0          100m
+default              loadgenerator-7d9cfb7cb9-9zjhk               1/1     Running   0          100m
+default              paymentservice-b67c65d9c-ztkqg               1/1     Running   0          100m
+default              productcatalogservice-5f94b6cd47-lk6vh       1/1     Running   0          100m
+default              recommendationservice-c468b6867-pcbbn        1/1     Running   0          100m
+default              redis-cart-5b6f47b748-9rgzw                  1/1     Running   0          100m
+default              shippingservice-f6bc4cd5d-69r7d              1/1     Running   0          100m
+kube-system          coredns-668d6bf9bc-g5z8v                     1/1     Running   0          103m
+kube-system          coredns-668d6bf9bc-l2w7d                     1/1     Running   0          103m
+kube-system          etcd-kind-control-plane                      1/1     Running   0          103m
+kube-system          kindnet-g596l                                1/1     Running   0          103m
+kube-system          kube-apiserver-kind-control-plane            1/1     Running   0          103m
+kube-system          kube-controller-manager-kind-control-plane   1/1     Running   0          103m
+kube-system          kube-proxy-48f5g                             1/1     Running   0          103m
+kube-system          kube-scheduler-kind-control-plane            1/1     Running   0          103m
+local-path-storage   local-path-provisioner-58cc7856b6-nfdzv      1/1     Running   0          103m
+
+Mismatch Summary: Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy deny-ad-shipping -n default --type=json -p '[{
+  "op": "add",
+  "path": "/spec",
+  "value": {
+    "podSelector": {
+      "matchLabels": {
+        "app": "checkoutservice"
+      }
+    },
+    "policyTypes": ["Ingress"],
+    "ingress": [
+      {
+        "from": [
+          {
+            "podSelector": {
+              "matchLabels": {
+                "app": "adservice"
+              }
+            }
+          },
+          {
+            "podSelector": {
+              "matchLabels": {
+                "app": "shippingservice"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}]'
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "deny-ad-shipping" not found
+
+Mismatch Summary: Mismatch: adservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+

@@ -1,0 +1,90 @@
+LLM Command: python
+"kubectl get networkpolicy -n frontend"
+Output: /bin/bash: line 2: kubectl get networkpolicy -n frontend: command not found
+
+Mismatch Summary: Mismatch: checkoutservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: shippingservice → recommendationservice:8080 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n checkoutservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: checkoutservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: shippingservice → recommendationservice:8080 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy -n checkoutservice --type='merge' -p '{"apiVersion": "networking.k8s.io/v1", "kind": "NetworkPolicy", "metadata": {"name": "checkoutservice-policy"}, "spec": {"podSelector": {}, "policyTypes": ["Ingress"], "ingress": [{"from": [{"namespaceSelector": {"matchLabels": {"name": "paymentservice"}}}], "ports": [{"port": 50051, "protocol": "TCP"}]}]}}'
+Output: error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: checkoutservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: shippingservice → recommendationservice:8080 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -n checkoutservice -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: checkoutservice-policy
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: paymentservice
+    ports:
+    - port: 50051
+      protocol: TCP
+EOF
+Output: error: resource(s) were provided, but no name was specified
+
+Mismatch Summary: Mismatch: checkoutservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: shippingservice → recommendationservice:8080 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy checkoutservice-policy -n checkoutservice --type='merge' -p '{"spec": {"ingress": [{"from": [{"namespaceSelector": {"matchLabels": {"name": "paymentservice"}}}], "ports": [{"port": 50051, "protocol": "TCP"}]}]}}'
+Output: Error from server (NotFound): namespaces "checkoutservice" not found
+
+Mismatch Summary: Mismatch: checkoutservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: shippingservice → recommendationservice:8080 (Expected: False, Actual: True)
+
+LLM Command: kubectl get namespaces
+Output: NAME                 STATUS   AGE
+default              Active   16h
+kube-node-lease      Active   16h
+kube-public          Active   16h
+kube-system          Active   16h
+local-path-storage   Active   16h
+
+Mismatch Summary: Mismatch: checkoutservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: shippingservice → recommendationservice:8080 (Expected: False, Actual: True)
+
+LLM Command: kubernetes microservices architecture namespace checkoutservice
+Output: /bin/bash: line 1: kubernetes: command not found
+
+Mismatch Summary: Mismatch: checkoutservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: shippingservice → recommendationservice:8080 (Expected: False, Actual: True)
+
+LLM Command: kubernetes microservices architecture namespace checkoutservice
+Output: /bin/bash: line 1: kubernetes: command not found
+
+Mismatch Summary: Mismatch: checkoutservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: shippingservice → recommendationservice:8080 (Expected: False, Actual: True)
+
+LLM Command: checkoutservice namespace in Kubernetes microservices architecture
+Output: /bin/bash: line 1: checkoutservice: command not found
+
+Mismatch Summary: Mismatch: checkoutservice → recommendationservice:8080 (Expected: False, Actual: True)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: shippingservice → recommendationservice:8080 (Expected: False, Actual: True)
+

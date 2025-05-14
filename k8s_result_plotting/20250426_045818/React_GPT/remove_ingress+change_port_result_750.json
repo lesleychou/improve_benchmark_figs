@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy <networkpolicy-name> -n frontend --type=json -p '[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"cartservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 7070, \"protocol\": \"TCP\"}}]'",
+        "output": "/bin/bash: line 1: networkpolicy-name: No such file or directory\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend -o json",
+        "output": "{\n    \"apiVersion\": \"v1\",\n    \"items\": [],\n    \"kind\": \"List\",\n    \"metadata\": {\n        \"resourceVersion\": \"\"\n    }\n}\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy frontend-policy -n frontend --type=json -p '[{\"op\": \"add\", \"path\": \"/spec/ingress\", \"value\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"cartservice\"}}}], \"ports\": [{\"port\": 7070, \"protocol\": \"TCP\"}]}]}]'",
+        "output": "Error from server (NotFound): namespaces \"frontend\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\ndefault              Active   10h\nkube-node-lease      Active   10h\nkube-public          Active   10h\nkube-system          Active   10h\nlocal-path-storage   Active   10h\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get services -n default",
+        "output": "NAME                    TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE\nadservice               ClusterIP      10.96.182.150   <none>        9555/TCP       10h\ncartservice             ClusterIP      10.96.134.110   <none>        7070/TCP       10h\ncheckoutservice         ClusterIP      10.96.50.97     <none>        5050/TCP       10h\ncurrencyservice         ClusterIP      10.96.113.81    <none>        7000/TCP       10h\nemailservice            ClusterIP      10.96.164.48    <none>        5000/TCP       10h\nfrontend                ClusterIP      10.96.210.18    <none>        80/TCP         10h\nfrontend-external       LoadBalancer   10.96.205.66    <pending>     80:32110/TCP   10h\nkubernetes              ClusterIP      10.96.0.1       <none>        443/TCP        10h\npaymentservice          ClusterIP      10.96.159.123   <none>        50051/TCP      10h\nproductcatalogservice   ClusterIP      10.96.239.23    <none>        3550/TCP       10h\nrecommendationservice   ClusterIP      10.96.134.174   <none>        8080/TCP       10h\nredis-cart              ClusterIP      10.96.111.32    <none>        6379/TCP       10h\nshippingservice         ClusterIP      10.96.206.53    <none>        50051/TCP      10h\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n default",
+        "output": "NAME                    POD-SELECTOR                AGE\nadservice               app=adservice               10h\ncartservice             app=cartservice             10h\ncheckoutservice         app=checkoutservice         10h\ncurrencyservice         app=currencyservice         10h\nemailservice            app=emailservice            10h\nfrontend                app=frontend                10h\nloadgenerator           app=loadgenerator           10h\npaymentservice          app=paymentservice          10h\nproductcatalogservice   app=productcatalogservice   10h\nrecommendationservice   app=recommendationservice   10h\nredis-cart              app=redis-cart              10h\nshippingservice         app=shippingservice         10h\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 cartservice:7070 (Expected: True, Actual: False)\nMismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 cartservice:7070 (Expected: True, Actual: False)"
+    }
+]

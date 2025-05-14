@@ -1,0 +1,207 @@
+LLM Command: kubectl get networkpolicy -A
+Output: NAMESPACE   NAME                    POD-SELECTOR                AGE
+default     adservice               app=adservice               145m
+default     cartservice             app=cartservice             145m
+default     checkoutservice         app=checkoutservice         145m
+default     currencyservice         app=currencyservice         145m
+default     emailservice            app=emailservice            145m
+default     frontend                app=frontend                145m
+default     loadgenerator           app=loadgenerator           145m
+default     paymentservice          app=paymentservice          145m
+default     productcatalogservice   app=productcatalogservice   145m
+default     recommendationservice   app=recommendationservice   145m
+default     redis-cart              app=redis-cart              145m
+default     shippingservice         app=shippingservice         145m
+
+Mismatch Summary: Mismatch: productcatalogservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: recommendationservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy shippingservice -n default --type=json -p '[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "productcatalogservice"}}}}, {"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "recommendationservice"}}}}, {"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 50051, "protocol": "TCP"}}]'
+Output: networkpolicy.networking.k8s.io/shippingservice patched
+
+Mismatch Summary: Mismatch: productcatalogservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: recommendationservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy shippingservice -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"shippingservice","namespace":"default"},"spec":{"egress":[{}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}},{"podSelector":{"matchLabels":{"app":"checkoutservice"}}}],"ports":[{"port":50051,"protocol":"TCP"}]},{"from":[{"podSelector":{"matchLabels":{"app":"productcatalogservice"}}}]},{"from":[{"podSelector":{"matchLabels":{"app":"recommendationservice"}}}]}],"podSelector":{"matchLabels":{"app":"shippingservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-05-07T16:33:47Z"
+  generation: 65
+  name: shippingservice
+  namespace: default
+  resourceVersion: "12857"
+  uid: 54ee9d2b-adbf-43e9-8f41-f94ca8e77e34
+spec:
+  egress:
+  - {}
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+    - podSelector:
+        matchLabels:
+          app: productcatalogservice
+    - podSelector:
+        matchLabels:
+          app: recommendationservice
+    ports:
+    - port: 50051
+      protocol: TCP
+    - port: 50051
+      protocol: TCP
+  - from:
+    - podSelector:
+        matchLabels:
+          app: productcatalogservice
+  - from:
+    - podSelector:
+        matchLabels:
+          app: recommendationservice
+  podSelector:
+    matchLabels:
+      app: shippingservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: productcatalogservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: recommendationservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy shippingservice -n default --type=json -p '[{"op": "remove", "path": "/spec/ingress/0/from/2"}, {"op": "remove", "path": "/spec/ingress/0/from/3"}]'
+Output: The request is invalid: the server rejected our request due to an error in our request
+
+Mismatch Summary: Mismatch: productcatalogservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: recommendationservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy shippingservice -n default --type=json -p '[{"op": "remove", "path": "/spec/ingress/0/from/2"}, {"op": "remove", "path": "/spec/ingress/0/from/3"}]'
+Output: The request is invalid: the server rejected our request due to an error in our request
+
+Mismatch Summary: Mismatch: productcatalogservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: recommendationservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy shippingservice -n default --type=json -p '[{"op": "remove", "path": "/spec/ingress/1"}, {"op": "remove", "path": "/spec/ingress/2"}]'
+Output: The request is invalid: the server rejected our request due to an error in our request
+
+Mismatch Summary: Mismatch: productcatalogservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: recommendationservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy shippingservice -n default --type=json -p '[{"op": "remove", "path": "/spec/ingress/1"}, {"op": "remove", "path": "/spec/ingress/2"}]'
+Output: The request is invalid: the server rejected our request due to an error in our request
+
+Mismatch Summary: Mismatch: productcatalogservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: recommendationservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy shippingservice -n default -o json
+Output: {
+    "apiVersion": "networking.k8s.io/v1",
+    "kind": "NetworkPolicy",
+    "metadata": {
+        "annotations": {
+            "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"shippingservice\",\"namespace\":\"default\"},\"spec\":{\"egress\":[{}],\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}}},{\"podSelector\":{\"matchLabels\":{\"app\":\"checkoutservice\"}}}],\"ports\":[{\"port\":50051,\"protocol\":\"TCP\"}]},{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"productcatalogservice\"}}}]},{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"recommendationservice\"}}}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"shippingservice\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n"
+        },
+        "creationTimestamp": "2025-05-07T16:33:47Z",
+        "generation": 65,
+        "name": "shippingservice",
+        "namespace": "default",
+        "resourceVersion": "12857",
+        "uid": "54ee9d2b-adbf-43e9-8f41-f94ca8e77e34"
+    },
+    "spec": {
+        "egress": [
+            {}
+        ],
+        "ingress": [
+            {
+                "from": [
+                    {
+                        "podSelector": {
+                            "matchLabels": {
+                                "app": "frontend"
+                            }
+                        }
+                    },
+                    {
+                        "podSelector": {
+                            "matchLabels": {
+                                "app": "checkoutservice"
+                            }
+                        }
+                    },
+                    {
+                        "podSelector": {
+                            "matchLabels": {
+                                "app": "productcatalogservice"
+                            }
+                        }
+                    },
+                    {
+                        "podSelector": {
+                            "matchLabels": {
+                                "app": "recommendationservice"
+                            }
+                        }
+                    }
+                ],
+                "ports": [
+                    {
+                        "port": 50051,
+                        "protocol": "TCP"
+                    },
+                    {
+                        "port": 50051,
+                        "protocol": "TCP"
+                    }
+                ]
+            },
+            {
+                "from": [
+                    {
+                        "podSelector": {
+                            "matchLabels": {
+                                "app": "productcatalogservice"
+                            }
+                        }
+                    }
+                ]
+            },
+            {
+                "from": [
+                    {
+                        "podSelector": {
+                            "matchLabels": {
+                                "app": "recommendationservice"
+                            }
+                        }
+                    }
+                ]
+            }
+        ],
+        "podSelector": {
+            "matchLabels": {
+                "app": "shippingservice"
+            }
+        },
+        "policyTypes": [
+            "Ingress",
+            "Egress"
+        ]
+    }
+}
+
+Mismatch Summary: Mismatch: productcatalogservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: recommendationservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy shippingservice -n default --type=json -p '[{"op": "remove", "path": "/spec/ingress/1"}, {"op": "remove", "path": "/spec/ingress/2"}]'
+Output: The request is invalid: the server rejected our request due to an error in our request
+
+Mismatch Summary: Mismatch: productcatalogservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: recommendationservice → shippingservice:50051 (Expected: False, Actual: True)
+

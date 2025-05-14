@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: cartservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy deny-cart-to-payment -n paymentservice --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"cartservice\"}}}}]'",
+        "output": "Error from server (NotFound): namespaces \"paymentservice\" not found\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                    STATUS   AGE\nadservice               Active   24m\ncartservice             Active   15m\ncheckoutservice         Active   20m\ncurrencyservice         Active   3m28s\ndefault                 Active   35m\nemailservice            Active   19m\nkube-node-lease         Active   35m\nkube-public             Active   35m\nkube-system             Active   35m\nlocal-path-storage      Active   35m\nproductcatalogservice   Active   4m36s\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get pods --all-namespaces | grep paymentservice",
+        "output": "default              paymentservice-7dc8859fb8-vnwl8              1/1     Running   0          32m\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy deny-cart-to-payment -n default --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"cartservice\"}}}}]'",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"deny-cart-to-payment\" not found\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl apply -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: deny-cart-to-payment\n  namespace: default\nspec:\n  podSelector:\n    matchLabels:\n      app: paymentservice\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: cartservice\n    ports:\n    - protocol: TCP\n      port: 50051\nEOF",
+        "output": "networkpolicy.networking.k8s.io/deny-cart-to-payment created\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "`\nkubectl patch networkpolicy deny-cart-to-payment -n default --type='json' -p='[{\"op\": \"replace\", \"path\": \"/spec/ingress\", \"value\": []}]'",
+        "output": "/bin/bash: -c: line 1: unexpected EOF while looking for matching ``'\n/bin/bash: -c: line 3: syntax error: unexpected end of file\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl apply -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: deny-cart-to-payment\n  namespace: default\nspec:\n  podSelector:\n    matchLabels:\n      app: paymentservice\n  ingress: []\nEOF",
+        "output": "networkpolicy.networking.k8s.io/deny-cart-to-payment configured\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl apply -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: deny-cart-to-payment\n  namespace: default\nspec:\n  podSelector:\n    matchLabels:\n      app: paymentservice\n  ingress:\n    - from:\n        - podSelector:\n            matchLabels:\n              app: cartservice\n      ports:\n        - protocol: TCP\n          port: 50051\nEOF",
+        "output": "networkpolicy.networking.k8s.io/deny-cart-to-payment configured\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    }
+]

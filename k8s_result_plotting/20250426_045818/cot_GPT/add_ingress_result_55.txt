@@ -1,0 +1,137 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: cartservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy paymentservice --namespace=paymentservice -p '{"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"checkoutservice"}}},{"podSelector":{"matchLabels":{"app":"shippingservice"}}},{"podSelector":{"matchLabels":{"app":"emailservice"}}},{"podSelector":{"matchLabels":{"app":"currencyservice"}}}],"ports":[{"port":50051}]}]}}'
+Output: Error from server (NotFound): namespaces "paymentservice" not found
+
+Mismatch Summary: Mismatch: cartservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get namespaces
+Output: NAME                    STATUS   AGE
+adservice               Active   27m
+cartservice             Active   17m
+checkoutservice         Active   22m
+currencyservice         Active   6m10s
+default                 Active   38m
+emailservice            Active   22m
+kube-node-lease         Active   38m
+kube-public             Active   38m
+kube-system             Active   38m
+local-path-storage      Active   37m
+productcatalogservice   Active   7m18s
+
+Mismatch Summary: Mismatch: cartservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy --namespace=cartservice
+Output: NAME                  POD-SELECTOR      AGE
+allow-cart-to-redis   <none>            17m
+cartservice-policy    app=cartservice   5m5s
+
+Mismatch Summary: Mismatch: cartservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy --all-namespaces
+Output: NAMESPACE               NAME                               POD-SELECTOR                AGE
+adservice               adservice-policy                   app=adservice               8m42s
+adservice               allow-frontend-access              app=adservice               27m
+cartservice             allow-cart-to-redis                <none>                      17m
+cartservice             cartservice-policy                 app=cartservice             5m9s
+checkoutservice         allow-emailservice                 <none>                      22m
+checkoutservice         checkoutservice                    app=checkoutservice         22m
+default                 adservice                          app=adservice               34m
+default                 allow-checkout-to-email            app=checkoutservice         23m
+default                 allow-currency-ingress             app=currencyservice         29m
+default                 allow-frontend-checkout            app=shippingservice         31m
+default                 allow-frontend-checkout-to-cart    app=cartservice             26m
+default                 allow-frontend-to-recommendation   app=recommendationservice   19m
+default                 allow-productcatalog-access        app=productcatalogservice   32m
+default                 cartservice                        app=cartservice             34m
+default                 checkoutservice                    app=checkoutservice         34m
+default                 checkoutservice-policy             app=checkoutservice         29m
+default                 currencyservice                    app=currencyservice         34m
+default                 deny-cart-to-payment               app=paymentservice          2m38s
+default                 deny-frontend-to-payment           app=frontend                12m
+default                 deny-frontend-to-payment-ingress   app=paymentservice          12m
+default                 emailservice                       app=emailservice            34m
+default                 frontend                           app=frontend                34m
+default                 frontend-deny-emailservice         app=frontend                5m44s
+default                 loadgenerator                      app=loadgenerator           34m
+default                 paymentservice                     app=paymentservice          34m
+default                 paymentservice-ingress             app=paymentservice          22m
+default                 productcatalogservice              app=productcatalogservice   34m
+default                 recommendationservice              app=recommendationservice   34m
+default                 redis-cart                         app=redis-cart              34m
+default                 restrict-ingress-checkout          app=checkoutservice         24m
+default                 shippingservice                    app=shippingservice         34m
+emailservice            deny-all                           <none>                      13m
+productcatalogservice   deny-adservice                     <none>                      3m8s
+
+Mismatch Summary: Mismatch: cartservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy deny-cart-to-payment --namespace=default -p '{"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"cartservice"}}}],"ports":[{"port":50051}]}]}}'
+Output: networkpolicy.networking.k8s.io/deny-cart-to-payment patched (no change)
+
+Mismatch Summary: Mismatch: cartservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy --namespace=paymentservice
+Output: 
+Mismatch Summary: Mismatch: cartservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy deny-cart-to-payment --namespace=default -p '{"spec":{"policyTypes":["Ingress"],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"cartservice"}}}],"ports":[{"port":50051}]}]}}'
+Output: networkpolicy.networking.k8s.io/deny-cart-to-payment patched (no change)
+
+Mismatch Summary: Mismatch: cartservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl describe networkpolicy deny-cart-to-payment --namespace=default
+Output: Name:         deny-cart-to-payment
+Namespace:    default
+Created on:   2025-04-26 05:34:16 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=paymentservice
+  Allowing ingress traffic:
+    To Port: 50051/TCP
+    From:
+      PodSelector: app=cartservice
+  Not affecting egress traffic
+  Policy Types: Ingress
+
+Mismatch Summary: Mismatch: cartservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → adservice:9555 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+

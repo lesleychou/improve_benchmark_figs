@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy checkoutservice-policy -n checkoutservice --type=json -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"cartservice\"}}}}]'",
+        "output": "Error from server (NotFound): namespaces \"checkoutservice\" not found\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                    STATUS   AGE\nadservice               Active   61m\ncartservice             Active   38m\ndefault                 Active   65m\nfrontend                Active   61m\nkube-node-lease         Active   65m\nkube-public             Active   65m\nkube-system             Active   65m\nlocal-path-storage      Active   65m\npaymentservice          Active   20s\nrecommendationservice   Active   55m\nshippingservice         Active   57m\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get pods --all-namespaces",
+        "output": "NAMESPACE            NAME                                         READY   STATUS    RESTARTS   AGE\ndefault              adservice-589cc8b8f6-669tp                   1/1     Running   0          62m\ndefault              cartservice-58878fc594-tc2lj                 1/1     Running   0          62m\ndefault              checkoutservice-5784b78cf6-qnw2z             1/1     Running   0          62m\ndefault              currencyservice-6cf48b5fbd-5zt6g             1/1     Running   0          62m\ndefault              emailservice-54644d947c-d7rc2                1/1     Running   0          62m\ndefault              frontend-556fdd9fd5-jgcjw                    1/1     Running   0          62m\ndefault              loadgenerator-cfb66cf49-r4g6f                1/1     Running   0          62m\ndefault              paymentservice-69cffc78d9-pg6g5              1/1     Running   0          62m\ndefault              productcatalogservice-697ff888cf-k7x58       1/1     Running   0          62m\ndefault              recommendationservice-697d6dbcf5-mzfv2       1/1     Running   0          62m\ndefault              redis-cart-c56696bc6-lqkvl                   1/1     Running   0          62m\ndefault              shippingservice-85968d94b6-5t9ls             1/1     Running   0          62m\nkube-system          coredns-668d6bf9bc-8m6v4                     1/1     Running   0          65m\nkube-system          coredns-668d6bf9bc-klmhz                     1/1     Running   0          65m\nkube-system          etcd-kind-control-plane                      1/1     Running   0          65m\nkube-system          kindnet-hhhzm                                1/1     Running   0          65m\nkube-system          kube-apiserver-kind-control-plane            1/1     Running   0          65m\nkube-system          kube-controller-manager-kind-control-plane   1/1     Running   0          65m\nkube-system          kube-proxy-n5t6f                             1/1     Running   0          65m\nkube-system          kube-scheduler-kind-control-plane            1/1     Running   0          65m\nlocal-path-storage   local-path-provisioner-58cc7856b6-sn76m      1/1     Running   0          65m\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy checkoutservice-policy -n default --type=json -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"cartservice\"}}, \"namespaceSelector\": {\"matchLabels\": {\"name\": \"default\"}}}}]'",
+        "output": "networkpolicy.networking.k8s.io/checkoutservice-policy patched\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy checkoutservice-policy -n default --type=json -p='[{\"op\": \"remove\", \"path\": \"/spec/ingress/0/from\"}]'",
+        "output": "networkpolicy.networking.k8s.io/checkoutservice-policy patched\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: redis-cart \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: loadgenerator \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy productcatalogservice-policy -n default --type=json -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"recommendationservice\"}}}}]'",
+        "output": "networkpolicy.networking.k8s.io/productcatalogservice-policy patched\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: redis-cart \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: loadgenerator \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy productcatalogservice-policy -n default --type=json -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"recommendationservice\"}}}}]'",
+        "output": "networkpolicy.networking.k8s.io/productcatalogservice-policy patched\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: redis-cart \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: loadgenerator \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy checkoutservice-policy -n default --type=json -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"cartservice\"}}, \"namespaceSelector\": {\"matchLabels\": {\"name\": \"default\"}}}}]'",
+        "output": "The request is invalid: the server rejected our request due to an error in our request\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: redis-cart \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: loadgenerator \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    }
+]

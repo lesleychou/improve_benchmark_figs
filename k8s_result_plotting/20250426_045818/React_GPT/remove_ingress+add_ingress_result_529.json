@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "kubectl get networkpolicy -A",
+        "output": "NAMESPACE   NAME                    POD-SELECTOR                AGE\ndefault     adservice               app=adservice               7h31m\ndefault     cartservice             app=cartservice             7h31m\ndefault     checkoutservice         app=checkoutservice         7h31m\ndefault     currencyservice         app=currencyservice         7h31m\ndefault     emailservice            app=emailservice            7h31m\ndefault     frontend                app=frontend                7h31m\ndefault     loadgenerator           app=loadgenerator           7h31m\ndefault     paymentservice          app=paymentservice          7h31m\ndefault     productcatalogservice   app=productcatalogservice   7h31m\ndefault     recommendationservice   app=recommendationservice   7h31m\ndefault     redis-cart              app=redis-cart              7h31m\ndefault     shippingservice         app=shippingservice         7h31m\n",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)\nMismatch: productcatalogservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy checkoutservice -n default --type=json -p '[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"paymentservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 50051, \"protocol\": \"TCP\"}}]'",
+        "output": "networkpolicy.networking.k8s.io/checkoutservice patched\n",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)\nMismatch: productcatalogservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy checkoutservice -n default -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"checkoutservice\",\"namespace\":\"default\"},\"spec\":{\"egress\":[{}],\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}}}],\"ports\":[{\"port\":5050,\"protocol\":\"TCP\"}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"checkoutservice\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n  creationTimestamp: \"2025-05-07T16:33:45Z\"\n  generation: 470\n  name: checkoutservice\n  namespace: default\n  resourceVersion: \"37506\"\n  uid: b1131e44-9a17-4b4e-97bd-fd8c0d884378\nspec:\n  egress:\n  - {}\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    - podSelector:\n        matchLabels:\n          app: paymentservice\n    ports:\n    - port: 5050\n      protocol: TCP\n    - port: 50051\n      protocol: TCP\n  podSelector:\n    matchLabels:\n      app: checkoutservice\n  policyTypes:\n  - Ingress\n  - Egress\n",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)\nMismatch: productcatalogservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy paymentservice -n default -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"paymentservice\",\"namespace\":\"default\"},\"spec\":{\"egress\":[{}],\"ingress\":[],\"podSelector\":{\"matchLabels\":{\"app\":\"paymentservice\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n  creationTimestamp: \"2025-05-07T16:33:46Z\"\n  generation: 81\n  name: paymentservice\n  namespace: default\n  resourceVersion: \"37495\"\n  uid: b7efce39-558a-4e66-b79b-86d1cb85082a\nspec:\n  egress:\n  - {}\n  podSelector:\n    matchLabels:\n      app: paymentservice\n  policyTypes:\n  - Ingress\n  - Egress\n",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 paymentservice:50051 (Expected: True, Actual: False)\nMismatch: productcatalogservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy paymentservice -n default --type=json -p '[{\"op\": \"add\", \"path\": \"/spec/ingress\", \"value\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"checkoutservice\"}}}], \"ports\": [{\"port\": 50051, \"protocol\": \"TCP\"}]}]}]'",
+        "output": "networkpolicy.networking.k8s.io/paymentservice patched\n",
+        "mismatch_summary": "Mismatch: productcatalogservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy redis-cart -n default -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"redis-cart\",\"namespace\":\"default\"},\"spec\":{\"egress\":[{}],\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"cartservice\"}}}],\"ports\":[{\"port\":6379,\"protocol\":\"TCP\"}]},{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"emailservice\"}}}]},{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"productcatalogservice\"}}}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"redis-cart\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n  creationTimestamp: \"2025-05-07T16:33:46Z\"\n  generation: 130\n  name: redis-cart\n  namespace: default\n  resourceVersion: \"37498\"\n  uid: c854c8da-db1b-4b5f-a8ff-74f2574f7bda\nspec:\n  egress:\n  - {}\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: cartservice\n    ports:\n    - port: 6379\n      protocol: TCP\n  - from:\n    - podSelector:\n        matchLabels:\n          app: emailservice\n  - from:\n    - podSelector:\n        matchLabels:\n          app: productcatalogservice\n  podSelector:\n    matchLabels:\n      app: redis-cart\n  policyTypes:\n  - Ingress\n  - Egress\n",
+        "mismatch_summary": "Mismatch: productcatalogservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy redis-cart -n default --type=json -p '[{\"op\": \"remove\", \"path\": \"/spec/ingress/1\"}, {\"op\": \"remove\", \"path\": \"/spec/ingress/2\"}]'",
+        "output": "The request is invalid: the server rejected our request due to an error in our request\n",
+        "mismatch_summary": "Mismatch: productcatalogservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy redis-cart -n default --type=json -p '[{\"op\": \"remove\", \"path\": \"/spec/ingress/1/from\"}, {\"op\": \"remove\", \"path\": \"/spec/ingress/2/from\"}]'",
+        "output": "networkpolicy.networking.k8s.io/redis-cart patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: adservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 redis-cart:6379 (Expected: False, Actual: True)\nMismatch: loadgenerator \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy redis-cart -n default --type=json -p '[{\"op\": \"replace\", \"path\": \"/spec/ingress\", \"value\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"cartservice\"}}}], \"ports\": [{\"port\": 6379, \"protocol\": \"TCP\"}]}]}]'",
+        "output": "networkpolicy.networking.k8s.io/redis-cart patched\n",
+        "mismatch_summary": "No mismatches found."
+    }
+]

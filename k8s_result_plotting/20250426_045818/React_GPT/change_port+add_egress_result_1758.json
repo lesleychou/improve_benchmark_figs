@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n cartservice -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy allow-frontend-to-adservice -n frontend --type='merge' -p '{\"apiVersion\": \"networking.k8s.io/v1\", \"kind\": \"NetworkPolicy\", \"metadata\": {\"name\": \"allow-frontend-to-adservice\"}, \"spec\": {\"podSelector\": {}, \"policyTypes\": [\"Ingress\"], \"ingress\": [{\"from\": [{\"namespaceSelector\": {\"matchLabels\": {\"name\": \"adservice\"}}}], \"ports\": [{\"protocol\": \"TCP\", \"port\": 9555}]}]}}'",
+        "output": "Error from server (NotFound): namespaces \"frontend\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\ndefault              Active   10h\nkube-node-lease      Active   10h\nkube-public          Active   10h\nkube-system          Active   10h\nlocal-path-storage   Active   10h\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get pods -n default",
+        "output": "NAME                                     READY   STATUS    RESTARTS      AGE\nadservice-597dc59b77-q8dfh               1/1     Running   0             9h\ncartservice-577f8d8c75-5lfjl             1/1     Running   0             9h\ncheckoutservice-55698bfcc5-hrjtk         1/1     Running   0             9h\ncurrencyservice-c5968f8f5-dx7rq          1/1     Running   2 (92m ago)   9h\nemailservice-6c56b65f6d-fkhwd            1/1     Running   0             9h\nfrontend-797c8f7758-fkv9r                1/1     Running   0             9h\nloadgenerator-6c5b65b44b-wp4z7           1/1     Running   0             9h\npaymentservice-76948fc564-dlnrz          1/1     Running   2 (53m ago)   9h\nproductcatalogservice-5f9d5c689b-x9sdp   1/1     Running   0             9h\nrecommendationservice-67cbb84b7b-c2src   1/1     Running   0             9h\nredis-cart-866688457f-zsqdb              1/1     Running   0             9h\nshippingservice-9ddf878c7-gr8bc          1/1     Running   0             9h\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "bash\nkubectl patch networkpolicy allow-frontend-to-adservice -n default --type='merge' -p '{\"apiVersion\": \"networking.k8s.io/v1\", \"kind\": \"NetworkPolicy\", \"metadata\": {\"name\": \"allow-frontend-to-adservice\"}, \"spec\": {\"podSelector\": {\"matchLabels\": {\"app\": \"adservice\"}}, \"policyTypes\": [\"Ingress\"], \"ingress\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}}], \"ports\": [{\"protocol\": \"TCP\", \"port\": 9555}]}]}}'",
+        "output": "bash: error reading input file: Bad file descriptor\nError from server (NotFound): networkpolicies.networking.k8s.io \"allow-frontend-to-adservice\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get pods -n default --show-labels",
+        "output": "NAME                                     READY   STATUS    RESTARTS      AGE   LABELS\nadservice-597dc59b77-q8dfh               1/1     Running   0             9h    app=adservice,pod-template-hash=597dc59b77,skaffold.dev/run-id=71d8bd08-b5c3-43be-bb43-8f51fb0b19d6\ncartservice-577f8d8c75-5lfjl             1/1     Running   0             9h    app=cartservice,pod-template-hash=577f8d8c75,skaffold.dev/run-id=71d8bd08-b5c3-43be-bb43-8f51fb0b19d6\ncheckoutservice-55698bfcc5-hrjtk         1/1     Running   0             9h    app=checkoutservice,pod-template-hash=55698bfcc5,skaffold.dev/run-id=71d8bd08-b5c3-43be-bb43-8f51fb0b19d6\ncurrencyservice-c5968f8f5-dx7rq          1/1     Running   2 (92m ago)   9h    app=currencyservice,pod-template-hash=c5968f8f5,skaffold.dev/run-id=71d8bd08-b5c3-43be-bb43-8f51fb0b19d6\nemailservice-6c56b65f6d-fkhwd            1/1     Running   0             9h    app=emailservice,pod-template-hash=6c56b65f6d,skaffold.dev/run-id=71d8bd08-b5c3-43be-bb43-8f51fb0b19d6\nfrontend-797c8f7758-fkv9r                1/1     Running   0             9h    app=frontend,pod-template-hash=797c8f7758,skaffold.dev/run-id=71d8bd08-b5c3-43be-bb43-8f51fb0b19d6\nloadgenerator-6c5b65b44b-wp4z7           1/1     Running   0             9h    app=loadgenerator,pod-template-hash=6c5b65b44b,skaffold.dev/run-id=71d8bd08-b5c3-43be-bb43-8f51fb0b19d6\npaymentservice-76948fc564-dlnrz          1/1     Running   2 (53m ago)   9h    app=paymentservice,pod-template-hash=76948fc564,skaffold.dev/run-id=71d8bd08-b5c3-43be-bb43-8f51fb0b19d6\nproductcatalogservice-5f9d5c689b-x9sdp   1/1     Running   0             9h    app=productcatalogservice,pod-template-hash=5f9d5c689b,skaffold.dev/run-id=71d8bd08-b5c3-43be-bb43-8f51fb0b19d6\nrecommendationservice-67cbb84b7b-c2src   1/1     Running   0             9h    app=recommendationservice,pod-template-hash=67cbb84b7b,skaffold.dev/run-id=71d8bd08-b5c3-43be-bb43-8f51fb0b19d6\nredis-cart-866688457f-zsqdb              1/1     Running   0             9h    app=redis-cart,pod-template-hash=866688457f,skaffold.dev/run-id=71d8bd08-b5c3-43be-bb43-8f51fb0b19d6\nshippingservice-9ddf878c7-gr8bc          1/1     Running   0             9h    app=shippingservice,pod-template-hash=9ddf878c7,skaffold.dev/run-id=71d8bd08-b5c3-43be-bb43-8f51fb0b19d6\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy allow-frontend-to-adservice -n default --type='merge' -p '{\"apiVersion\": \"networking.k8s.io/v1\", \"kind\": \"NetworkPolicy\", \"metadata\": {\"name\": \"allow-frontend-to-adservice\"}, \"spec\": {\"podSelector\": {\"matchLabels\": {\"app\": \"adservice\"}}, \"policyTypes\": [\"Ingress\"], \"ingress\": [{\"from\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}}], \"ports\": [{\"protocol\": \"TCP\", \"port\": 9555}]}]}}'",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"allow-frontend-to-adservice\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 redis-cart:6379 (Expected: True, Actual: False)"
+    }
+]

@@ -1,0 +1,168 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy productcatalogservice-policy -n productcatalogservice --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "frontend"}}}}]'
+Output: Error from server (NotFound): namespaces "productcatalogservice" not found
+
+Mismatch Summary: Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get namespaces
+Output: NAME                    STATUS   AGE
+adservice               Active   16m
+default                 Active   21m
+frontend                Active   16m
+kube-node-lease         Active   21m
+kube-public             Active   21m
+kube-system             Active   21m
+local-path-storage      Active   21m
+recommendationservice   Active   10m
+shippingservice         Active   13m
+
+Mismatch Summary: Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get pods --all-namespaces
+Output: NAMESPACE            NAME                                         READY   STATUS    RESTARTS   AGE
+default              adservice-589cc8b8f6-669tp                   1/1     Running   0          18m
+default              cartservice-58878fc594-tc2lj                 1/1     Running   0          18m
+default              checkoutservice-5784b78cf6-qnw2z             1/1     Running   0          18m
+default              currencyservice-6cf48b5fbd-5zt6g             1/1     Running   0          18m
+default              emailservice-54644d947c-d7rc2                1/1     Running   0          18m
+default              frontend-556fdd9fd5-jgcjw                    1/1     Running   0          18m
+default              loadgenerator-cfb66cf49-r4g6f                1/1     Running   0          17m
+default              paymentservice-69cffc78d9-pg6g5              1/1     Running   0          18m
+default              productcatalogservice-697ff888cf-k7x58       1/1     Running   0          18m
+default              recommendationservice-697d6dbcf5-mzfv2       1/1     Running   0          18m
+default              redis-cart-c56696bc6-lqkvl                   1/1     Running   0          18m
+default              shippingservice-85968d94b6-5t9ls             1/1     Running   0          18m
+kube-system          coredns-668d6bf9bc-8m6v4                     1/1     Running   0          21m
+kube-system          coredns-668d6bf9bc-klmhz                     1/1     Running   0          21m
+kube-system          etcd-kind-control-plane                      1/1     Running   0          21m
+kube-system          kindnet-hhhzm                                1/1     Running   0          21m
+kube-system          kube-apiserver-kind-control-plane            1/1     Running   0          21m
+kube-system          kube-controller-manager-kind-control-plane   1/1     Running   0          21m
+kube-system          kube-proxy-n5t6f                             1/1     Running   0          21m
+kube-system          kube-scheduler-kind-control-plane            1/1     Running   0          21m
+local-path-storage   local-path-provisioner-58cc7856b6-sn76m      1/1     Running   0          21m
+
+Mismatch Summary: Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy productcatalogservice-policy -n default --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "frontend"}}}}]'
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "productcatalogservice-policy" not found
+
+Mismatch Summary: Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl apply -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: productcatalogservice-policy
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: productcatalogservice
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    - podSelector:
+        matchLabels:
+          app: checkoutservice
+    - podSelector:
+        matchLabels:
+          app: recommendationservice
+    ports:
+    - protocol: TCP
+      port: 3550
+EOF
+Output: networkpolicy.networking.k8s.io/productcatalogservice-policy created
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+
+LLM Command: kubectl apply -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: redis-cart-policy
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: redis-cart
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: cartservice
+    ports:
+    - protocol: TCP
+      port: 6379
+EOF
+Output: networkpolicy.networking.k8s.io/redis-cart-policy created
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+
+LLM Command: kubectl get pods -n default --show-labels
+Output: NAME                                     READY   STATUS    RESTARTS   AGE   LABELS
+adservice-589cc8b8f6-669tp               1/1     Running   0          18m   app=adservice,pod-template-hash=589cc8b8f6,skaffold.dev/run-id=0f0dc272-5a75-49dc-969b-a258f785482a
+cartservice-58878fc594-tc2lj             1/1     Running   0          18m   app=cartservice,pod-template-hash=58878fc594,skaffold.dev/run-id=0f0dc272-5a75-49dc-969b-a258f785482a
+checkoutservice-5784b78cf6-qnw2z         1/1     Running   0          18m   app=checkoutservice,pod-template-hash=5784b78cf6,skaffold.dev/run-id=0f0dc272-5a75-49dc-969b-a258f785482a
+currencyservice-6cf48b5fbd-5zt6g         1/1     Running   0          18m   app=currencyservice,pod-template-hash=6cf48b5fbd,skaffold.dev/run-id=0f0dc272-5a75-49dc-969b-a258f785482a
+emailservice-54644d947c-d7rc2            1/1     Running   0          18m   app=emailservice,pod-template-hash=54644d947c,skaffold.dev/run-id=0f0dc272-5a75-49dc-969b-a258f785482a
+frontend-556fdd9fd5-jgcjw                1/1     Running   0          18m   app=frontend,pod-template-hash=556fdd9fd5,skaffold.dev/run-id=0f0dc272-5a75-49dc-969b-a258f785482a
+loadgenerator-cfb66cf49-r4g6f            1/1     Running   0          18m   app=loadgenerator,pod-template-hash=cfb66cf49,skaffold.dev/run-id=0f0dc272-5a75-49dc-969b-a258f785482a
+paymentservice-69cffc78d9-pg6g5          1/1     Running   0          18m   app=paymentservice,pod-template-hash=69cffc78d9,skaffold.dev/run-id=0f0dc272-5a75-49dc-969b-a258f785482a
+productcatalogservice-697ff888cf-k7x58   1/1     Running   0          18m   app=productcatalogservice,pod-template-hash=697ff888cf,skaffold.dev/run-id=0f0dc272-5a75-49dc-969b-a258f785482a
+recommendationservice-697d6dbcf5-mzfv2   1/1     Running   0          18m   app=recommendationservice,pod-template-hash=697d6dbcf5,skaffold.dev/run-id=0f0dc272-5a75-49dc-969b-a258f785482a
+redis-cart-c56696bc6-lqkvl               1/1     Running   0          18m   app=redis-cart,pod-template-hash=c56696bc6,skaffold.dev/run-id=0f0dc272-5a75-49dc-969b-a258f785482a
+shippingservice-85968d94b6-5t9ls         1/1     Running   0          18m   app=shippingservice,pod-template-hash=85968d94b6,skaffold.dev/run-id=0f0dc272-5a75-49dc-969b-a258f785482a
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy redis-cart-policy -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"redis-cart-policy","namespace":"default"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"cartservice"}}}],"ports":[{"port":6379,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"redis-cart"}}}}
+  creationTimestamp: "2025-04-27T15:53:47Z"
+  generation: 1
+  name: redis-cart-policy
+  namespace: default
+  resourceVersion: "2642"
+  uid: 34774760-9d08-4b1b-8e1c-58e62b7864fd
+spec:
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: cartservice
+    ports:
+    - port: 6379
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: redis-cart
+  policyTypes:
+  - Ingress
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+

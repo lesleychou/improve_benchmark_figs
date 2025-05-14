@@ -1,0 +1,336 @@
+LLM Command: kubectl get networkpolicy --all-namespaces
+Output: NAMESPACE   NAME                    POD-SELECTOR                AGE
+default     adservice               app=adservice               7h52m
+default     cartservice             app=cartservice             7h52m
+default     checkoutservice         app=checkoutservice         7h52m
+default     currencyservice         app=currencyservice         7h52m
+default     emailservice            app=emailservice            7h52m
+default     frontend                app=frontend                7h52m
+default     loadgenerator           app=loadgenerator           7h52m
+default     paymentservice          app=paymentservice          7h52m
+default     productcatalogservice   app=productcatalogservice   7h52m
+default     recommendationservice   app=recommendationservice   7h52m
+default     redis-cart              app=redis-cart              7h52m
+default     shippingservice         app=shippingservice         7h52m
+
+Mismatch Summary: Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy checkoutservice -n default --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "paymentservice"}}}}, {"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 50051, "protocol": "TCP"}}]'
+Output: networkpolicy.networking.k8s.io/checkoutservice patched
+
+Mismatch Summary: Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy checkoutservice -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"checkoutservice","namespace":"default"},"spec":{"egress":[{}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":5050,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"checkoutservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-05-07T16:33:45Z"
+  generation: 501
+  name: checkoutservice
+  namespace: default
+  resourceVersion: "39280"
+  uid: b1131e44-9a17-4b4e-97bd-fd8c0d884378
+spec:
+  egress:
+  - {}
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    - podSelector:
+        matchLabels:
+          app: paymentservice
+    ports:
+    - port: 5050
+      protocol: TCP
+    - port: 50051
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: checkoutservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl get pods -l app=paymentservice -n default -o yaml
+Output: apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2025-05-07T16:32:36Z"
+    generateName: paymentservice-b67c65d9c-
+    labels:
+      app: paymentservice
+      pod-template-hash: b67c65d9c
+      skaffold.dev/run-id: d9aabfde-b7ab-4584-b757-8c80f6c37263
+    name: paymentservice-b67c65d9c-ztkqg
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: paymentservice-b67c65d9c
+      uid: 38811886-f41e-4384-a732-a2686bce90f8
+    resourceVersion: "23402"
+    uid: 653dc6d9-cc4c-4d8a-be12-9f1fcf6552a7
+  spec:
+    containers:
+    - env:
+      - name: PORT
+        value: "50051"
+      - name: DISABLE_PROFILER
+        value: "1"
+      image: paymentservice:67b7bfffe8608fd31896ea9619baccf3269cc9fa751ab491b34e4fd7511474a2
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        failureThreshold: 3
+        grpc:
+          port: 50051
+          service: ""
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 1
+      name: server
+      ports:
+      - containerPort: 50051
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 3
+        grpc:
+          port: 50051
+          service: ""
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 1
+      resources:
+        limits:
+          cpu: 200m
+          memory: 128Mi
+        requests:
+          cpu: 100m
+          memory: 64Mi
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+          - ALL
+        privileged: false
+        readOnlyRootFilesystem: true
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-tn2wk
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    ephemeralContainers:
+    - command:
+      - sleep
+      - infinity
+      image: busybox
+      imagePullPolicy: Always
+      name: debugger-qsrns
+      resources: {}
+      stdin: true
+      targetContainerName: server
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      tty: true
+    nodeName: kind-control-plane
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext:
+      fsGroup: 1000
+      runAsGroup: 1000
+      runAsNonRoot: true
+      runAsUser: 1000
+    serviceAccount: paymentservice
+    serviceAccountName: paymentservice
+    terminationGracePeriodSeconds: 5
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-tn2wk
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2025-05-07T16:32:39Z"
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2025-05-07T16:32:36Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2025-05-07T21:10:14Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2025-05-07T21:10:14Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2025-05-07T16:32:36Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: containerd://0cfad20d4bc05ad2ce1f92e24df16fb4123d46c7b2373515222f99fb144461d4
+      image: docker.io/library/paymentservice:67b7bfffe8608fd31896ea9619baccf3269cc9fa751ab491b34e4fd7511474a2
+      imageID: docker.io/library/import-2025-05-07@sha256:db5028e8cbe635f20b28a086aa67f4eba1321f5155a3e23188d9aee7d09dfc71
+      lastState:
+        terminated:
+          containerID: containerd://c6e88ea1e7b0ef00e1c482cf9feb11ee4694cc352376f9196b4b65a4707551d7
+          exitCode: 137
+          finishedAt: "2025-05-07T21:10:10Z"
+          reason: OOMKilled
+          startedAt: "2025-05-07T16:32:39Z"
+      name: server
+      ready: true
+      restartCount: 1
+      started: true
+      state:
+        running:
+          startedAt: "2025-05-07T21:10:12Z"
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-tn2wk
+        readOnly: true
+        recursiveReadOnly: Disabled
+    ephemeralContainerStatuses:
+    - containerID: containerd://c32676a342dbfb51e7400f1f1642ccfb7622f8348d6cac531ce78f07703cd3a1
+      image: docker.io/library/busybox:latest
+      imageID: docker.io/library/busybox@sha256:37f7b378a29ceb4c551b1b5582e27747b855bbfaa73fa11914fe0df028dc581f
+      lastState: {}
+      name: debugger-qsrns
+      ready: false
+      restartCount: 0
+      state:
+        terminated:
+          containerID: containerd://c32676a342dbfb51e7400f1f1642ccfb7622f8348d6cac531ce78f07703cd3a1
+          exitCode: 137
+          finishedAt: "2025-05-07T21:10:10Z"
+          reason: Error
+          startedAt: "2025-05-07T16:33:35Z"
+    hostIP: 172.18.0.2
+    hostIPs:
+    - ip: 172.18.0.2
+    phase: Running
+    podIP: 10.244.0.11
+    podIPs:
+    - ip: 10.244.0.11
+    qosClass: Burstable
+    startTime: "2025-05-07T16:32:36Z"
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy checkoutservice -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"checkoutservice","namespace":"default"},"spec":{"egress":[{}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":5050,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"checkoutservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-05-07T16:33:45Z"
+  generation: 501
+  name: checkoutservice
+  namespace: default
+  resourceVersion: "39280"
+  uid: b1131e44-9a17-4b4e-97bd-fd8c0d884378
+spec:
+  egress:
+  - {}
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    - podSelector:
+        matchLabels:
+          app: paymentservice
+    ports:
+    - port: 5050
+      protocol: TCP
+    - port: 50051
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: checkoutservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl get pods -l app=paymentservice -n default --show-labels
+Output: NAME                             READY   STATUS    RESTARTS        AGE     LABELS
+paymentservice-b67c65d9c-ztkqg   1/1     Running   1 (3h16m ago)   7h54m   app=paymentservice,pod-template-hash=b67c65d9c,skaffold.dev/run-id=d9aabfde-b7ab-4584-b757-8c80f6c37263
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: frontend → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: frontend → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: frontend → recommendationservice:8080 (Expected: True, Actual: False)
+Mismatch: frontend → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: checkoutservice → cartservice:7070 (Expected: True, Actual: False)
+Mismatch: checkoutservice → currencyservice:7000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → productcatalogservice:3550 (Expected: True, Actual: False)
+Mismatch: checkoutservice → shippingservice:50051 (Expected: True, Actual: False)
+Mismatch: checkoutservice → emailservice:5000 (Expected: True, Actual: False)
+Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy checkoutservice -n default --type='json' -p='[{"op": "replace", "path": "/spec/ingress/0/from", "value": [{"podSelector": {"matchLabels": {"app": "frontend"}}}, {"podSelector": {"matchLabels": {"app": "paymentservice"}}}]}, {"op": "replace", "path": "/spec/ingress/0/ports", "value": [{"port": 5050, "protocol": "TCP"}, {"port": 50051, "protocol": "TCP"}]}]'
+Output: networkpolicy.networking.k8s.io/checkoutservice patched (no change)
+
+Mismatch Summary: Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl get pods -l app=checkoutservice -n default --show-labels
+Output: NAME                               READY   STATUS    RESTARTS   AGE     LABELS
+checkoutservice-769b8ff7b8-jxzrv   1/1     Running   0          7h54m   app=checkoutservice,pod-template-hash=769b8ff7b8,skaffold.dev/run-id=d9aabfde-b7ab-4584-b757-8c80f6c37263
+
+Mismatch Summary: Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+
+LLM Command: kubectl get pods -l app=paymentservice -n default --show-labels
+Output: NAME                             READY   STATUS    RESTARTS        AGE     LABELS
+paymentservice-b67c65d9c-ztkqg   1/1     Running   1 (3h16m ago)   7h54m   app=paymentservice,pod-template-hash=b67c65d9c,skaffold.dev/run-id=d9aabfde-b7ab-4584-b757-8c80f6c37263
+
+Mismatch Summary: Mismatch: checkoutservice → paymentservice:50051 (Expected: True, Actual: False)
+

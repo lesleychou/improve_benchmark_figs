@@ -1,0 +1,103 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy checkout-network-policy -n checkoutservice --type=json -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "frontend"}}}}]'
+Output: Error from server (NotFound): namespaces "checkoutservice" not found
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+
+LLM Command: kubectl get svc checkoutservice --all-namespaces
+Output: error: a resource cannot be retrieved by name across all namespaces
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+
+LLM Command: kubectl get namespaces
+Output: NAME                 STATUS   AGE
+default              Active   6m34s
+kube-node-lease      Active   6m34s
+kube-public          Active   6m34s
+kube-system          Active   6m34s
+local-path-storage   Active   6m27s
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+
+LLM Command: kubectl get svc --all-namespaces
+Output: NAMESPACE     NAME                    TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)                  AGE
+default       adservice               ClusterIP      10.96.205.178   <none>        9555/TCP                 3m42s
+default       cartservice             ClusterIP      10.96.85.95     <none>        7070/TCP                 3m42s
+default       checkoutservice         ClusterIP      10.96.118.118   <none>        5050/TCP                 3m41s
+default       currencyservice         ClusterIP      10.96.140.252   <none>        7000/TCP                 3m41s
+default       emailservice            ClusterIP      10.96.36.126    <none>        5000/TCP                 3m41s
+default       frontend                ClusterIP      10.96.76.231    <none>        80/TCP                   3m41s
+default       frontend-external       LoadBalancer   10.96.188.159   <pending>     80:30378/TCP             3m41s
+default       kubernetes              ClusterIP      10.96.0.1       <none>        443/TCP                  6m35s
+default       paymentservice          ClusterIP      10.96.5.186     <none>        50051/TCP                3m41s
+default       productcatalogservice   ClusterIP      10.96.85.216    <none>        3550/TCP                 3m41s
+default       recommendationservice   ClusterIP      10.96.45.217    <none>        8080/TCP                 3m41s
+default       redis-cart              ClusterIP      10.96.122.155   <none>        6379/TCP                 3m41s
+default       shippingservice         ClusterIP      10.96.95.128    <none>        50051/TCP                3m41s
+kube-system   kube-dns                ClusterIP      10.96.0.10      <none>        53/UDP,53/TCP,9153/TCP   6m32s
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy checkout-network-policy -n default --type=json -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "frontend"}}}}]'
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "checkout-network-policy" not found
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n default
+Output: NAME                          POD-SELECTOR                AGE
+adservice                     app=adservice               2m45s
+allow-frontend-checkout       app=cartservice             29s
+allow-productcatalog-access   app=productcatalogservice   64s
+cartservice                   app=cartservice             2m45s
+checkoutservice               app=checkoutservice         2m45s
+currencyservice               app=currencyservice         2m45s
+emailservice                  app=emailservice            2m45s
+frontend                      app=frontend                2m44s
+loadgenerator                 app=loadgenerator           2m44s
+paymentservice                app=paymentservice          2m44s
+productcatalogservice         app=productcatalogservice   2m44s
+recommendationservice         app=recommendationservice   2m44s
+redis-cart                    app=redis-cart              2m44s
+shippingservice               app=shippingservice         2m44s
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy checkoutservice -n default --type=json -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "frontend"}}}}]'
+Output: The request is invalid: the server rejected our request due to an error in our request
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy checkoutservice -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"checkoutservice","namespace":"default"},"spec":{"egress":[{}],"ingress":[],"podSelector":{"matchLabels":{"app":"checkoutservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-04-26T05:02:44Z"
+  generation: 2
+  name: checkoutservice
+  namespace: default
+  resourceVersion: "1356"
+  uid: 35564efc-1c59-43fc-a67f-7c18db8116a1
+spec:
+  egress:
+  - {}
+  podSelector:
+    matchLabels:
+      app: checkoutservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+
+LLM Command: bash
+kubectl patch networkpolicy checkoutservice -n default --type=json -p='[{"op": "add", "path": "/spec/ingress", "value": [{"from": [{"podSelector": {"matchLabels": {"app": "frontend"}}}]}]}]'
+Output: networkpolicy.networking.k8s.io/checkoutservice patched
+
+Mismatch Summary: No mismatches found.
+

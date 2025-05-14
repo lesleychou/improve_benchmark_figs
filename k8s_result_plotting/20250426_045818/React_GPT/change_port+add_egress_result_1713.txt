@@ -1,0 +1,157 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+
+LLM Command: bash
+kubectl get networkpolicy -n frontend -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy -n cartservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+
+LLM Command: bash
+kubectl patch networkpolicy allow-frontend-to-checkout -n frontend --type='json' -p='[{"op": "add", "path": "/spec", "value": {"podSelector": {}, "policyTypes": ["Ingress"], "ingress": [{"from": [{"namespaceSelector": {"matchLabels": {"name": "frontend"}}}, {"podSelector": {"matchLabels": {"app": "frontend"}}}], "ports": [{"protocol": "TCP", "port": 5050}]}]}}]'
+Output: bash: error reading input file: Bad file descriptor
+Error from server (NotFound): namespaces "frontend" not found
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+
+LLM Command: kubectl get namespaces
+Output: NAME                 STATUS   AGE
+default              Active   8h
+kube-node-lease      Active   8h
+kube-public          Active   8h
+kube-system          Active   8h
+local-path-storage   Active   8h
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+
+LLM Command: kubectl get pods -n default -o wide
+Output: NAME                                     READY   STATUS    RESTARTS        AGE   IP            NODE                 NOMINATED NODE   READINESS GATES
+adservice-597dc59b77-q8dfh               1/1     Running   0               8h    10.244.0.6    kind-control-plane   <none>           <none>
+cartservice-577f8d8c75-5lfjl             1/1     Running   0               8h    10.244.0.5    kind-control-plane   <none>           <none>
+checkoutservice-55698bfcc5-hrjtk         1/1     Running   0               8h    10.244.0.7    kind-control-plane   <none>           <none>
+currencyservice-c5968f8f5-dx7rq          1/1     Running   1 (4h3m ago)    8h    10.244.0.8    kind-control-plane   <none>           <none>
+emailservice-6c56b65f6d-fkhwd            1/1     Running   0               8h    10.244.0.9    kind-control-plane   <none>           <none>
+frontend-797c8f7758-fkv9r                1/1     Running   0               8h    10.244.0.11   kind-control-plane   <none>           <none>
+loadgenerator-6c5b65b44b-wp4z7           1/1     Running   0               8h    10.244.0.16   kind-control-plane   <none>           <none>
+paymentservice-76948fc564-dlnrz          1/1     Running   1 (3h48m ago)   8h    10.244.0.10   kind-control-plane   <none>           <none>
+productcatalogservice-5f9d5c689b-x9sdp   1/1     Running   0               8h    10.244.0.12   kind-control-plane   <none>           <none>
+recommendationservice-67cbb84b7b-c2src   1/1     Running   0               8h    10.244.0.14   kind-control-plane   <none>           <none>
+redis-cart-866688457f-zsqdb              1/1     Running   0               8h    10.244.0.13   kind-control-plane   <none>           <none>
+shippingservice-9ddf878c7-gr8bc          1/1     Running   0               8h    10.244.0.15   kind-control-plane   <none>           <none>
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+
+LLM Command: kubectl apply -n default -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-frontend-to-checkout
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: checkoutservice
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    ports:
+    - protocol: TCP
+      port: 5050
+EOF
+Output: NAME                                     READY   STATUS    RESTARTS        AGE   IP            NODE                 NOMINATED NODE   READINESS GATES
+adservice-597dc59b77-q8dfh               1/1     Running   0               8h    10.244.0.6    kind-control-plane   <none>           <none>
+cartservice-577f8d8c75-5lfjl             1/1     Running   0               8h    10.244.0.5    kind-control-plane   <none>           <none>
+checkoutservice-55698bfcc5-hrjtk         1/1     Running   0               8h    10.244.0.7    kind-control-plane   <none>           <none>
+currencyservice-c5968f8f5-dx7rq          1/1     Running   1 (4h3m ago)    8h    10.244.0.8    kind-control-plane   <none>           <none>
+emailservice-6c56b65f6d-fkhwd            1/1     Running   0               8h    10.244.0.9    kind-control-plane   <none>           <none>
+frontend-797c8f7758-fkv9r                1/1     Running   0               8h    10.244.0.11   kind-control-plane   <none>           <none>
+loadgenerator-6c5b65b44b-wp4z7           1/1     Running   0               8h    10.244.0.16   kind-control-plane   <none>           <none>
+paymentservice-76948fc564-dlnrz          1/1     Running   1 (3h48m ago)   8h    10.244.0.10   kind-control-plane   <none>           <none>
+productcatalogservice-5f9d5c689b-x9sdp   1/1     Running   0               8h    10.244.0.12   kind-control-plane   <none>           <none>
+recommendationservice-67cbb84b7b-c2src   1/1     Running   0               8h    10.244.0.14   kind-control-plane   <none>           <none>
+redis-cart-866688457f-zsqdb              1/1     Running   0               8h    10.244.0.13   kind-control-plane   <none>           <none>
+shippingservice-9ddf878c7-gr8bc          1/1     Running   0               8h    10.244.0.15   kind-control-plane   <none>           <none>
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+
+LLM Command: kubectl apply -n default -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-cartservice-to-redis
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: redis-cart
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: cartservice
+    ports:
+    - protocol: TCP
+      port: 6379
+EOF
+Output: NAME                                     READY   STATUS    RESTARTS        AGE   IP            NODE                 NOMINATED NODE   READINESS GATES
+adservice-597dc59b77-q8dfh               1/1     Running   0               8h    10.244.0.6    kind-control-plane   <none>           <none>
+cartservice-577f8d8c75-5lfjl             1/1     Running   0               8h    10.244.0.5    kind-control-plane   <none>           <none>
+checkoutservice-55698bfcc5-hrjtk         1/1     Running   0               8h    10.244.0.7    kind-control-plane   <none>           <none>
+currencyservice-c5968f8f5-dx7rq          1/1     Running   1 (4h3m ago)    8h    10.244.0.8    kind-control-plane   <none>           <none>
+emailservice-6c56b65f6d-fkhwd            1/1     Running   0               8h    10.244.0.9    kind-control-plane   <none>           <none>
+frontend-797c8f7758-fkv9r                1/1     Running   0               8h    10.244.0.11   kind-control-plane   <none>           <none>
+loadgenerator-6c5b65b44b-wp4z7           1/1     Running   0               8h    10.244.0.16   kind-control-plane   <none>           <none>
+paymentservice-76948fc564-dlnrz          1/1     Running   1 (3h48m ago)   8h    10.244.0.10   kind-control-plane   <none>           <none>
+productcatalogservice-5f9d5c689b-x9sdp   1/1     Running   0               8h    10.244.0.12   kind-control-plane   <none>           <none>
+recommendationservice-67cbb84b7b-c2src   1/1     Running   0               8h    10.244.0.14   kind-control-plane   <none>           <none>
+redis-cart-866688457f-zsqdb              1/1     Running   0               8h    10.244.0.13   kind-control-plane   <none>           <none>
+shippingservice-9ddf878c7-gr8bc          1/1     Running   0               8h    10.244.0.15   kind-control-plane   <none>           <none>
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+
+LLM Command: kubectl get pods -n default --show-labels
+Output: NAME                                     READY   STATUS    RESTARTS        AGE   LABELS
+adservice-597dc59b77-q8dfh               1/1     Running   0               8h    app=adservice,pod-template-hash=597dc59b77,skaffold.dev/run-id=71d8bd08-b5c3-43be-bb43-8f51fb0b19d6
+cartservice-577f8d8c75-5lfjl             1/1     Running   0               8h    app=cartservice,pod-template-hash=577f8d8c75,skaffold.dev/run-id=71d8bd08-b5c3-43be-bb43-8f51fb0b19d6
+checkoutservice-55698bfcc5-hrjtk         1/1     Running   0               8h    app=checkoutservice,pod-template-hash=55698bfcc5,skaffold.dev/run-id=71d8bd08-b5c3-43be-bb43-8f51fb0b19d6
+currencyservice-c5968f8f5-dx7rq          1/1     Running   1 (4h3m ago)    8h    app=currencyservice,pod-template-hash=c5968f8f5,skaffold.dev/run-id=71d8bd08-b5c3-43be-bb43-8f51fb0b19d6
+emailservice-6c56b65f6d-fkhwd            1/1     Running   0               8h    app=emailservice,pod-template-hash=6c56b65f6d,skaffold.dev/run-id=71d8bd08-b5c3-43be-bb43-8f51fb0b19d6
+frontend-797c8f7758-fkv9r                1/1     Running   0               8h    app=frontend,pod-template-hash=797c8f7758,skaffold.dev/run-id=71d8bd08-b5c3-43be-bb43-8f51fb0b19d6
+loadgenerator-6c5b65b44b-wp4z7           1/1     Running   0               8h    app=loadgenerator,pod-template-hash=6c5b65b44b,skaffold.dev/run-id=71d8bd08-b5c3-43be-bb43-8f51fb0b19d6
+paymentservice-76948fc564-dlnrz          1/1     Running   1 (3h48m ago)   8h    app=paymentservice,pod-template-hash=76948fc564,skaffold.dev/run-id=71d8bd08-b5c3-43be-bb43-8f51fb0b19d6
+productcatalogservice-5f9d5c689b-x9sdp   1/1     Running   0               8h    app=productcatalogservice,pod-template-hash=5f9d5c689b,skaffold.dev/run-id=71d8bd08-b5c3-43be-bb43-8f51fb0b19d6
+recommendationservice-67cbb84b7b-c2src   1/1     Running   0               8h    app=recommendationservice,pod-template-hash=67cbb84b7b,skaffold.dev/run-id=71d8bd08-b5c3-43be-bb43-8f51fb0b19d6
+redis-cart-866688457f-zsqdb              1/1     Running   0               8h    app=redis-cart,pod-template-hash=866688457f,skaffold.dev/run-id=71d8bd08-b5c3-43be-bb43-8f51fb0b19d6
+shippingservice-9ddf878c7-gr8bc          1/1     Running   0               8h    app=shippingservice,pod-template-hash=9ddf878c7,skaffold.dev/run-id=71d8bd08-b5c3-43be-bb43-8f51fb0b19d6
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+

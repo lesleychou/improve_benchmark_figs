@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy <network-policy-name> -n redis-cart --type=json -p '[{\"op\": \"replace\", \"path\": \"/spec/ingress/0/from\", \"value\": [{\"podSelector\": {\"matchLabels\": {\"app\": \"cartservice\"}}}]}]'",
+        "output": "/bin/bash: line 1: network-policy-name: No such file or directory\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n redis-cart",
+        "output": "",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n redis-cart -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n shippingservice -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl apply -n redis-cart -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: restrict-redis-cart-access\n  namespace: redis-cart\nspec:\n  podSelector:\n    matchLabels:\n      app: redis-cart\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: cartservice\nEOF",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl apply -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: restrict-redis-cart-access\n  namespace: redis-cart\nspec:\n  podSelector:\n    matchLabels:\n      app: redis-cart\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: cartservice\nEOF",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\ndefault              Active   117m\nkube-node-lease      Active   117m\nkube-public          Active   117m\nkube-system          Active   117m\nlocal-path-storage   Active   117m\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get pods --all-namespaces -o wide | grep redis-cart",
+        "output": "default              redis-cart-5b6f47b748-9rgzw                  1/1     Running   0          114m   10.244.0.13   kind-control-plane   <none>           <none>\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 redis-cart:6379 (Expected: False, Actual: True)"
+    }
+]

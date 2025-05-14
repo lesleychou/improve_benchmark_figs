@@ -1,0 +1,415 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: recommendationservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy cartservice-allow-redis -n cartservice --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from", "value": [{"podSelector": {"matchLabels": {"app": "redis-cart"}}}]}]'
+Output: networkpolicy.networking.k8s.io/cartservice-allow-redis patched (no change)
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: recommendationservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl describe networkpolicy cartservice-allow-redis -n cartservice
+Output: Name:         cartservice-allow-redis
+Namespace:    cartservice
+Created on:   2025-04-26 10:18:44 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=cartservice
+  Allowing ingress traffic:
+    To Port: 6379/TCP
+    To Port: 6379/TCP
+    From:
+      PodSelector: app=redis-cart
+  Not affecting egress traffic
+  Policy Types: Ingress
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: recommendationservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n cartservice
+Output: NAME                                 POD-SELECTOR      AGE
+allow-cart-to-redis                  app=cart          113m
+allow-cartservice-to-redis           app=cartservice   73m
+allow-checkout-to-cart               app=cartservice   3h39m
+allow-frontend-to-cartservice        app=cartservice   10h
+cartservice                          app=cartservice   9h
+cartservice-allow                    app=cartservice   143m
+cartservice-allow-redis              app=cartservice   10h
+cartservice-deny-checkout            app=cartservice   43m
+cartservice-deny-payment             app=cartservice   15h
+cartservice-egress-policy            app=cartservice   15h
+cartservice-network-policy           app=cartservice   10h
+cartservice-policy                   app=cartservice   15h
+deny-cartservice-to-productcatalog   app=cartservice   51m
+deny-cartservice-to-recommendation   app=cartservice   67m
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: recommendationservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl describe networkpolicy -n cartservice
+Output: Name:         allow-cart-to-redis
+Namespace:    cartservice
+Created on:   2025-04-26 19:07:51 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=cart
+  Allowing ingress traffic:
+    <none> (Selected pods are isolated for ingress connectivity)
+  Not affecting egress traffic
+  Policy Types: Ingress
+
+
+Name:         allow-cartservice-to-redis
+Namespace:    cartservice
+Created on:   2025-04-26 19:47:22 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=cartservice
+  Allowing ingress traffic:
+    To Port: 6379/TCP
+    From:
+      PodSelector: app=cartservice
+  Not affecting egress traffic
+  Policy Types: Ingress
+
+
+Name:         allow-checkout-to-cart
+Namespace:    cartservice
+Created on:   2025-04-26 17:21:43 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=cartservice
+  Allowing ingress traffic:
+    To Port: 7070/TCP
+    From:
+      PodSelector: app=checkoutservice
+  Not affecting egress traffic
+  Policy Types: Ingress
+
+
+Name:         allow-frontend-to-cartservice
+Namespace:    cartservice
+Created on:   2025-04-26 10:34:02 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=cartservice
+  Allowing ingress traffic:
+    To Port: 7070/TCP
+    From:
+      PodSelector: app=frontend
+    From:
+      PodSelector: app=frontend
+  Not affecting egress traffic
+  Policy Types: Ingress
+
+
+Name:         cartservice
+Namespace:    cartservice
+Created on:   2025-04-26 11:24:08 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=cartservice
+  Allowing ingress traffic:
+    To Port: 6379/TCP
+    To Port: 6379/TCP
+    From:
+      PodSelector: app=redis-cart
+    From:
+      PodSelector: app=redis-cart
+    ----------
+    To Port: 6379/TCP
+    From:
+      PodSelector: app=redis-cart
+  Allowing egress traffic:
+    To Port: 6379/TCP
+    To:
+      PodSelector: app=redis-cart
+    ----------
+    To Port: 6379/TCP
+    To:
+      PodSelector: app=redis-cart
+  Policy Types: Ingress, Egress
+
+
+Name:         cartservice-allow
+Namespace:    cartservice
+Created on:   2025-04-26 18:37:22 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=cartservice
+  Allowing ingress traffic:
+    To Port: 7070/TCP
+    From:
+      PodSelector: app=frontend
+  Not affecting egress traffic
+  Policy Types: Ingress
+
+
+Name:         cartservice-allow-redis
+Namespace:    cartservice
+Created on:   2025-04-26 10:18:44 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=cartservice
+  Allowing ingress traffic:
+    To Port: 6379/TCP
+    To Port: 6379/TCP
+    From:
+      PodSelector: app=redis-cart
+  Not affecting egress traffic
+  Policy Types: Ingress
+
+
+Name:         cartservice-deny-checkout
+Namespace:    cartservice
+Created on:   2025-04-26 20:17:30 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=cartservice
+  Not affecting ingress traffic
+  Allowing egress traffic:
+    To Port: 5050/TCP
+    To:
+      PodSelector: app=checkoutservice
+  Policy Types: Egress
+
+
+Name:         cartservice-deny-payment
+Namespace:    cartservice
+Created on:   2025-04-26 05:56:33 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=cartservice
+  Not affecting ingress traffic
+  Allowing egress traffic:
+    To Port: 50051/TCP
+    To:
+      PodSelector: app=paymentservice
+  Policy Types: Egress
+
+
+Name:         cartservice-egress-policy
+Namespace:    cartservice
+Created on:   2025-04-26 05:59:43 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=cartservice
+  Not affecting ingress traffic
+  Allowing egress traffic:
+    To Port: 6379/TCP
+    To:
+      PodSelector: app=redis-cart
+    ----------
+    To Port: 6379/TCP
+    To:
+      PodSelector: app=redis-cart
+    ----------
+    To Port: 6379/TCP
+    To:
+      PodSelector: app=redis-cart
+  Policy Types: Egress
+
+
+Name:         cartservice-network-policy
+Namespace:    cartservice
+Created on:   2025-04-26 10:12:57 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=cartservice
+  Allowing ingress traffic:
+    To Port: 6379/TCP
+    To Port: 6379/TCP
+    To Port: 6379/TCP
+    To Port: 6379/TCP
+    From:
+      PodSelector: app=redis-cart
+    From:
+      NamespaceSelector: name=default
+      PodSelector: app=redis-cart
+    From:
+      PodSelector: app=redis-cart
+    From:
+      NamespaceSelector: kubernetes.io/metadata.name=default
+      PodSelector: app=redis-cart
+    From:
+      PodSelector: app=redis-cart
+    From:
+      PodSelector: app=redis-cart
+  Not affecting egress traffic
+  Policy Types: Ingress
+
+
+Name:         cartservice-policy
+Namespace:    cartservice
+Created on:   2025-04-26 05:31:45 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=cartservice
+  Not affecting ingress traffic
+  Allowing egress traffic:
+    To Port: 6379/TCP
+    To:
+      PodSelector: app=redis-cart
+    ----------
+    To Port: 6379/TCP
+    To:
+      PodSelector: app=redis-cart
+  Policy Types: Egress
+
+
+Name:         deny-cartservice-to-productcatalog
+Namespace:    cartservice
+Created on:   2025-04-26 20:09:53 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=cartservice
+  Not affecting ingress traffic
+  Allowing egress traffic:
+    To Port: 3550/TCP
+    To:
+      PodSelector: app=productcatalogservice
+  Policy Types: Egress
+
+
+Name:         deny-cartservice-to-recommendation
+Namespace:    cartservice
+Created on:   2025-04-26 19:53:51 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=cartservice
+  Not affecting ingress traffic
+  Allowing egress traffic:
+    To Port: 8080/TCP
+    To:
+      PodSelector: app=recommendationservice
+  Policy Types: Egress
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: recommendationservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy cartservice-egress-policy -n cartservice --type='json' -p='[{"op": "add", "path": "/spec/egress/0/to", "value": [{"podSelector": {"matchLabels": {"app": "redis-cart"}}, "ports": [{"port": 6379, "protocol": "TCP"}]}]}]'
+Output: networkpolicy.networking.k8s.io/cartservice-egress-policy patched (no change)
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: recommendationservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl describe networkpolicy -n redis-cart
+Output: Name:         allow-cartservice-to-redis-cart
+Namespace:    redis-cart
+Created on:   2025-04-26 17:08:11 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=redis-cart
+  Allowing ingress traffic:
+    To Port: 6379/TCP
+    From:
+      PodSelector: app=cartservice
+  Not affecting egress traffic
+  Policy Types: Ingress
+
+
+Name:         redis-cart
+Namespace:    redis-cart
+Created on:   2025-04-26 06:34:10 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=redis-cart
+  Allowing ingress traffic:
+    To Port: <any> (traffic allowed to all ports)
+    From:
+      PodSelector: app=cart
+  Not affecting egress traffic
+  Policy Types: Ingress
+
+
+Name:         redis-cart-policy
+Namespace:    redis-cart
+Created on:   2025-04-26 20:27:17 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=redis-cart
+  Allowing ingress traffic:
+    To Port: 6379/TCP
+    From:
+      PodSelector: app=cartservice
+  Not affecting egress traffic
+  Policy Types: Ingress
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: recommendationservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy allow-cartservice-to-redis-cart -n redis-cart --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from", "value": [{"podSelector": {"matchLabels": {"app": "cartservice"}}}]}]'
+Output: networkpolicy.networking.k8s.io/allow-cartservice-to-redis-cart patched (no change)
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: recommendationservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → redis-cart:6379 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods -n cartservice --show-labels
+Output: 
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: recommendationservice → redis-cart:6379 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → redis-cart:6379 (Expected: False, Actual: True)
+

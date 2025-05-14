@@ -1,0 +1,189 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy cartservice-policy -n cartservice --type=json -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "redis-cart"}}}}, {"op": "add", "path": "/spec/ingress/0/ports/-", "value": {"port": 6379, "protocol": "TCP"}}]'
+Output: networkpolicy.networking.k8s.io/cartservice-policy patched
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl describe networkpolicy cartservice-policy -n cartservice
+Output: Name:         cartservice-policy
+Namespace:    cartservice
+Created on:   2025-04-26 05:31:45 +0000 UTC
+Labels:       <none>
+Annotations:  <none>
+Spec:
+  PodSelector:     app=cartservice
+  Allowing ingress traffic:
+    To Port: 6379/TCP
+    To Port: 6379/TCP
+    To Port: 6379/TCP
+    From:
+      PodSelector: app=redis-cart
+    From:
+      NamespaceSelector: name=default
+      PodSelector: app=redis-cart
+    From:
+      NamespaceSelector: name=default
+    From:
+      PodSelector: app=redis-cart
+    From:
+      PodSelector: app=redis-cart
+    From:
+      NamespaceSelector: name=default
+    From:
+      NamespaceSelector: name=default
+      PodSelector: app=redis-cart
+    From:
+      PodSelector: app=redis-cart
+  Allowing egress traffic:
+    To Port: 6379/TCP
+    To:
+      PodSelector: app=redis-cart
+  Policy Types: Ingress, Egress
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl
+kubectl patch networkpolicy cartservice-policy -n cartservice --type=json -p='[{"op": "replace", "path": "/spec/ingress", "value": [{"from": [{"podSelector": {"matchLabels": {"app": "redis-cart"}}}], "ports": [{"port": 6379, "protocol": "TCP"}]}]}, {"op": "replace", "path": "/spec/egress", "value": [{"to": [{"podSelector": {"matchLabels": {"app": "redis-cart"}}}], "ports": [{"port": 6379, "protocol": "TCP"}]}]}]'
+Output: kubectl controls the Kubernetes cluster manager.
+
+ Find more information at: https://kubernetes.io/docs/reference/kubectl/
+
+Basic Commands (Beginner):
+  create          Create a resource from a file or from stdin
+  expose          Take a replication controller, service, deployment or pod and expose it as a new Kubernetes service
+  run             Run a particular image on the cluster
+  set             Set specific features on objects
+
+Basic Commands (Intermediate):
+  explain         Get documentation for a resource
+  get             Display one or many resources
+  edit            Edit a resource on the server
+  delete          Delete resources by file names, stdin, resources and names, or by resources and label selector
+
+Deploy Commands:
+  rollout         Manage the rollout of a resource
+  scale           Set a new size for a deployment, replica set, or replication controller
+  autoscale       Auto-scale a deployment, replica set, stateful set, or replication controller
+
+Cluster Management Commands:
+  certificate     Modify certificate resources
+  cluster-info    Display cluster information
+  top             Display resource (CPU/memory) usage
+  cordon          Mark node as unschedulable
+  uncordon        Mark node as schedulable
+  drain           Drain node in preparation for maintenance
+  taint           Update the taints on one or more nodes
+
+Troubleshooting and Debugging Commands:
+  describe        Show details of a specific resource or group of resources
+  logs            Print the logs for a container in a pod
+  attach          Attach to a running container
+  exec            Execute a command in a container
+  port-forward    Forward one or more local ports to a pod
+  proxy           Run a proxy to the Kubernetes API server
+  cp              Copy files and directories to and from containers
+  auth            Inspect authorization
+  debug           Create debugging sessions for troubleshooting workloads and nodes
+  events          List events
+
+Advanced Commands:
+  diff            Diff the live version against a would-be applied version
+  apply           Apply a configuration to a resource by file name or stdin
+  patch           Update fields of a resource
+  replace         Replace a resource by file name or stdin
+  wait            Experimental: Wait for a specific condition on one or many resources
+  kustomize       Build a kustomization target from a directory or URL
+
+Settings Commands:
+  label           Update the labels on a resource
+  annotate        Update the annotations on a resource
+  completion      Output shell completion code for the specified shell (bash, zsh, fish, or powershell)
+
+Subcommands provided by plugins:
+
+Other Commands:
+  api-resources   Print the supported API resources on the server
+  api-versions    Print the supported API versions on the server, in the form of "group/version"
+  config          Modify kubeconfig files
+  plugin          Provides utilities for interacting with plugins
+  version         Print the client and server version information
+
+Usage:
+  kubectl [flags] [options]
+
+Use "kubectl <command> --help" for more information about a given command.
+Use "kubectl options" for a list of global command-line options (applies to all commands).
+networkpolicy.networking.k8s.io/cartservice-policy patched
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy cartservice-policy -n cartservice --type=json -p='[{"op": "replace", "path": "/spec/ingress", "value": [{"from": [{"podSelector": {"matchLabels": {"app": "redis-cart"}}}], "ports": [{"port": 6379, "protocol": "TCP"}]}]}, {"op": "replace", "path": "/spec/egress", "value": [{"to": [{"podSelector": {"matchLabels": {"app": "redis-cart"}}}], "ports": [{"port": 6379, "protocol": "TCP"}]}]}]'
+Output: networkpolicy.networking.k8s.io/cartservice-policy patched (no change)
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods -n cartservice -l app=redis-cart -o wide
+Output: 
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods -n cartservice -l app=redis-cart -o jsonpath='{.items[*].metadata.labels}'
+Output: 
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods -n cartservice -l app=redis-cart -o json
+Output: {
+    "apiVersion": "v1",
+    "items": [],
+    "kind": "List",
+    "metadata": {
+        "resourceVersion": ""
+    }
+}
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods --all-namespaces -l app=redis-cart -o wide
+Output: NAMESPACE   NAME                         READY   STATUS    RESTARTS   AGE   IP            NODE                 NOMINATED NODE   READINESS GATES
+default     redis-cart-799f8fc4c-p9wps   1/1     Running   0          12h   10.244.0.14   kind-control-plane   <none>           <none>
+
+Mismatch Summary: Mismatch: cartservice → redis-cart:6379 (Expected: True, Actual: False)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+

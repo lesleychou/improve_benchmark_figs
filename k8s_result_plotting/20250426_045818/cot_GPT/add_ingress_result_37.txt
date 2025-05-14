@@ -1,0 +1,119 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: recommendationservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n frontend -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: recommendationservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: recommendationservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy deny-payment-access -n frontend --type='merge' -p '{"apiVersion": "networking.k8s.io/v1","kind": "NetworkPolicy","metadata": {"name": "deny-payment-access"},"spec": {"podSelector": {},"policyTypes": ["Ingress"],"ingress": [{"from": [{"namespaceSelector": {"matchLabels": {"name": "paymentservice"}}}]}]}}
+Output: /bin/bash: -c: line 1: unexpected EOF while looking for matching `''
+/bin/bash: -c: line 2: syntax error: unexpected end of file
+
+Mismatch Summary: Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: recommendationservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy deny-payment-access -n frontend --type='merge' -p '{"spec": {"ingress": [{"from": [], "ports": [{"port": 50051, "protocol": "TCP"}]}]}}'
+Output: Error from server (NotFound): namespaces "frontend" not found
+
+Mismatch Summary: Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: recommendationservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get namespaces
+Output: NAME                 STATUS   AGE
+adservice            Active   14m
+cartservice          Active   5m4s
+checkoutservice      Active   10m
+default              Active   25m
+emailservice         Active   9m57s
+kube-node-lease      Active   25m
+kube-public          Active   25m
+kube-system          Active   25m
+local-path-storage   Active   25m
+
+Mismatch Summary: Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: recommendationservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get services --all-namespaces
+Output: NAMESPACE     NAME                    TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)                  AGE
+default       adservice               ClusterIP      10.96.205.178   <none>        9555/TCP                 22m
+default       cartservice             ClusterIP      10.96.85.95     <none>        7070/TCP                 22m
+default       checkoutservice         ClusterIP      10.96.118.118   <none>        5050/TCP                 22m
+default       currencyservice         ClusterIP      10.96.140.252   <none>        7000/TCP                 22m
+default       emailservice            ClusterIP      10.96.36.126    <none>        5000/TCP                 22m
+default       frontend                ClusterIP      10.96.76.231    <none>        80/TCP                   22m
+default       frontend-external       LoadBalancer   10.96.188.159   <pending>     80:30378/TCP             22m
+default       kubernetes              ClusterIP      10.96.0.1       <none>        443/TCP                  25m
+default       paymentservice          ClusterIP      10.96.5.186     <none>        50051/TCP                22m
+default       productcatalogservice   ClusterIP      10.96.85.216    <none>        3550/TCP                 22m
+default       recommendationservice   ClusterIP      10.96.45.217    <none>        8080/TCP                 22m
+default       redis-cart              ClusterIP      10.96.122.155   <none>        6379/TCP                 22m
+default       shippingservice         ClusterIP      10.96.95.128    <none>        50051/TCP                22m
+kube-system   kube-dns                ClusterIP      10.96.0.10      <none>        53/UDP,53/TCP,9153/TCP   25m
+
+Mismatch Summary: Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: recommendationservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy deny-payment-access -n default --type='merge' -p '{"apiVersion": "networking.k8s.io/v1","kind": "NetworkPolicy","metadata": {"name": "deny-payment-access"},"spec": {"podSelector": {"matchLabels": {"app": "frontend"}},"policyTypes": ["Ingress"],"ingress": [{"from": [{"podSelector": {"matchLabels": {"app": "paymentservice"}}}],"ports": [{"port": 50051,"protocol": "TCP"}]}]}}'
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "deny-payment-access" not found
+
+Mismatch Summary: Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: recommendationservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: bash
+kubectl apply -n default -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-frontend-to-payment
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: frontend
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: paymentservice
+    ports:
+    - protocol: TCP
+      port: 50051
+EOF
+Output: networkpolicy.networking.k8s.io/deny-frontend-to-payment created
+
+Mismatch Summary: Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: recommendationservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+

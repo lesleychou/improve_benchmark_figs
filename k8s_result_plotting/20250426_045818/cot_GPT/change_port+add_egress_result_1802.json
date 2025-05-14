@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy checkoutservice-policy -n checkoutservice --type=json -p '[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}}}]'",
+        "output": "Error from server (NotFound): namespaces \"checkoutservice\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                    STATUS   AGE\nadservice               Active   15m\ndefault                 Active   19m\nfrontend                Active   15m\nkube-node-lease         Active   19m\nkube-public             Active   19m\nkube-system             Active   19m\nlocal-path-storage      Active   19m\nrecommendationservice   Active   9m27s\nshippingservice         Active   11m\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get pods --all-namespaces -o wide",
+        "output": "NAMESPACE            NAME                                         READY   STATUS    RESTARTS   AGE   IP            NODE                 NOMINATED NODE   READINESS GATES\ndefault              adservice-589cc8b8f6-669tp                   1/1     Running   0          16m   10.244.0.5    kind-control-plane   <none>           <none>\ndefault              cartservice-58878fc594-tc2lj                 1/1     Running   0          16m   10.244.0.6    kind-control-plane   <none>           <none>\ndefault              checkoutservice-5784b78cf6-qnw2z             1/1     Running   0          16m   10.244.0.7    kind-control-plane   <none>           <none>\ndefault              currencyservice-6cf48b5fbd-5zt6g             1/1     Running   0          16m   10.244.0.8    kind-control-plane   <none>           <none>\ndefault              emailservice-54644d947c-d7rc2                1/1     Running   0          16m   10.244.0.9    kind-control-plane   <none>           <none>\ndefault              frontend-556fdd9fd5-jgcjw                    1/1     Running   0          16m   10.244.0.10   kind-control-plane   <none>           <none>\ndefault              loadgenerator-cfb66cf49-r4g6f                1/1     Running   0          16m   10.244.0.16   kind-control-plane   <none>           <none>\ndefault              paymentservice-69cffc78d9-pg6g5              1/1     Running   0          16m   10.244.0.11   kind-control-plane   <none>           <none>\ndefault              productcatalogservice-697ff888cf-k7x58       1/1     Running   0          16m   10.244.0.12   kind-control-plane   <none>           <none>\ndefault              recommendationservice-697d6dbcf5-mzfv2       1/1     Running   0          16m   10.244.0.13   kind-control-plane   <none>           <none>\ndefault              redis-cart-c56696bc6-lqkvl                   1/1     Running   0          16m   10.244.0.14   kind-control-plane   <none>           <none>\ndefault              shippingservice-85968d94b6-5t9ls             1/1     Running   0          16m   10.244.0.15   kind-control-plane   <none>           <none>\nkube-system          coredns-668d6bf9bc-8m6v4                     1/1     Running   0          19m   10.244.0.3    kind-control-plane   <none>           <none>\nkube-system          coredns-668d6bf9bc-klmhz                     1/1     Running   0          19m   10.244.0.4    kind-control-plane   <none>           <none>\nkube-system          etcd-kind-control-plane                      1/1     Running   0          19m   172.18.0.2    kind-control-plane   <none>           <none>\nkube-system          kindnet-hhhzm                                1/1     Running   0          19m   172.18.0.2    kind-control-plane   <none>           <none>\nkube-system          kube-apiserver-kind-control-plane            1/1     Running   0          19m   172.18.0.2    kind-control-plane   <none>           <none>\nkube-system          kube-controller-manager-kind-control-plane   1/1     Running   0          19m   172.18.0.2    kind-control-plane   <none>           <none>\nkube-system          kube-proxy-n5t6f                             1/1     Running   0          19m   172.18.0.2    kind-control-plane   <none>           <none>\nkube-system          kube-scheduler-kind-control-plane            1/1     Running   0          19m   172.18.0.2    kind-control-plane   <none>           <none>\nlocal-path-storage   local-path-provisioner-58cc7856b6-sn76m      1/1     Running   0          19m   10.244.0.2    kind-control-plane   <none>           <none>\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy checkoutservice-policy -n default --type=json -p '[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}}}]'",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"checkoutservice-policy\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl apply -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: checkoutservice-policy\n  namespace: default\nspec:\n  podSelector:\n    matchLabels:\n      app: checkoutservice\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    ports:\n    - protocol: TCP\n      port: 5050\n  policyTypes:\n  - Ingress\nEOF",
+        "output": "networkpolicy.networking.k8s.io/checkoutservice-policy created\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy checkoutservice-policy -n default --type=json -p '[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"cartservice\"}}, \"namespaceSelector\": {\"matchLabels\": {\"name\": \"default\"}}}}]'",
+        "output": "networkpolicy.networking.k8s.io/checkoutservice-policy patched\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy checkoutservice-policy -n default --type=json -p '[{\"op\": \"remove\", \"path\": \"/spec/ingress/0/from/1\"}]'",
+        "output": "networkpolicy.networking.k8s.io/checkoutservice-policy patched\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy checkoutservice-policy -n default -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"checkoutservice-policy\",\"namespace\":\"default\"},\"spec\":{\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}}}],\"ports\":[{\"port\":5050,\"protocol\":\"TCP\"}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"checkoutservice\"}},\"policyTypes\":[\"Ingress\"]}}\n  creationTimestamp: \"2025-04-27T15:52:13Z\"\n  generation: 3\n  name: checkoutservice-policy\n  namespace: default\n  resourceVersion: \"2521\"\n  uid: 9ca872ec-7fc9-4ec3-af5d-07f200d9ec37\nspec:\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    ports:\n    - port: 5050\n      protocol: TCP\n  podSelector:\n    matchLabels:\n      app: checkoutservice\n  policyTypes:\n  - Ingress\n",
+        "mismatch_summary": "Mismatch: cartservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 productcatalogservice:3550 (Expected: True, Actual: False)"
+    }
+]

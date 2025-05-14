@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy allow-adservice --type='merge' -p '{\"spec\":{\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"adservice\"}}}],\"ports\":[{\"port\":9555,\"protocol\":\"TCP\"}]}]}}' -n frontend",
+        "output": "Error from server (NotFound): namespaces \"frontend\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\ndefault              Active   18h\nkube-node-lease      Active   18h\nkube-public          Active   18h\nkube-system          Active   18h\nlocal-path-storage   Active   18h\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get pods --all-namespaces -o wide | grep frontend",
+        "output": "default              frontend-7ffbffc6f7-9hb4b                    1/1     Running   0              18h   10.244.0.10   kind-control-plane   <none>           <none>\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy allow-adservice --type='merge' -p '{\"spec\":{\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"adservice\"}}}],\"ports\":[{\"port\":9555,\"protocol\":\"TCP\"}]}]}}' -n default",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"allow-adservice\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "bash\nkubectl apply -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-adservice\n  namespace: default\nspec:\n  podSelector:\n    matchLabels:\n      app: frontend\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: adservice\n    ports:\n    - protocol: TCP\n      port: 9555\nEOF",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"allow-adservice\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl apply -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-adservice\n  namespace: default\nspec:\n  podSelector:\n    matchLabels:\n      app: frontend\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: adservice\n    ports:\n    - protocol: TCP\n      port: 9555\nEOF",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"allow-adservice\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl apply -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-adservice\n  namespace: default\nspec:\n  podSelector:\n    matchLabels:\n      app: frontend\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: adservice\n    ports:\n    - protocol: TCP\n      port: 9555\nEOF",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"allow-adservice\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)\nMismatch: frontend \u2192 paymentservice:50051 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 paymentservice:50051 (Expected: False, Actual: True)"
+    }
+]

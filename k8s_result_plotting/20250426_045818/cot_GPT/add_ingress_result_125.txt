@@ -1,0 +1,193 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: cartservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy frontend-network-policy -n frontend -p '{"spec":{"egress":[{"to":[{"podSelector":{"matchLabels":{"app":"paymentservice"}}}],"ports":[{"port":50051,"protocol":"TCP"}]}]}}' --type=merge
+Output: Error from server (NotFound): namespaces "frontend" not found
+
+Mismatch Summary: Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: cartservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get namespaces
+Output: NAME                    STATUS   AGE
+adservice               Active   81m
+cartservice             Active   72m
+checkoutservice         Active   77m
+currencyservice         Active   61m
+default                 Active   92m
+emailservice            Active   77m
+kube-node-lease         Active   92m
+kube-public             Active   92m
+kube-system             Active   92m
+local-path-storage      Active   92m
+productcatalogservice   Active   62m
+recommendationservice   Active   50m
+redis-cart              Active   48m
+shippingservice         Active   37m
+
+Mismatch Summary: Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: cartservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy frontend-network-policy -n default -p '{"spec":{"egress":[{"to":[{"podSelector":{"matchLabels":{"app":"paymentservice"}}}],"ports":[{"port":50051,"protocol":"TCP"}]}]}}' --type=merge
+Output: networkpolicy.networking.k8s.io/frontend-network-policy patched
+
+Mismatch Summary: Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: cartservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy frontend-network-policy -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"frontend-network-policy","namespace":"default"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"loadgenerator"}}},{"podSelector":{"matchLabels":{"app":"user"}}}],"ports":[{"port":80,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"frontend"}}}}
+  creationTimestamp: "2025-04-26T06:09:06Z"
+  generation: 2
+  name: frontend-network-policy
+  namespace: default
+  resourceVersion: "8577"
+  uid: 8852c4cd-3091-495b-b8e8-96d7f7ef2eef
+spec:
+  egress:
+  - ports:
+    - port: 50051
+      protocol: TCP
+    to:
+    - podSelector:
+        matchLabels:
+          app: paymentservice
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: loadgenerator
+    - podSelector:
+        matchLabels:
+          app: user
+    ports:
+    - port: 80
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: frontend
+  policyTypes:
+  - Ingress
+
+Mismatch Summary: Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: cartservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy frontend-network-policy -n default -p '{"spec":{"egress":[]}}' --type=merge
+Output: networkpolicy.networking.k8s.io/frontend-network-policy patched
+
+Mismatch Summary: Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: cartservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n default
+Output: NAME                               POD-SELECTOR                AGE
+adservice                          app=adservice               89m
+allow-checkout-to-email            app=checkoutservice         78m
+allow-currency-ingress             app=currencyservice         84m
+allow-frontend-checkout            app=shippingservice         86m
+allow-frontend-checkout-to-cart    app=cartservice             81m
+allow-frontend-to-recommendation   app=recommendationservice   74m
+allow-productcatalog-access        app=productcatalogservice   87m
+cartservice                        app=cartservice             89m
+checkoutservice                    app=checkoutservice         89m
+checkoutservice-policy             app=checkoutservice         84m
+currencyservice                    app=currencyservice         89m
+default-deny-egress                app=frontend                28m
+deny-cart-to-payment               app=paymentservice          57m
+deny-frontend-to-emailservice      app=frontend                28m
+deny-frontend-to-payment           app=frontend                67m
+deny-frontend-to-payment-ingress   app=paymentservice          67m
+emailservice                       app=emailservice            89m
+frontend                           app=frontend                89m
+frontend-deny-emailservice         app=frontend                60m
+frontend-network-policy            app=frontend                22m
+loadgenerator                      app=loadgenerator           89m
+paymentservice                     app=paymentservice          89m
+paymentservice-ingress             app=paymentservice          77m
+paymentservice-network-policy      app=paymentservice          23m
+productcatalogservice              app=productcatalogservice   89m
+recommendationservice              app=recommendationservice   89m
+redis-cart                         app=redis-cart              89m
+restrict-ingress-checkout          app=checkoutservice         79m
+shippingservice                    app=shippingservice         89m
+
+Mismatch Summary: Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: cartservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy deny-frontend-to-payment -n default -p '{"spec":{"egress":[{"to":[{"podSelector":{"matchLabels":{"app":"paymentservice"}}}],"ports":[{"port":50051,"protocol":"TCP"}]}]}}' --type=merge
+Output: networkpolicy.networking.k8s.io/deny-frontend-to-payment patched (no change)
+
+Mismatch Summary: Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: cartservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy deny-frontend-to-payment -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"deny-frontend-to-payment","namespace":"default"},"spec":{"egress":[{"ports":[{"port":50051,"protocol":"TCP"}],"to":[{"podSelector":{"matchLabels":{"app":"paymentservice"}}}]}],"podSelector":{"matchLabels":{"app":"frontend"}},"policyTypes":["Egress"]}}
+  creationTimestamp: "2025-04-26T05:24:20Z"
+  generation: 3
+  name: deny-frontend-to-payment
+  namespace: default
+  resourceVersion: "3969"
+  uid: 18178589-e375-456c-a8fb-0d35f30530e2
+spec:
+  egress:
+  - ports:
+    - port: 50051
+      protocol: TCP
+    to:
+    - podSelector:
+        matchLabels:
+          app: paymentservice
+  podSelector:
+    matchLabels:
+      app: frontend
+  policyTypes:
+  - Egress
+
+Mismatch Summary: Mismatch: frontend → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: cartservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → paymentservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → paymentservice:50051 (Expected: False, Actual: True)
+

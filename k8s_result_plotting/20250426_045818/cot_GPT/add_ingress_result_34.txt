@@ -1,0 +1,133 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: recommendationservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy currencyservice -n currencyservice --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "checkoutservice"}}}}]'
+Output: Error from server (NotFound): namespaces "currencyservice" not found
+
+Mismatch Summary: Mismatch: recommendationservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+
+LLM Command: kubectl get namespaces
+Output: NAME                 STATUS   AGE
+adservice            Active   12m
+cartservice          Active   2m43s
+checkoutservice      Active   7m46s
+default              Active   23m
+emailservice         Active   7m36s
+kube-node-lease      Active   23m
+kube-public          Active   23m
+kube-system          Active   23m
+local-path-storage   Active   22m
+
+Mismatch Summary: Mismatch: recommendationservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods --all-namespaces
+Output: NAMESPACE            NAME                                         READY   STATUS    RESTARTS   AGE
+default              adservice-76f594d56f-2prlg                   1/1     Running   0          20m
+default              cartservice-5958849bb7-49tjm                 1/1     Running   0          20m
+default              checkoutservice-55d99bbf75-z49bp             1/1     Running   0          20m
+default              currencyservice-649964f87f-nxj9q             1/1     Running   0          20m
+default              emailservice-6d85f47b76-rdnmb                1/1     Running   0          20m
+default              frontend-fc4bf5fdb-rmj59                     1/1     Running   0          20m
+default              loadgenerator-6d98cc6686-4m4tn               1/1     Running   0          19m
+default              paymentservice-7dc8859fb8-vnwl8              1/1     Running   0          20m
+default              productcatalogservice-5bd4cb4488-7m8zm       1/1     Running   0          20m
+default              recommendationservice-c64454f56-4k2kx        1/1     Running   0          20m
+default              redis-cart-799f8fc4c-p9wps                   1/1     Running   0          20m
+default              shippingservice-5dd466d969-ppcwn             1/1     Running   0          20m
+kube-system          coredns-668d6bf9bc-7vskf                     1/1     Running   0          22m
+kube-system          coredns-668d6bf9bc-vhtsb                     1/1     Running   0          22m
+kube-system          etcd-kind-control-plane                      1/1     Running   0          23m
+kube-system          kindnet-kf59t                                1/1     Running   0          22m
+kube-system          kube-apiserver-kind-control-plane            1/1     Running   0          23m
+kube-system          kube-controller-manager-kind-control-plane   1/1     Running   0          23m
+kube-system          kube-proxy-t9chz                             1/1     Running   0          22m
+kube-system          kube-scheduler-kind-control-plane            1/1     Running   0          23m
+local-path-storage   local-path-provisioner-58cc7856b6-czqc8      1/1     Running   0          22m
+
+Mismatch Summary: Mismatch: recommendationservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy currencyservice -n default --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "recommendationservice"}}}}]'
+Output: networkpolicy.networking.k8s.io/currencyservice patched
+
+Mismatch Summary: Mismatch: recommendationservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+
+LLM Command: bash
+kubectl patch networkpolicy currencyservice -n default --type='json' -p='[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "recommendationservice"}}, "namespaceSelector": {"matchLabels": {"name": "default"}}}}]'
+Output: networkpolicy.networking.k8s.io/currencyservice patched
+
+Mismatch Summary: Mismatch: recommendationservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+
+LLM Command: bash
+kubectl patch networkpolicy currencyservice -n default --type='json' -p='[{"op": "remove", "path": "/spec/ingress/0/from"}]'
+Output: networkpolicy.networking.k8s.io/currencyservice patched
+
+Mismatch Summary: Mismatch: adservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: cartservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: productcatalogservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: recommendationservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: shippingservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: redis-cart → currencyservice:7000 (Expected: False, Actual: True)
+Mismatch: loadgenerator → currencyservice:7000 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy currencyservice -n default --type='json' -p='[{"op": "remove", "path": "/spec/ingress"}]'
+Output: networkpolicy.networking.k8s.io/currencyservice patched
+
+Mismatch Summary: Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy checkoutservice -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"checkoutservice","namespace":"default"},"spec":{"egress":[{}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":5050,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"checkoutservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-04-26T05:02:44Z"
+  generation: 12
+  name: checkoutservice
+  namespace: default
+  resourceVersion: "1902"
+  uid: 35564efc-1c59-43fc-a67f-7c18db8116a1
+spec:
+  egress:
+  - {}
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    ports:
+    - port: 5050
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: checkoutservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+

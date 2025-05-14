@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend",
+        "output": "",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy checkoutservice-policy -n checkoutservice --type=json -p '[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"emailservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 5000, \"protocol\": \"TCP\"}}]'",
+        "output": "Error from server (NotFound): namespaces \"checkoutservice\" not found\n",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\ndefault              Active   4h7m\nkube-node-lease      Active   4h7m\nkube-public          Active   4h7m\nkube-system          Active   4h7m\nlocal-path-storage   Active   4h7m\n",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get pods --all-namespaces",
+        "output": "NAMESPACE            NAME                                         READY   STATUS    RESTARTS   AGE\ndefault              adservice-7c7687ff5b-fbq2s                   1/1     Running   0          4h4m\ndefault              cartservice-7c8966d6fd-c8rb4                 1/1     Running   0          4h4m\ndefault              checkoutservice-769b8ff7b8-jxzrv             1/1     Running   0          4h4m\ndefault              currencyservice-578dcb55f6-bdvtr             1/1     Running   0          4h4m\ndefault              emailservice-d5d54d4fc-lksfn                 1/1     Running   0          4h4m\ndefault              frontend-7ffbffc6f7-9hb4b                    1/1     Running   0          4h4m\ndefault              loadgenerator-7d9cfb7cb9-9zjhk               1/1     Running   0          4h4m\ndefault              paymentservice-b67c65d9c-ztkqg               1/1     Running   0          4h4m\ndefault              productcatalogservice-5f94b6cd47-lk6vh       1/1     Running   0          4h4m\ndefault              recommendationservice-c468b6867-pcbbn        1/1     Running   0          4h4m\ndefault              redis-cart-5b6f47b748-9rgzw                  1/1     Running   0          4h4m\ndefault              shippingservice-f6bc4cd5d-69r7d              1/1     Running   0          4h4m\nkube-system          coredns-668d6bf9bc-g5z8v                     1/1     Running   0          4h7m\nkube-system          coredns-668d6bf9bc-l2w7d                     1/1     Running   0          4h7m\nkube-system          etcd-kind-control-plane                      1/1     Running   0          4h7m\nkube-system          kindnet-g596l                                1/1     Running   0          4h7m\nkube-system          kube-apiserver-kind-control-plane            1/1     Running   0          4h7m\nkube-system          kube-controller-manager-kind-control-plane   1/1     Running   0          4h7m\nkube-system          kube-proxy-48f5g                             1/1     Running   0          4h7m\nkube-system          kube-scheduler-kind-control-plane            1/1     Running   0          4h7m\nlocal-path-storage   local-path-provisioner-58cc7856b6-nfdzv      1/1     Running   0          4h7m\n",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy checkoutservice-policy -n default --type=json -p '[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"emailservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 5000, \"protocol\": \"TCP\"}}]'",
+        "output": "Error from server (NotFound): networkpolicies.networking.k8s.io \"checkoutservice-policy\" not found\n",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n default",
+        "output": "NAME                    POD-SELECTOR                AGE\nadservice               app=adservice               4h3m\ncartservice             app=cartservice             4h3m\ncheckoutservice         app=checkoutservice         4h3m\ncurrencyservice         app=currencyservice         4h3m\nemailservice            app=emailservice            4h3m\nfrontend                app=frontend                4h3m\nloadgenerator           app=loadgenerator           4h3m\npaymentservice          app=paymentservice          4h3m\nproductcatalogservice   app=productcatalogservice   4h3m\nrecommendationservice   app=recommendationservice   4h3m\nredis-cart              app=redis-cart              4h3m\nshippingservice         app=shippingservice         4h3m\n",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy checkoutservice -n default --type=json -p '[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"emailservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 5000, \"protocol\": \"TCP\"}}]'",
+        "output": "networkpolicy.networking.k8s.io/checkoutservice patched\n",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy checkoutservice -n default -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"checkoutservice\",\"namespace\":\"default\"},\"spec\":{\"egress\":[{}],\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}}}],\"ports\":[{\"port\":5050,\"protocol\":\"TCP\"}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"checkoutservice\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n  creationTimestamp: \"2025-05-07T16:33:45Z\"\n  generation: 226\n  name: checkoutservice\n  namespace: default\n  resourceVersion: \"20771\"\n  uid: b1131e44-9a17-4b4e-97bd-fd8c0d884378\nspec:\n  egress:\n  - {}\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    - podSelector:\n        matchLabels:\n          app: emailservice\n    ports:\n    - port: 5050\n      protocol: TCP\n    - port: 5000\n      protocol: TCP\n  podSelector:\n    matchLabels:\n      app: checkoutservice\n  policyTypes:\n  - Ingress\n  - Egress\n",
+        "mismatch_summary": "Mismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy checkoutservice -n default --type=json -p '[{\"op\": \"remove\", \"path\": \"/spec/ingress/0/ports/0\"}]'",
+        "output": "networkpolicy.networking.k8s.io/checkoutservice patched\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 checkoutservice:5050 (Expected: True, Actual: False)\nMismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)"
+    }
+]

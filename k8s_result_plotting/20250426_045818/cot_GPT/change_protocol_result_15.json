@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy <network-policy-name> -n adservice --type=json -p '[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"frontend\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 9555, \"protocol\": \"TCP\"}}]'",
+        "output": "/bin/bash: line 1: network-policy-name: No such file or directory\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n adservice",
+        "output": "",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n adservice -o yaml",
+        "output": "apiVersion: v1\nitems: []\nkind: List\nmetadata:\n  resourceVersion: \"\"\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl apply -n adservice -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-frontend-access\n  namespace: adservice\nspec:\n  podSelector:\n    matchLabels: {}\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    ports:\n    - protocol: TCP\n      port: 9555\nEOF",
+        "output": "Error from server (NotFound): error when creating \"STDIN\": namespaces \"adservice\" not found\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\ndefault              Active   10m\nkube-node-lease      Active   10m\nkube-public          Active   10m\nkube-system          Active   10m\nlocal-path-storage   Active   10m\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl create namespace adservice",
+        "output": "namespace/adservice created\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl apply -n adservice -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-frontend-access\n  namespace: adservice\nspec:\n  podSelector:\n    matchLabels: {}\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    ports:\n    - protocol: TCP\n      port: 9555\nEOF",
+        "output": "networkpolicy.networking.k8s.io/allow-frontend-access created\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)"
+    },
+    {
+        "llm_command": "kubectl get pods -n default --show-labels",
+        "output": "NAME                                     READY   STATUS    RESTARTS   AGE     LABELS\nadservice-76f594d56f-2prlg               1/1     Running   0          8m9s    app=adservice,pod-template-hash=76f594d56f,skaffold.dev/run-id=00adce13-6ae0-4db6-9ff3-9bd0af686efb\ncartservice-5958849bb7-49tjm             1/1     Running   0          8m9s    app=cartservice,pod-template-hash=5958849bb7,skaffold.dev/run-id=00adce13-6ae0-4db6-9ff3-9bd0af686efb\ncheckoutservice-55d99bbf75-z49bp         1/1     Running   0          8m9s    app=checkoutservice,pod-template-hash=55d99bbf75,skaffold.dev/run-id=00adce13-6ae0-4db6-9ff3-9bd0af686efb\ncurrencyservice-649964f87f-nxj9q         1/1     Running   0          8m9s    app=currencyservice,pod-template-hash=649964f87f,skaffold.dev/run-id=00adce13-6ae0-4db6-9ff3-9bd0af686efb\nemailservice-6d85f47b76-rdnmb            1/1     Running   0          8m9s    app=emailservice,pod-template-hash=6d85f47b76,skaffold.dev/run-id=00adce13-6ae0-4db6-9ff3-9bd0af686efb\nfrontend-fc4bf5fdb-rmj59                 1/1     Running   0          8m9s    app=frontend,pod-template-hash=fc4bf5fdb,skaffold.dev/run-id=00adce13-6ae0-4db6-9ff3-9bd0af686efb\nloadgenerator-6d98cc6686-4m4tn           1/1     Running   0          7m34s   app=loadgenerator,pod-template-hash=6d98cc6686,skaffold.dev/run-id=00adce13-6ae0-4db6-9ff3-9bd0af686efb\npaymentservice-7dc8859fb8-vnwl8          1/1     Running   0          8m9s    app=paymentservice,pod-template-hash=7dc8859fb8,skaffold.dev/run-id=00adce13-6ae0-4db6-9ff3-9bd0af686efb\nproductcatalogservice-5bd4cb4488-7m8zm   1/1     Running   0          8m9s    app=productcatalogservice,pod-template-hash=5bd4cb4488,skaffold.dev/run-id=00adce13-6ae0-4db6-9ff3-9bd0af686efb\nrecommendationservice-c64454f56-4k2kx    1/1     Running   0          8m9s    app=recommendationservice,pod-template-hash=c64454f56,skaffold.dev/run-id=00adce13-6ae0-4db6-9ff3-9bd0af686efb\nredis-cart-799f8fc4c-p9wps               1/1     Running   0          8m8s    app=redis-cart,pod-template-hash=799f8fc4c,skaffold.dev/run-id=00adce13-6ae0-4db6-9ff3-9bd0af686efb\nshippingservice-5dd466d969-ppcwn         1/1     Running   0          8m8s    app=shippingservice,pod-template-hash=5dd466d969,skaffold.dev/run-id=00adce13-6ae0-4db6-9ff3-9bd0af686efb\n",
+        "mismatch_summary": "Mismatch: frontend \u2192 adservice:9555 (Expected: True, Actual: False)"
+    }
+]

@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "kubectl get networkpolicy -n frontend",
+        "output": "",
+        "mismatch_summary": "Mismatch: adservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)\nMismatch: emailservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy <networkpolicy-name> -n checkoutservice --type=json -p '[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"emailservice\"}}}}, {\"op\": \"add\", \"path\": \"/spec/ingress/0/ports/-\", \"value\": {\"port\": 5000, \"protocol\": \"TCP\"}}]'",
+        "output": "/bin/bash: line 1: networkpolicy-name: No such file or directory\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)\nMismatch: emailservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n checkoutservice",
+        "output": "",
+        "mismatch_summary": "Mismatch: adservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)\nMismatch: emailservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n checkoutservice -o jsonpath='{.items[*].metadata.name}'",
+        "output": "",
+        "mismatch_summary": "Mismatch: adservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)\nMismatch: emailservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n checkoutservice",
+        "output": "",
+        "mismatch_summary": "Mismatch: adservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)\nMismatch: emailservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy -n checkoutservice -o json",
+        "output": "{\n    \"apiVersion\": \"v1\",\n    \"items\": [],\n    \"kind\": \"List\",\n    \"metadata\": {\n        \"resourceVersion\": \"\"\n    }\n}\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)\nMismatch: emailservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl apply -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-emailservice\n  namespace: checkoutservice\nspec:\n  podSelector: {}\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: emailservice\n    ports:\n    - protocol: TCP\n      port: 5000\nEOF",
+        "output": "{\n    \"apiVersion\": \"v1\",\n    \"items\": [],\n    \"kind\": \"List\",\n    \"metadata\": {\n        \"resourceVersion\": \"\"\n    }\n}\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)\nMismatch: emailservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get namespace checkoutservice",
+        "output": "Error from server (NotFound): namespaces \"checkoutservice\" not found\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)\nMismatch: emailservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\ndefault              Active   18h\nkube-node-lease      Active   18h\nkube-public          Active   18h\nkube-system          Active   18h\nlocal-path-storage   Active   18h\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)\nMismatch: checkoutservice \u2192 emailservice:5000 (Expected: True, Actual: False)\nMismatch: emailservice \u2192 recommendationservice:8080 (Expected: False, Actual: True)"
+    }
+]

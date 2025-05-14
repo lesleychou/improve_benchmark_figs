@@ -1,0 +1,47 @@
+[
+    {
+        "llm_command": "",
+        "output": "",
+        "mismatch_summary": "Mismatch: recommendationservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy currencyservice -n currencyservice --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"checkoutservice\"}}}}]'",
+        "output": "Error from server (NotFound): namespaces \"currencyservice\" not found\n",
+        "mismatch_summary": "Mismatch: recommendationservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get namespaces",
+        "output": "NAME                 STATUS   AGE\nadservice            Active   12m\ncartservice          Active   2m43s\ncheckoutservice      Active   7m46s\ndefault              Active   23m\nemailservice         Active   7m36s\nkube-node-lease      Active   23m\nkube-public          Active   23m\nkube-system          Active   23m\nlocal-path-storage   Active   22m\n",
+        "mismatch_summary": "Mismatch: recommendationservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get pods --all-namespaces",
+        "output": "NAMESPACE            NAME                                         READY   STATUS    RESTARTS   AGE\ndefault              adservice-76f594d56f-2prlg                   1/1     Running   0          20m\ndefault              cartservice-5958849bb7-49tjm                 1/1     Running   0          20m\ndefault              checkoutservice-55d99bbf75-z49bp             1/1     Running   0          20m\ndefault              currencyservice-649964f87f-nxj9q             1/1     Running   0          20m\ndefault              emailservice-6d85f47b76-rdnmb                1/1     Running   0          20m\ndefault              frontend-fc4bf5fdb-rmj59                     1/1     Running   0          20m\ndefault              loadgenerator-6d98cc6686-4m4tn               1/1     Running   0          19m\ndefault              paymentservice-7dc8859fb8-vnwl8              1/1     Running   0          20m\ndefault              productcatalogservice-5bd4cb4488-7m8zm       1/1     Running   0          20m\ndefault              recommendationservice-c64454f56-4k2kx        1/1     Running   0          20m\ndefault              redis-cart-799f8fc4c-p9wps                   1/1     Running   0          20m\ndefault              shippingservice-5dd466d969-ppcwn             1/1     Running   0          20m\nkube-system          coredns-668d6bf9bc-7vskf                     1/1     Running   0          22m\nkube-system          coredns-668d6bf9bc-vhtsb                     1/1     Running   0          22m\nkube-system          etcd-kind-control-plane                      1/1     Running   0          23m\nkube-system          kindnet-kf59t                                1/1     Running   0          22m\nkube-system          kube-apiserver-kind-control-plane            1/1     Running   0          23m\nkube-system          kube-controller-manager-kind-control-plane   1/1     Running   0          23m\nkube-system          kube-proxy-t9chz                             1/1     Running   0          22m\nkube-system          kube-scheduler-kind-control-plane            1/1     Running   0          23m\nlocal-path-storage   local-path-provisioner-58cc7856b6-czqc8      1/1     Running   0          22m\n",
+        "mismatch_summary": "Mismatch: recommendationservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy currencyservice -n default --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"recommendationservice\"}}}}]'",
+        "output": "networkpolicy.networking.k8s.io/currencyservice patched\n",
+        "mismatch_summary": "Mismatch: recommendationservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "bash\nkubectl patch networkpolicy currencyservice -n default --type='json' -p='[{\"op\": \"add\", \"path\": \"/spec/ingress/0/from/-\", \"value\": {\"podSelector\": {\"matchLabels\": {\"app\": \"recommendationservice\"}}, \"namespaceSelector\": {\"matchLabels\": {\"name\": \"default\"}}}}]'",
+        "output": "networkpolicy.networking.k8s.io/currencyservice patched\n",
+        "mismatch_summary": "Mismatch: recommendationservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "bash\nkubectl patch networkpolicy currencyservice -n default --type='json' -p='[{\"op\": \"remove\", \"path\": \"/spec/ingress/0/from\"}]'",
+        "output": "networkpolicy.networking.k8s.io/currencyservice patched\n",
+        "mismatch_summary": "Mismatch: adservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: cartservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: productcatalogservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: recommendationservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: shippingservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: redis-cart \u2192 currencyservice:7000 (Expected: False, Actual: True)\nMismatch: loadgenerator \u2192 currencyservice:7000 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl patch networkpolicy currencyservice -n default --type='json' -p='[{\"op\": \"remove\", \"path\": \"/spec/ingress\"}]'",
+        "output": "networkpolicy.networking.k8s.io/currencyservice patched\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    },
+    {
+        "llm_command": "kubectl get networkpolicy checkoutservice -n default -o yaml",
+        "output": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  annotations:\n    kubectl.kubernetes.io/last-applied-configuration: |\n      {\"apiVersion\":\"networking.k8s.io/v1\",\"kind\":\"NetworkPolicy\",\"metadata\":{\"annotations\":{},\"name\":\"checkoutservice\",\"namespace\":\"default\"},\"spec\":{\"egress\":[{}],\"ingress\":[{\"from\":[{\"podSelector\":{\"matchLabels\":{\"app\":\"frontend\"}}}],\"ports\":[{\"port\":5050,\"protocol\":\"TCP\"}]}],\"podSelector\":{\"matchLabels\":{\"app\":\"checkoutservice\"}},\"policyTypes\":[\"Ingress\",\"Egress\"]}}\n  creationTimestamp: \"2025-04-26T05:02:44Z\"\n  generation: 12\n  name: checkoutservice\n  namespace: default\n  resourceVersion: \"1902\"\n  uid: 35564efc-1c59-43fc-a67f-7c18db8116a1\nspec:\n  egress:\n  - {}\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: frontend\n    ports:\n    - port: 5050\n      protocol: TCP\n  podSelector:\n    matchLabels:\n      app: checkoutservice\n  policyTypes:\n  - Ingress\n  - Egress\n",
+        "mismatch_summary": "Mismatch: shippingservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)\nMismatch: emailservice \u2192 checkoutservice:5050 (Expected: False, Actual: True)"
+    }
+]

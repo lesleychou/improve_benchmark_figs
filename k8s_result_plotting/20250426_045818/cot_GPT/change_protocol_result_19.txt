@@ -1,0 +1,99 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy checkoutservice --type='merge' -p '{"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"paymentservice"}}},{"podSelector":{"matchLabels":{"app":"shippingservice"}}},{"podSelector":{"matchLabels":{"app":"emailservice"}}},{"podSelector":{"matchLabels":{"app":"currencyservice"}}}],"ports":[{"port":5050}]}]}}' -n checkoutservice
+Output: Error from server (NotFound): namespaces "checkoutservice" not found
+
+Mismatch Summary: Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get pods --all-namespaces | grep checkoutservice
+Output: default              checkoutservice-55d99bbf75-z49bp             1/1     Running   0          9m33s
+
+Mismatch Summary: Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy checkoutservice --type='merge' -p '{"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"paymentservice"}}},{"podSelector":{"matchLabels":{"app":"shippingservice"}}},{"podSelector":{"matchLabels":{"app":"currencyservice"}}}],"ports":[{"port":5050}]}]}}' -n default
+Output: networkpolicy.networking.k8s.io/checkoutservice patched
+
+Mismatch Summary: Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n default
+Output: NAME                              POD-SELECTOR                AGE
+adservice                         app=adservice               8m37s
+allow-currency-ingress            app=currencyservice         3m52s
+allow-frontend-checkout           app=shippingservice         6m21s
+allow-frontend-checkout-to-cart   app=cartservice             60s
+allow-productcatalog-access       app=productcatalogservice   6m56s
+cartservice                       app=cartservice             8m37s
+checkoutservice                   app=checkoutservice         8m37s
+checkoutservice-policy            app=checkoutservice         3m27s
+currencyservice                   app=currencyservice         8m37s
+emailservice                      app=emailservice            8m37s
+frontend                          app=frontend                8m36s
+loadgenerator                     app=loadgenerator           8m36s
+paymentservice                    app=paymentservice          8m36s
+productcatalogservice             app=productcatalogservice   8m36s
+recommendationservice             app=recommendationservice   8m36s
+redis-cart                        app=redis-cart              8m36s
+shippingservice                   app=shippingservice         8m36s
+
+Mismatch Summary: Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy checkoutservice -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"checkoutservice","namespace":"default"},"spec":{"egress":[{}],"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":5050,"protocol":"SCTP"}]}],"podSelector":{"matchLabels":{"app":"checkoutservice"}},"policyTypes":["Ingress","Egress"]}}
+  creationTimestamp: "2025-04-26T05:02:44Z"
+  generation: 7
+  name: checkoutservice
+  namespace: default
+  resourceVersion: "1863"
+  uid: 35564efc-1c59-43fc-a67f-7c18db8116a1
+spec:
+  egress:
+  - {}
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: paymentservice
+    - podSelector:
+        matchLabels:
+          app: shippingservice
+    - podSelector:
+        matchLabels:
+          app: currencyservice
+    ports:
+    - port: 5050
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: checkoutservice
+  policyTypes:
+  - Ingress
+  - Egress
+
+Mismatch Summary: Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy checkoutservice --type='merge' -p '{"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"paymentservice"}}},{"podSelector":{"matchLabels":{"app":"currencyservice"}}}],"ports":[{"port":5050,"protocol":"TCP"}]}]}}' -n default
+Output: networkpolicy.networking.k8s.io/checkoutservice patched
+
+Mismatch Summary: Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy checkoutservice --type='merge' -p '{"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"paymentservice"}}},{"podSelector":{"matchLabels":{"app":"shippingservice"}}},{"podSelector":{"matchLabels":{"app":"currencyservice"}}}],"ports":[{"port":5050,"protocol":"TCP"}]}]}}' -n default
+Output: networkpolicy.networking.k8s.io/checkoutservice patched
+
+Mismatch Summary: Mismatch: shippingservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy checkoutservice --type='merge' -p '{"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"paymentservice"}}},{"podSelector":{"matchLabels":{"app":"currencyservice"}}}],"ports":[{"port":5050,"protocol":"TCP"}]}]}}' -n default
+Output: networkpolicy.networking.k8s.io/checkoutservice patched
+
+Mismatch Summary: Mismatch: emailservice → checkoutservice:5050 (Expected: False, Actual: True)
+

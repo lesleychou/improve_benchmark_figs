@@ -1,0 +1,133 @@
+LLM Command: 
+Output: 
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy checkoutservice-policy -n checkoutservice --type=json -p '[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "frontend"}}}}]'
+Output: Error from server (NotFound): namespaces "checkoutservice" not found
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get namespaces
+Output: NAME                    STATUS   AGE
+adservice               Active   15m
+default                 Active   19m
+frontend                Active   15m
+kube-node-lease         Active   19m
+kube-public             Active   19m
+kube-system             Active   19m
+local-path-storage      Active   19m
+recommendationservice   Active   9m27s
+shippingservice         Active   11m
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get pods --all-namespaces -o wide
+Output: NAMESPACE            NAME                                         READY   STATUS    RESTARTS   AGE   IP            NODE                 NOMINATED NODE   READINESS GATES
+default              adservice-589cc8b8f6-669tp                   1/1     Running   0          16m   10.244.0.5    kind-control-plane   <none>           <none>
+default              cartservice-58878fc594-tc2lj                 1/1     Running   0          16m   10.244.0.6    kind-control-plane   <none>           <none>
+default              checkoutservice-5784b78cf6-qnw2z             1/1     Running   0          16m   10.244.0.7    kind-control-plane   <none>           <none>
+default              currencyservice-6cf48b5fbd-5zt6g             1/1     Running   0          16m   10.244.0.8    kind-control-plane   <none>           <none>
+default              emailservice-54644d947c-d7rc2                1/1     Running   0          16m   10.244.0.9    kind-control-plane   <none>           <none>
+default              frontend-556fdd9fd5-jgcjw                    1/1     Running   0          16m   10.244.0.10   kind-control-plane   <none>           <none>
+default              loadgenerator-cfb66cf49-r4g6f                1/1     Running   0          16m   10.244.0.16   kind-control-plane   <none>           <none>
+default              paymentservice-69cffc78d9-pg6g5              1/1     Running   0          16m   10.244.0.11   kind-control-plane   <none>           <none>
+default              productcatalogservice-697ff888cf-k7x58       1/1     Running   0          16m   10.244.0.12   kind-control-plane   <none>           <none>
+default              recommendationservice-697d6dbcf5-mzfv2       1/1     Running   0          16m   10.244.0.13   kind-control-plane   <none>           <none>
+default              redis-cart-c56696bc6-lqkvl                   1/1     Running   0          16m   10.244.0.14   kind-control-plane   <none>           <none>
+default              shippingservice-85968d94b6-5t9ls             1/1     Running   0          16m   10.244.0.15   kind-control-plane   <none>           <none>
+kube-system          coredns-668d6bf9bc-8m6v4                     1/1     Running   0          19m   10.244.0.3    kind-control-plane   <none>           <none>
+kube-system          coredns-668d6bf9bc-klmhz                     1/1     Running   0          19m   10.244.0.4    kind-control-plane   <none>           <none>
+kube-system          etcd-kind-control-plane                      1/1     Running   0          19m   172.18.0.2    kind-control-plane   <none>           <none>
+kube-system          kindnet-hhhzm                                1/1     Running   0          19m   172.18.0.2    kind-control-plane   <none>           <none>
+kube-system          kube-apiserver-kind-control-plane            1/1     Running   0          19m   172.18.0.2    kind-control-plane   <none>           <none>
+kube-system          kube-controller-manager-kind-control-plane   1/1     Running   0          19m   172.18.0.2    kind-control-plane   <none>           <none>
+kube-system          kube-proxy-n5t6f                             1/1     Running   0          19m   172.18.0.2    kind-control-plane   <none>           <none>
+kube-system          kube-scheduler-kind-control-plane            1/1     Running   0          19m   172.18.0.2    kind-control-plane   <none>           <none>
+local-path-storage   local-path-provisioner-58cc7856b6-sn76m      1/1     Running   0          19m   10.244.0.2    kind-control-plane   <none>           <none>
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy checkoutservice-policy -n default --type=json -p '[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "frontend"}}}}]'
+Output: Error from server (NotFound): networkpolicies.networking.k8s.io "checkoutservice-policy" not found
+
+Mismatch Summary: Mismatch: frontend → checkoutservice:5050 (Expected: True, Actual: False)
+Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl apply -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: checkoutservice-policy
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: checkoutservice
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    ports:
+    - protocol: TCP
+      port: 5050
+  policyTypes:
+  - Ingress
+EOF
+Output: networkpolicy.networking.k8s.io/checkoutservice-policy created
+
+Mismatch Summary: Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy checkoutservice-policy -n default --type=json -p '[{"op": "add", "path": "/spec/ingress/0/from/-", "value": {"podSelector": {"matchLabels": {"app": "cartservice"}}, "namespaceSelector": {"matchLabels": {"name": "default"}}}}]'
+Output: networkpolicy.networking.k8s.io/checkoutservice-policy patched
+
+Mismatch Summary: Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl patch networkpolicy checkoutservice-policy -n default --type=json -p '[{"op": "remove", "path": "/spec/ingress/0/from/1"}]'
+Output: networkpolicy.networking.k8s.io/checkoutservice-policy patched
+
+Mismatch Summary: Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+
+LLM Command: kubectl get networkpolicy checkoutservice-policy -n default -o yaml
+Output: apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"annotations":{},"name":"checkoutservice-policy","namespace":"default"},"spec":{"ingress":[{"from":[{"podSelector":{"matchLabels":{"app":"frontend"}}}],"ports":[{"port":5050,"protocol":"TCP"}]}],"podSelector":{"matchLabels":{"app":"checkoutservice"}},"policyTypes":["Ingress"]}}
+  creationTimestamp: "2025-04-27T15:52:13Z"
+  generation: 3
+  name: checkoutservice-policy
+  namespace: default
+  resourceVersion: "2521"
+  uid: 9ca872ec-7fc9-4ec3-af5d-07f200d9ec37
+spec:
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    ports:
+    - port: 5050
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: checkoutservice
+  policyTypes:
+  - Ingress
+
+Mismatch Summary: Mismatch: cartservice → checkoutservice:5050 (Expected: False, Actual: True)
+Mismatch: recommendationservice → productcatalogservice:3550 (Expected: True, Actual: False)
+

@@ -1,0 +1,80 @@
+LLM Command: kubectl get networkpolicy -n frontend
+Output: 
+Mismatch Summary: Mismatch: recommendationservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy <networkpolicy-name> -n shippingservice --type=json -p '[{"op": "remove", "path": "/spec/ingress/0/from"}]'
+Output: /bin/bash: line 1: networkpolicy-name: No such file or directory
+
+Mismatch Summary: Mismatch: recommendationservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n shippingservice
+Output: 
+Mismatch Summary: Mismatch: recommendationservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n shippingservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: recommendationservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n recommendationservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: recommendationservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl get networkpolicy -n emailservice -o yaml
+Output: apiVersion: v1
+items: []
+kind: List
+metadata:
+  resourceVersion: ""
+
+Mismatch Summary: Mismatch: recommendationservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy <networkpolicy-name> -n shippingservice --type=json -p '[{"op": "add", "path": "/spec/ingress", "value": [{"from": [{"namespaceSelector": {"matchLabels": {"name": "recommendationservice"}}}, {"namespaceSelector": {"matchLabels": {"name": "emailservice"}}}]}]}]'
+Output: /bin/bash: line 1: networkpolicy-name: No such file or directory
+
+Mismatch Summary: Mismatch: recommendationservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl patch networkpolicy allow-ingress -n shippingservice --type=json -p '[{"op": "add", "path": "/spec/ingress", "value": [{"from": [{"namespaceSelector": {"matchLabels": {"name": "frontend"}}}, {"namespaceSelector": {"matchLabels": {"name": "checkout"}}}]}]}]'
+Output: Error from server (NotFound): namespaces "shippingservice" not found
+
+Mismatch Summary: Mismatch: recommendationservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → shippingservice:50051 (Expected: False, Actual: True)
+
+LLM Command: kubectl apply -f - <<EOF
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-recommendation-email
+  namespace: shippingservice
+spec:
+  podSelector: {}
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: recommendationservice
+        - namespaceSelector:
+            matchLabels:
+              name: emailservice
+EOF
+Output: Error from server (NotFound): namespaces "shippingservice" not found
+
+Mismatch Summary: Mismatch: recommendationservice → shippingservice:50051 (Expected: False, Actual: True)
+Mismatch: emailservice → shippingservice:50051 (Expected: False, Actual: True)
+
