@@ -12,6 +12,25 @@ import argparse
 from scipy import stats
 import math
 
+# Create a consistent color mapping for all agent methods
+AGENT_COLOR_MAP = {
+    "GPT+CoT": "#1f77b4",        # Blue
+    "GPT+Fewshot": "#ff7f0e",    # Orange
+    "QWen+CoT": "#2ca02c",       # Green
+    "QWen+Fewshot": "#d62728",   # Red
+    "GPT+ReAct": "#9467bd"       # Purple
+}
+
+# Mapping for agent names in the legend
+AGENT_NAME_MAPPING = {
+    "react_GPT": "GPT+ReAct",
+    "few_shot_basic_GPT": "GPT+Fewshot",
+    "cot_Qwen": "QWen+CoT",
+    "few_shot_Qwen": "QWen+Fewshot",
+    "cot_GPT": "GPT+CoT",
+    "few_shot_GPT": "GPT+Fewshot",  # Add mapped name for few_shot_GPT
+}
+
 # Example usage:
 # python eval_with_spider_charts.py --sampling_method random
 
@@ -54,6 +73,9 @@ def main():
         # Extract name from the filename (remove path and extension)
         name = os.path.basename(path).replace("_merged.jsonl", "")
         
+        # Map the agent name to standardized naming
+        display_name = AGENT_NAME_MAPPING.get(name, name)
+        
         # Group the results by task label
         grouped_results = {}
         for result in results:
@@ -65,6 +87,7 @@ def main():
         all_results.append({
             'path': path,
             'name': name,
+            'display_name': display_name,
             'grouped_results': grouped_results
         })
 
@@ -72,7 +95,7 @@ def main():
     sample_size = 100
     
     # Set up data structures for spider charts
-    agent_names = [result_set['name'] for result_set in all_results]
+    agent_display_names = [result_set['display_name'] for result_set in all_results]
     # Get all task labels excluding the first one (which is typically 'None' or similar)
     all_task_labels = set()
     for result_set in all_results:
@@ -84,13 +107,13 @@ def main():
     task_labels = sorted(list(all_task_labels))
 
     # Prepare data for spider charts
-    correctness_data = {agent: {} for agent in agent_names}
-    safety_data = {agent: {} for agent in agent_names}
-    latency_data = {agent: {} for agent in agent_names}
+    correctness_data = {agent: {} for agent in agent_display_names}
+    safety_data = {agent: {} for agent in agent_display_names}
+    latency_data = {agent: {} for agent in agent_display_names}
     
     # Calculate stats for each agent and task label
     for i, result_set in enumerate(all_results):
-        agent_name = result_set['name']
+        agent_display_name = result_set['display_name']
         grouped_results = result_set['grouped_results']
         
         for task_label in task_labels:
@@ -111,33 +134,33 @@ def main():
                 # Calculate correctness pass rate
                 correctness_binary = [1 if result["Result-Correctness"] == "Pass" else 0 for result in samples]
                 correctness_pass_rate = (sum(correctness_binary) / len(correctness_binary)) * 100
-                correctness_data[agent_name][task_label] = correctness_pass_rate
+                correctness_data[agent_display_name][task_label] = correctness_pass_rate
                 
                 # Calculate safety pass rate
                 safety_binary = [1 if result["Result-Safety"] == "Pass" else 0 for result in samples]
                 safety_pass_rate = (sum(safety_binary) / len(safety_binary)) * 100
-                safety_data[agent_name][task_label] = safety_pass_rate
+                safety_data[agent_display_name][task_label] = safety_pass_rate
 
                 # Calculate average latency
                 latencies = [float(result["Result-Latency"]) for result in samples]
                 avg_latency = sum(latencies) / len(latencies)
-                latency_data[agent_name][task_label] = avg_latency
+                latency_data[agent_display_name][task_label] = avg_latency
             else:
                 # If no data for this task label, set to 0
-                correctness_data[agent_name][task_label] = 0
-                safety_data[agent_name][task_label] = 0
-                latency_data[agent_name][task_label] = 0
+                correctness_data[agent_display_name][task_label] = 0
+                safety_data[agent_display_name][task_label] = 0
+                latency_data[agent_display_name][task_label] = 0
     
     # Create spider charts
     create_spider_chart(correctness_data, task_labels, "Correctness Pass Rate (%)", 
-                        f"figs/malt_correctness_spider_merged.png")
+                        f"figs/malt_correctness_spider_merged.pdf")
     create_spider_chart(safety_data, task_labels, "Safety Pass Rate (%)", 
-                        f"figs/malt_safety_spider_merged.png")
+                        f"figs/malt_safety_spider_merged.pdf")
     create_spider_chart(latency_data, task_labels, "Average Latency (seconds)", 
-                        f"figs/malt_latency_spider_merged.png",
+                        f"figs/malt_latency_spider_merged.pdf",
                         is_latency=True)
 
-    print(f"Spider charts saved to figs/malt_correctness_spider_merged.png, figs/malt_safety_spider_merged.png, and figs/malt_latency_spider_merged.png")
+    print(f"Spider charts saved to figs/malt_correctness_spider_merged.pdf, figs/malt_safety_spider_merged.pdf, and figs/malt_latency_spider_merged.pdf")
 
 def create_spider_chart(data, categories, title, output_path, is_latency=False):
     """Create a polygon-style spider chart with the given data."""
@@ -192,29 +215,28 @@ def create_spider_chart(data, categories, title, output_path, is_latency=False):
         ax.plot([angles[i], angles[i]], [0, ax.get_ylim()[1]], 
                 color='gray', linestyle='-', linewidth=0.5, alpha=0.5, zorder=-10)
     
-    # Use a more professional color palette
-    colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd']  # Professional color scheme
-    
     # Plot each agent with improved styling
     legend_patches = []
     for i, (agent_name, agent_data) in enumerate(data.items()):
         values = [agent_data.get(cat, 0) for cat in categories]
         values += values[:1]  # Close the loop
         
-        color = colors[i % len(colors)]
+        # Get color from the consistent color map
+        color = AGENT_COLOR_MAP.get(agent_name, "#333333")  # Default to dark gray if not found
+        
         # Plot line with higher z-order to ensure it's above the fill
         ax.plot(angles, values, linewidth=1.5, linestyle='-', color=color, zorder=2, clip_on=False)
         ax.fill(angles, values, color=color, alpha=0.1, zorder=1)
         
         legend_patches.append(mpatches.Patch(color=color, label=agent_name))
     
-    # Add legend with improved positioning and styling
-    legend = plt.legend(handles=legend_patches, 
-                       loc='lower left', 
-                       frameon=True,
-                       edgecolor='none',
-                       facecolor='white',
-                       framealpha=0.8)
+    # # Add legend with improved positioning and styling
+    # legend = plt.legend(handles=legend_patches, 
+    #                    loc='lower left', 
+    #                    frameon=True,
+    #                    edgecolor='none',
+    #                    facecolor='white',
+    #                    framealpha=0.8)
     
     # Adjust layout to prevent text cutoff
     plt.tight_layout()
@@ -224,16 +246,7 @@ def create_spider_chart(data, categories, title, output_path, is_latency=False):
     plt.savefig(output_path, 
                 dpi=300, 
                 bbox_inches='tight',
-                pad_inches=0.2,
-                format='pdf')  # Save as PDF for better quality
-    
-    # Also save as PNG for easy viewing
-    plt.savefig(output_path.replace('.pdf', '.png'),
-                dpi=300,
-                bbox_inches='tight',
                 pad_inches=0.2)
-    
-    plt.close()
 
 # run the main function
 if __name__ == "__main__":
